@@ -1,11 +1,32 @@
+#NOTE - Imports
 import tkinter
 import customtkinter as ctk
-from config.instancias import frame_1_inicio_func
-from config.instancias import frame_1_sai_func
+from config.instancias.frames import frame_1_inicio_func
+from config.instancias.frames import frame_1_sai_func
 from config.instancias import janela_saida_caminhoes_func
 from config.styles import estilo_janelas
 from config.instancias import janela_inicial_func
+from config.instancias.apis import listar_local_estoque
+from config.instancias.apis import listar_projetos
 
+#NOTE - Puxando listas
+lista_estoque = listar_local_estoque()
+with open(f"config/arquivos/lista_estoques.txt", "r") as arquivo:
+    lista_estoques_arquivo = arquivo.readlines()
+lista_estoques_arquivo = []
+for item in lista_estoque:
+    lista_estoques_arquivo.append(f"{item}\n")
+with open("config/arquivos/lista_estoques.txt", "w") as arquivo:
+    arquivo.writelines(lista_estoques_arquivo)
+
+lista_projetos = listar_projetos()
+with open(f"config/arquivos/lista_projetos.txt", "r") as arquivo:
+    lista_projetos_arquivo = arquivo.readlines()
+lista_projetos_arquivo = []
+for item in lista_projetos:
+    lista_projetos_arquivo.append(f"{item}\n")
+with open("config/arquivos/lista_projetos.txt", "w") as arquivo:
+    arquivo.writelines(lista_projetos_arquivo)
 
 #NOTE - JANELA INICIO
 janela_inicio = janela_inicial_func()
