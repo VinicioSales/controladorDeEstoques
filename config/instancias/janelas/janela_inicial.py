@@ -8,4 +8,5 @@ def janela_inicial_func():
     janela_inicio = ctk.CTk()
     janela_inicio.geometry(dimensao)
     janela_inicio.title("CustomTkinter simple_example.py")
+    janela_inicio._set_appearance_mode("dark")
     return janela_inicio
