@@ -45,7 +45,7 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
         lista_projetos_aux.append(projeto)
     lista_projetos = lista_projetos_aux
 
-
+lista_produtos_selecionados = []
 #!SECTION
 
 #NOTE - Instancia Janela
@@ -57,8 +57,9 @@ def janela_saida_caminhoes_func():
     janela_saida_caminhao.title("Saida de caminhões")
     master = janela_saida_caminhao
 
-    #NOTE - Funcoes
+    #SECTION - Funcoes
     def get_codigo(nome_produto):
+        #NOTE - get_codigo
         """Pega o codigo do produto na lista de produtos
         
         param:
@@ -76,13 +77,14 @@ def janela_saida_caminhoes_func():
                     break
         return codigo
     def get_codigo_local_estoque(nome_estoque):
+        #NOTE - get_codigo_local_estoque
         """Pega o codigo do estoque na lista de estoques
         
         param:
             - string: nome_estoque
             
         return:
-            - string: codigo_local_estoque"""
+            - string: codigo_local_estoque"""        
         with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
             lista_estoques = arquivo.readlines()
             for estoque in lista_estoques:
@@ -93,6 +95,7 @@ def janela_saida_caminhoes_func():
                     break
         return codigo_local_estoque
     def get_codigo_projeto(nome_projeto):
+        #NOTE - get_codigo_projeto
         """Pega o codigo do projeto na lista de projetos
         
         param:
@@ -110,6 +113,7 @@ def janela_saida_caminhoes_func():
                     break
         return codigo_projeto
     def procurar_produto():
+        #NOTE - procurar_produto
         """Procura o produto na lista de produtos
 
         param:
@@ -121,6 +125,7 @@ def janela_saida_caminhoes_func():
         filtered_items = [item for item in lista_produtos if search_text in item]
         combo_produtos.configure(values=filtered_items)
     def procurar_estoque():
+        #NOTE - procurar_estoque
         """Procura o estoque na lista de estoques
 
         param:
@@ -132,10 +137,19 @@ def janela_saida_caminhoes_func():
         filtered_items = [item for item in lista_estoques if search_text in item]
         combo_estoque.configure(values=filtered_items)
     def procurar_projeto():
+        #NOTE - procurar_projeto
+        """Procura o projeto pesquisado
+        
+        params:
+            - None
+        
+        return:
+            - None"""
         search_text = pesquisar_projeto.get()
         filtered_items = [item for item in lista_projetos if search_text in item]
         combo_projeto.configure(values=filtered_items)    
     def ajustar_estoque_func():
+        #NOTE - ajustar_estoque_func
         """Lança um ajuste de movimento de estoque
 
         param:
@@ -147,13 +161,19 @@ def janela_saida_caminhoes_func():
         quantidade_itens = quantidade_itens_entry.get()
         nome_estoque = combo_estoque.get()
         nome_projeto = combo_projeto.get()
+        nota = nota_entry.get()
+        obs = f"{nota}\n\n,saida"
+        print(f'obs: {obs}')
         
         codigo = get_codigo(nome_produto)
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
         codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
         cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(codigo)
-        descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, 'SAI', valor_unitario, "saida", codigo_local_estoque)
-    
+        descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, 'SAI', valor_unitario, obs, codigo_local_estoque)
+    def inicio_func():
+        janela_saida_caminhao.destroy()
+    #!SECTION
+
     #NOTE - Produtos
     #============= Produtos ================#
     produtos_text = ctk.CTkTextbox(
@@ -171,6 +191,11 @@ def janela_saida_caminhoes_func():
     filtrar_produto_entry.place(relx=0.7, rely=0.1, anchor=ctk.CENTER)
     filtrar_produto_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_produto)
     filtrar_produto_btn.place(relx=0.8, rely=0.1, anchor=ctk.CENTER)
+    produtos_selecionados_text = ctk.CTkTextbox(
+        master,
+        width=200,
+        height=25
+        )
 
     #NOTE - Itens
     #============= Itens ================#
@@ -224,9 +249,24 @@ def janela_saida_caminhoes_func():
     filtrar_projeto_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_projeto)
     filtrar_projeto_btn.place(relx=0.8, rely=0.4, anchor=ctk.CENTER)
 
+    #NOTE - Numero Nota
+    #============== Numero Nota ==============#
+    nota_text = ctk.CTkTextbox(
+        master,
+        width=200,
+        height=25
+        )
+    nota_text.place(relx=0.3, rely=0.5, anchor=tkinter.CENTER)
+    nota_text.insert("0.0", "Adicione código da nota:")
+    nota_text.configure(state="disabled")
+    nota_entry = ctk.CTkEntry(master, textvariable=pesquisar_projeto)
+    nota_entry.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+
     #NOTE - Rodapé
+    inicio_btn = ctk.CTkButton(master, text="início", command=inicio_func)
+    inicio_btn.place(relx=0.6, rely=0.8, anchor=ctk.CENTER)
     enviar_btn = ctk.CTkButton(master, text="Enviar", command=ajustar_estoque_func)
-    enviar_btn.place(relx=0.8, rely=0.5, anchor=ctk.CENTER)
+    enviar_btn.place(relx=0.8, rely=0.8, anchor=ctk.CENTER)
 
     janela_saida_caminhao.mainloop()
 
