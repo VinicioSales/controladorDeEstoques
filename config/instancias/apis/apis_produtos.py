@@ -127,7 +127,7 @@ def listar_produtos_codigo_produto():
         total_de_paginas = int(response['total_de_paginas'])
         produto_servico_cadastro = response["produto_servico_cadastro"]
         for produto in produto_servico_cadastro:
-            codigo_descricao.append(f'{produto["codigo_produto"]} - {produto["descricao"]}')
+            codigo_descricao.append(f'{produto["codigo_produto"]} * {produto["descricao"]}')
         pagina += 1
     return codigo_descricao
 
@@ -146,7 +146,7 @@ def relatorio_quant_diferenca_func(lista_nCodProd, lista_quant_diferenca):
     for codigo_produto, quant_diferenca in zip(lista_nCodProd, lista_quant_diferenca):
         for codigo_descricao_item in codigo_descricao:
             if str(codigo_produto) in str(codigo_descricao_item):
-                codigo_descricao_item = codigo_descricao_item.split("-")
+                codigo_descricao_item = codigo_descricao_item.split("*")
                 nome_produto = codigo_descricao_item[1]
-                relatorio_quant_diferenca.append(f"{nome_produto} - {quant_diferenca}")
+                relatorio_quant_diferenca.append(f"{nome_produto} * {quant_diferenca}")
     return relatorio_quant_diferenca

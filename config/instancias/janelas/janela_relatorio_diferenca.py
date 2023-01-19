@@ -13,9 +13,21 @@ def janela_relatorio_diferenca_func():
         - None"""
     janela_relatorio_diferenca = ctk.CTk()
     janela_relatorio_diferenca.geometry("800x600")
-
     lista_nCodProd, lista_quant_diferenca = diferenca_quantidade()
     relatorio_quant_diferenca = relatorio_quant_diferenca_func(lista_nCodProd, lista_quant_diferenca)
+    with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
+        lista_produtos_ceasa = arquivo.readlines()
+    for index, item in enumerate(relatorio_quant_diferenca):
+        for produto_ceasa in lista_produtos_ceasa:            
+            produto_ceasa = produto_ceasa.split("*")
+            nome_produto = produto_ceasa[0]
+            quant_ceasa = int(produto_ceasa[2])
+            if str(nome_produto) in str(item):
+                item = item.split("*")
+                quant_diferenca = int(item[1])
+                quant_diferenca_soma = quant_diferenca + quant_ceasa
+                item_resultado = f"{item[0]} * {quant_diferenca_soma}"
+                relatorio_quant_diferenca[index] = item_resultado
 
     #SECTION - Funções
     #NOTE - gerar_pedido

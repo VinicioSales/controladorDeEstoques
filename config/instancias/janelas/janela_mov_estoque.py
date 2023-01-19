@@ -64,8 +64,6 @@ def janela_mov_estoque_func(tipo):
     janela_saida_caminhao.title("Saida de caminhões")
     master = janela_saida_caminhao
 
-    print(f"tipo: {tipo}")
-
     #SECTION - Funcoes
     def get_codigo(nome_produto):
         #NOTE - get_codigo
@@ -166,18 +164,26 @@ def janela_mov_estoque_func(tipo):
         
         return:
             - None"""
+        # Pegando variaveis
         nome_produto = combo_produtos.get()
         quantidade_itens = quantidade_itens_entry.get()
         nome_estoque = combo_estoque.get()
         nome_projeto = combo_projeto.get()
         nota = nota_entry.get()
-        obs = f"{nota},\n\nsaida"
-        print(f'obs: {obs}')
-        
+        obs = f"{nota},\n\nsaida"        
         codigo = get_codigo(nome_produto)
+        
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
         codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
         cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(codigo)
+        produtos_ceasa = produtos_ceasa_entry.get()
+        relatorio_ceasa = f"{nome_produto} * {codigo_produto} * {produtos_ceasa}"
+        print(f"relatorio_ceasa: {relatorio_ceasa}")
+        with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
+            lista_produtos_ceasa = arquivo.readlines()
+            lista_produtos_ceasa.append(f"{relatorio_ceasa}\n")
+        with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
+            arquivo.writelines(lista_produtos_ceasa)
         descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque)
     def inicio_func():
         janela_saida_caminhao.destroy()
@@ -213,9 +219,23 @@ def janela_mov_estoque_func(tipo):
     quantidade_itens_text.configure(state="disabled")
     quantidade_itens_entry = ctk.CTkEntry(
         master=master,
-        width=200,
+        width=150,
         height=25)
     quantidade_itens_entry.place(relx=0.5, rely=0.2, anchor=tkinter.CENTER)
+    if tipo == "ENT":
+        produtos_ceasa_text = ctk.CTkTextbox(
+            master,
+            width=150,
+            height=25
+            )
+        produtos_ceasa_text.place(relx=0.7, rely=0.2, anchor=tkinter.CENTER)
+        produtos_ceasa_text.insert("0.0", "Produtos na Ceasa")
+        produtos_ceasa_text.configure(state="disabled")
+        produtos_ceasa_entry = ctk.CTkEntry(
+            master=master,
+            width=150,
+            height=25)
+        produtos_ceasa_entry.place(relx=0.9, rely=0.2, anchor=tkinter.CENTER)     
 
     #NOTE - Estoque
     #============= Estoque ===============#
