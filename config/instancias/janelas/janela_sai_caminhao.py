@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import tkinter
-#from instancias.apis.apis_estoque import incluir_ajuste_estoque
-#from instancias.apis.apis_produtos import pesquisar_produto_func
+from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
+from config.instancias.apis.apis_produtos import pesquisar_produto_func
 
 #SECTION - Abrindo arquivos
 with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
@@ -31,7 +31,6 @@ with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
         estoque = estoque.replace("\\n", "")
         lista_estoques_aux.append(estoque)
     lista_estoques = lista_estoques_aux
-
 with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
     lista_projetos = arquivo.readlines()
     lista_projetos_aux = []
@@ -76,23 +75,23 @@ def janela_saida_caminhoes_func():
                     codigo = codigo.replace(" ", "")
                     break
         return codigo
-    def get_codigo_estoque(nome_estoque):
+    def get_codigo_local_estoque(nome_estoque):
         """Pega o codigo do estoque na lista de estoques
         
         param:
             - string: nome_estoque
             
         return:
-            - string: codigo_estoque"""
+            - string: codigo_local_estoque"""
         with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
             lista_estoques = arquivo.readlines()
             for estoque in lista_estoques:
                 if nome_estoque in estoque:
                     estoque = estoque.split("-")
-                    codigo_estoque = estoque[1]
-                    codigo_estoque = codigo_estoque.replace(" ", "")
+                    codigo_local_estoque = estoque[1]
+                    codigo_local_estoque = codigo_local_estoque.replace(" ", "")
                     break
-        return codigo_estoque
+        return codigo_local_estoque
     def get_codigo_projeto(nome_projeto):
         """Pega o codigo do projeto na lista de projetos
         
@@ -150,9 +149,10 @@ def janela_saida_caminhoes_func():
         nome_projeto = combo_projeto.get()
         
         codigo = get_codigo(nome_produto)
-        codigo_estoque = get_codigo_estoque(nome_estoque=nome_estoque)
+        codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
         codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
-        #cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(codigo)
+        cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(codigo)
+        descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, 'SAI', valor_unitario, "saida", codigo_local_estoque)
     
     #NOTE - Produtos
     #============= Produtos ================#

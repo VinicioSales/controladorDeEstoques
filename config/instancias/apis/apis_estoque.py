@@ -8,16 +8,21 @@ app_key = database_infos["app_key"]
 app_secret = database_infos["app_secret"]
 
 #NOTE - incluir_ajuste_estoque
-def incluir_ajuste_estoque(codigo, quan, tipo, valor, obs, codigo_local_estoque):
+def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque):
     """Inclui um ajuste de estoque
 
     param:
-        - string: codigo
+        - string: codigo_projeto
         - int: quan
         - string: tipo
-        - float: valor
+        - float: valor_unitario
         - string: obs
         - string: codigo_local_estoque
+    
+    retun:
+        - string: descricao_status
+        - string: id_movest
+        - string: id_ajuste
     """
     data = datetime.now()
     data = data.strftime("%d/%m/%Y")    
@@ -29,13 +34,13 @@ def incluir_ajuste_estoque(codigo, quan, tipo, valor, obs, codigo_local_estoque)
                             "param":[
                                         {
                                             "codigo_local_estoque": codigo_local_estoque,
-                                            "id_prod": codigo,
+                                            "id_prod": codigo_projeto,
                                             "data": data,
-                                            "quan": quan,
+                                            "quan": quantidade_itens,
                                             "origem": "AJU",
                                             "tipo": tipo,
                                             "motivo": "INV",
-                                            "valor": valor,
+                                            "valor": valor_unitario,
                                             "obs": obs
                                         }
                                     ]
@@ -45,7 +50,7 @@ def incluir_ajuste_estoque(codigo, quan, tipo, valor, obs, codigo_local_estoque)
             }
     response = requests.request("POST", url, headers=headers, data=payload)
     response = response.json()
-    print(f"IncluirAjusteEstoque: {response}")
+    print(f"incluir_ajuste_estoque: {response}")
     if "descricao_status" in str(response):
         descricao_status = response["descricao_status"]
     if "faultstring" in str(response):
