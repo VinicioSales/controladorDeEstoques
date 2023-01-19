@@ -50,12 +50,20 @@ lista_produtos_selecionados = []
 
 #NOTE - Instancia Janela
 dimensao = "1100x580"
-def janela_saida_caminhoes_func():
-    """Instancia a janela de saida de caminhões"""
+def janela_mov_estoque_func(tipo):
+    """Instancia a janela de saida de caminhões
+    params:
+        - string: tipo
+        
+    return:
+        - None"""
+    
     janela_saida_caminhao = ctk.CTkToplevel()
     janela_saida_caminhao.geometry(dimensao)
     janela_saida_caminhao.title("Saida de caminhões")
     master = janela_saida_caminhao
+
+    print(f"tipo: {tipo}")
 
     #SECTION - Funcoes
     def get_codigo(nome_produto):
@@ -162,14 +170,14 @@ def janela_saida_caminhoes_func():
         nome_estoque = combo_estoque.get()
         nome_projeto = combo_projeto.get()
         nota = nota_entry.get()
-        obs = f"{nota}\n\n,saida"
+        obs = f"{nota},\n\nsaida"
         print(f'obs: {obs}')
         
         codigo = get_codigo(nome_produto)
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
         codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
         cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(codigo)
-        descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, 'SAI', valor_unitario, obs, codigo_local_estoque)
+        descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque)
     def inicio_func():
         janela_saida_caminhao.destroy()
     #!SECTION

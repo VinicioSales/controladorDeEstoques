@@ -1,1 +1,1 @@
-from .janela_sai_caminhao import janela_saida_caminhoes_func
+from .janela_mov_estoque import janela_mov_estoque_func

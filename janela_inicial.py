@@ -3,7 +3,7 @@ import tkinter
 import customtkinter as ctk
 from config.instancias.frames import frame_1_inicio_func
 from config.instancias.frames import frame_1_sai_func
-from config.instancias import janela_saida_caminhoes_func
+from config.instancias import janela_mov_estoque_func
 from config.styles import estilo_janelas
 from config.instancias import janela_inicial_func
 from config.instancias.apis import listar_local_estoque
@@ -51,20 +51,27 @@ frame_1_inicio = frame_1_inicio_func(janela_inicio)
 #=============== FUNCAO BOTAO ==================#
 def btn_saida_caminhao_func():
     #//NOTE - btn_saida_caminhao_func
-    """Abre a janela de saida de caminhões
+    """Abre a janela de movimento de estoque
+    params:
+        - None
+
+    return:
+        - None
     """
     
-    janela_sai_caminhoes = janela_saida_caminhoes_func()
+    janela_sai_caminhoes = janela_mov_estoque_func(tipo="SAI")
     #janela_inicio.withdraw()
     janela_inicio.destroy
 def btn_entrada_caminhao_func():
     #//NOTE - btn_entrada_caminhao_func
-    """Abre a janela de entrada de caminhões
+    """Abre a janela de movimento de estoque
+    params:
+        - None
+
+    return:
+        - None
     """
-    jan_entrada_caminhao = ctk.CTkToplevel()
-    jan_entrada_caminhao.geometry("200x200")
-    jan_entrada_caminhao.title("Entrada de caminhão")
-    janela_inicio.withdraw()
+    janela_sai_caminhoes = janela_mov_estoque_func(tipo="ENT")
 def btn_produtos_func():
     #//NOTE - btn_produtos_func
     """Abre a janela de produtos
