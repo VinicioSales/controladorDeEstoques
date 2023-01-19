@@ -1,1 +1,1 @@
-from .styles import estilo_janelas
+from .styles import estilo_janelas_func

@@ -3,9 +3,10 @@ import tkinter
 import customtkinter as ctk
 from config.instancias.frames import frame_1_inicio_func
 from config.instancias.frames import frame_1_sai_func
-from config.instancias import janela_mov_estoque_func
-from config.styles import estilo_janelas
 from config.instancias import janela_inicial_func
+from config.instancias import janela_mov_estoque_func
+from config.instancias import janela_relatorio_diferenca_func
+from config.styles.styles import estilo_janelas_func
 from config.instancias.apis import listar_local_estoque
 from config.instancias.apis import listar_projetos
 from config.instancias.apis import listar_produtos
@@ -43,6 +44,9 @@ with open("config/arquivos/lista_produtos.txt", "w") as arquivo:
 
 #NOTE - JANELA INICIO
 janela_inicio = janela_inicial_func()
+estilo_janelas = estilo_janelas_func()
+tema_janela = estilo_janelas["tema_janela"]
+ctk.set_appearance_mode(tema_janela)
 
 #SECTION - INICIO
 #====================== FRAMES ===================#
@@ -72,14 +76,16 @@ def btn_entrada_caminhao_func():
         - None
     """
     janela_sai_caminhoes = janela_mov_estoque_func(tipo="ENT")
-def btn_produtos_func():
-    #//NOTE - btn_produtos_func
-    """Abre a janela de produtos
+def btn_relatorio_func():
+    #//NOTE - btn_relatorio_func
+    """Abre a janela de relatorio de diferença de quantidade
+    params:
+        - None
+
+    return:
+        - None
     """
-    jan_produtos = ctk.CTkToplevel()
-    jan_produtos.geometry("200x200")
-    jan_produtos.title("Produtos")
-    janela_inicio.withdraw()
+    janela_relatorio_diferenca = janela_relatorio_diferenca_func()
 
 #==================== PAGINA INICIAL ================#
 #========= BOTOES ===========#
@@ -99,13 +105,13 @@ btn_entrada_caminhao = ctk.CTkButton(
 )
 btn_entrada_caminhao.place(relx=0.3, rely=0.1, anchor=tkinter.CENTER)
 
-btn_produtos = ctk.CTkButton(
+btn_relatorio = ctk.CTkButton(
     master=frame_1_inicio,
-    text="Produtos",
+    text="Relatório",
     hover_color = "#AA0",
-    command=btn_produtos_func
+    command=btn_relatorio_func
 )
-btn_produtos.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
+btn_relatorio.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
 #!SECTION
 
 

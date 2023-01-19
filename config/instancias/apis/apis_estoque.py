@@ -157,3 +157,52 @@ def listar_local_estoque():
         pagina += 1
     return locais_estoque
 
+#NOTE - diferenca_quantidade
+def diferenca_quantidade():
+    """Busca a diferença de itens na movimentação de estoque
+    
+    param:
+        - none
+    
+    return:
+        - list: lista_nCodProd
+        - list: lista_quant_diferenca"""
+    total_de_paginas = 1
+    pagina = 1
+    lista_nCodProd = []
+    lista_quant_diferenca = []
+    while pagina <= total_de_paginas:
+        url = "https://app.omie.com.br/api/v1/estoque/movestoque/"
+        payload = json.dumps({
+                                "call": "ListarMovimentos",
+                                "app_key": "2999342667321",
+                                "app_secret": "337f2cb08516d060a37c47243b91d20f",
+                                "param":[
+                                            {
+                                                "pagina": pagina,
+                                                "registros_por_pagina": 500,
+                                                "codigo_local_estoque": 0,
+                                                "data_inicial": "19/01/2023",
+                                                "data_final": "19/01/2023"
+                                            }
+                                        ]
+                            })
+        headers ={
+                    "Content-Type": "application/json"
+                }
+        response = requests.request("POST", url, headers=headers, data=payload)
+        response = response.json()
+        cadastros = response["cadastros"]
+        for cadastro in cadastros:
+            nCodProd = cadastro["nCodProd"]
+            lista_nCodProd.append(nCodProd)
+            movimentos = cadastro["movimentos"]  
+            movimento = movimentos[0]
+            nQtdeSaidas = int(movimento["nQtdeSaidas"])
+            nQtdeEntradas = int(movimento["nQtdeEntradas"])
+            quant_diferenca = nQtdeSaidas - nQtdeEntradas
+            lista_quant_diferenca.append(quant_diferenca)
+        pagina += 1
+    return lista_nCodProd, lista_quant_diferenca
+    
+

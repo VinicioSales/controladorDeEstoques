@@ -2,7 +2,10 @@ import customtkinter as ctk
 import tkinter
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_func
+from config.styles import estilo_janelas_func
 
+estilo_janela = estilo_janelas_func()
+dimensao = estilo_janela["dimensao"]
 #SECTION - Abrindo arquivos
 with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
     lista_produtos = arquivo.readlines()
@@ -45,11 +48,9 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
         lista_projetos_aux.append(projeto)
     lista_projetos = lista_projetos_aux
 
-lista_produtos_selecionados = []
 #!SECTION
 
 #NOTE - Instancia Janela
-dimensao = "1100x580"
 def janela_mov_estoque_func(tipo):
     """Instancia a janela de saida de caminhões
     params:
@@ -199,11 +200,6 @@ def janela_mov_estoque_func(tipo):
     filtrar_produto_entry.place(relx=0.7, rely=0.1, anchor=ctk.CENTER)
     filtrar_produto_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_produto)
     filtrar_produto_btn.place(relx=0.8, rely=0.1, anchor=ctk.CENTER)
-    produtos_selecionados_text = ctk.CTkTextbox(
-        master,
-        width=200,
-        height=25
-        )
 
     #NOTE - Itens
     #============= Itens ================#
@@ -267,7 +263,7 @@ def janela_mov_estoque_func(tipo):
     nota_text.place(relx=0.3, rely=0.5, anchor=tkinter.CENTER)
     nota_text.insert("0.0", "Adicione código da nota:")
     nota_text.configure(state="disabled")
-    nota_entry = ctk.CTkEntry(master, textvariable=pesquisar_projeto)
+    nota_entry = ctk.CTkEntry(master)
     nota_entry.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
 
     #NOTE - Rodapé

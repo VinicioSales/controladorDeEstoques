@@ -1,6 +1,8 @@
 import customtkinter as ctk
+from config.styles import estilo_janelas_func
 
-dimensao = "1100x580"
+estilo_janela = estilo_janelas_func()
+dimensao = estilo_janela["dimensao"]
 
 def janela_inicial_func():
     #NOTE - janela_inicio
