@@ -4,6 +4,7 @@ from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_func
 from config.styles import estilo_janelas_func
 
+
 estilo_janela = estilo_janelas_func()
 dimensao = estilo_janela["dimensao"]
 #SECTION - Abrindo arquivos
@@ -58,7 +59,6 @@ def janela_mov_estoque_func(tipo):
         
     return:
         - None"""
-    
     janela_saida_caminhao = ctk.CTkToplevel()
     janela_saida_caminhao.geometry(dimensao)
     janela_saida_caminhao.title("Saida de caminhões")
@@ -131,8 +131,8 @@ def janela_mov_estoque_func(tipo):
         search_text = pesquisar_produto.get()
         filtered_items = [item for item in lista_produtos if search_text in item]
         combo_produtos.configure(values=filtered_items)
-    def procurar_estoque():
-        #NOTE - procurar_estoque
+    def procurar_estoque_interno():
+        #NOTE - procurar_estoque_interno
         """Procura o estoque na lista de estoques
 
         param:
@@ -140,9 +140,21 @@ def janela_mov_estoque_func(tipo):
         
         return:
             - None"""
-        search_text = pesquisar_estoque.get()
+        search_text = pesquisar_estoque_interno.get()
         filtered_items = [item for item in lista_estoques if search_text in item]
-        combo_estoque.configure(values=filtered_items)
+        combo_estoque_interno.configure(values=filtered_items)
+    def procurar_estoque_caminhao():
+        #NOTE - procurar_estoque_caminhao
+        """Procura o estoque na lista de estoques
+
+        param:
+            - None
+        
+        return:
+            - None"""
+        search_text = pesquisar_estoque_caminhao.get()
+        filtered_items = [item for item in lista_estoques if search_text in item]
+        combo_estoque_caminhao.configure(values=filtered_items)
     def procurar_projeto():
         #NOTE - procurar_projeto
         """Procura o projeto pesquisado
@@ -167,24 +179,27 @@ def janela_mov_estoque_func(tipo):
         # Pegando variaveis
         nome_produto = combo_produtos.get()
         quantidade_itens = quantidade_itens_entry.get()
-        nome_estoque = combo_estoque.get()
+        nome_estoque_interno = combo_estoque_interno.get()
+        nome_estoque_caminhao = combo_estoque_caminhao.get()
         nome_projeto = combo_projeto.get()
         nota = nota_entry.get()
         obs = f"{nota},\n\nsaida"        
         codigo = get_codigo(nome_produto)
+
         
-        codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
+        codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
+        nome_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
         codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
         cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(codigo)
-        produtos_ceasa = produtos_ceasa_entry.get()
-        relatorio_ceasa = f"{nome_produto} * {codigo_produto} * {produtos_ceasa}"
-        print(f"relatorio_ceasa: {relatorio_ceasa}")
-        with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
-            lista_produtos_ceasa = arquivo.readlines()
-            lista_produtos_ceasa.append(f"{relatorio_ceasa}\n")
-        with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
-            arquivo.writelines(lista_produtos_ceasa)
-        descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque)
+        if tipo == "ENT":
+            produtos_ceasa = produtos_ceasa_entry.get()
+            relatorio_ceasa = f"{nome_produto} * {codigo_produto} * {produtos_ceasa}"
+            with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
+                lista_produtos_ceasa = arquivo.readlines()
+                lista_produtos_ceasa.append(f"{relatorio_ceasa}\n")
+            with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
+                arquivo.writelines(lista_produtos_ceasa)
+        descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque, nome_estoque_caminhao)
     def inicio_func():
         janela_saida_caminhao.destroy()
     #!SECTION
@@ -239,21 +254,37 @@ def janela_mov_estoque_func(tipo):
 
     #NOTE - Estoque
     #============= Estoque ===============#
-    estoques_text = ctk.CTkTextbox(
+    estoques_interno_text = ctk.CTkTextbox(
         master,
         width=200,
         height=25
         )
-    estoques_text.place(relx=0.3, rely=0.3, anchor=tkinter.CENTER)
-    estoques_text.insert("0.0", "Selecione o estoque:")
-    estoques_text.configure(state="disabled")
-    combo_estoque = ctk.CTkComboBox(master, values=lista_estoques)
-    combo_estoque.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)    
-    pesquisar_estoque = ctk.StringVar()
-    filtrar_estoque_entry = ctk.CTkEntry(master, textvariable=pesquisar_estoque)
-    filtrar_estoque_entry.place(relx=0.7, rely=0.3, anchor=ctk.CENTER)
-    filtrar_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_estoque)
-    filtrar_btn.place(relx=0.8, rely=0.3, anchor=ctk.CENTER)
+    estoques_interno_text.place(relx=0.3, rely=0.3, anchor=tkinter.CENTER)
+    estoques_interno_text.insert("0.0", "Estoque interno:")
+    estoques_interno_text.configure(state="disabled")
+    combo_estoque_interno = ctk.CTkComboBox(master, values=lista_estoques)
+    combo_estoque_interno.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)    
+    pesquisar_estoque_interno = ctk.StringVar()
+    filtrar_estoque_interno_entry = ctk.CTkEntry(master, textvariable=pesquisar_estoque_interno)
+    filtrar_estoque_interno_entry.place(relx=0.7, rely=0.3, anchor=ctk.CENTER)
+    filtrar_interno_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_estoque_interno)
+    filtrar_interno_btn.place(relx=0.8, rely=0.3, anchor=ctk.CENTER)
+    estoques_caminhao_text = ctk.CTkTextbox(
+        master,
+        width=200,
+        height=25
+        )
+    estoques_caminhao_text.place(relx=0.3, rely=0.4, anchor=tkinter.CENTER)
+    estoques_caminhao_text.insert("0.0", "Estoque caminhao:")
+    estoques_caminhao_text.configure(state="disabled")
+    combo_estoque_caminhao = ctk.CTkComboBox(master, values=lista_estoques)
+    combo_estoque_caminhao.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)    
+    pesquisar_estoque_caminhao = ctk.StringVar()
+    filtrar_estoque_caminhao_entry = ctk.CTkEntry(master, textvariable=pesquisar_estoque_caminhao)
+    filtrar_estoque_caminhao_entry.place(relx=0.7, rely=0.4, anchor=ctk.CENTER)
+    filtrar_caminhao_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_estoque_caminhao)
+    filtrar_caminhao_btn.place(relx=0.8, rely=0.4, anchor=ctk.CENTER)
+
 
     #NOTE - Projeto
     #============== Projeto ==============#
@@ -262,16 +293,16 @@ def janela_mov_estoque_func(tipo):
         width=200,
         height=25
         )
-    projeto_text.place(relx=0.3, rely=0.4, anchor=tkinter.CENTER)
+    projeto_text.place(relx=0.3, rely=0.5, anchor=tkinter.CENTER)
     projeto_text.insert("0.0", "Selecione o projeto:")
     projeto_text.configure(state="disabled")
     combo_projeto = ctk.CTkComboBox(master, values=lista_projetos)
-    combo_projeto.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
+    combo_projeto.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
     pesquisar_projeto = ctk.StringVar()
     projeto_entry = ctk.CTkEntry(master, textvariable=pesquisar_projeto)
-    projeto_entry.place(relx=0.7, rely=0.4, anchor=ctk.CENTER)
+    projeto_entry.place(relx=0.7, rely=0.5, anchor=ctk.CENTER)
     filtrar_projeto_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_projeto)
-    filtrar_projeto_btn.place(relx=0.8, rely=0.4, anchor=ctk.CENTER)
+    filtrar_projeto_btn.place(relx=0.8, rely=0.5, anchor=ctk.CENTER)
 
     #NOTE - Numero Nota
     #============== Numero Nota ==============#
@@ -280,11 +311,11 @@ def janela_mov_estoque_func(tipo):
         width=200,
         height=25
         )
-    nota_text.place(relx=0.3, rely=0.5, anchor=tkinter.CENTER)
+    nota_text.place(relx=0.3, rely=0.6, anchor=tkinter.CENTER)
     nota_text.insert("0.0", "Adicione código da nota:")
     nota_text.configure(state="disabled")
     nota_entry = ctk.CTkEntry(master)
-    nota_entry.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+    nota_entry.place(relx=0.5, rely=0.6, anchor=ctk.CENTER)
 
     #NOTE - Rodapé
     inicio_btn = ctk.CTkButton(master, text="início", command=inicio_func)

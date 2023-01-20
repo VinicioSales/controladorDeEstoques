@@ -1,6 +1,7 @@
 #NOTE - Imports
 import tkinter
 import customtkinter as ctk
+from datetime import date
 from config.instancias.frames import frame_1_inicio_func
 from config.instancias.frames import frame_1_sai_func
 from config.instancias import janela_inicial_func
@@ -13,6 +14,16 @@ from config.instancias.apis import listar_produtos
 
 #SECTION - Puxando listas
 #NOTE - listar_local_estoque
+data_atual = date.today()
+data_atual = data_atual.strftime("%d/%m/%Y")
+with open("config/arquivos/data_anterior.txt", "r") as arquivo:
+    data_anterior = arquivo.read()
+if str(data_atual) != str(data_anterior):
+    with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
+        arquivo.write("")
+with open("config/arquivos/data_anterior.txt", "w") as arquivo:
+    arquivo.write(data_atual)
+
 lista_estoque = listar_local_estoque()
 with open(f"config/arquivos/lista_estoques.txt", "r") as arquivo:
     lista_estoques_arquivo = arquivo.readlines()

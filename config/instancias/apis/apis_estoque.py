@@ -1,6 +1,7 @@
 import json
 import requests
 from datetime import datetime
+from datetime import date
 from config.credenciais import database_infos_func
 
 database_infos = database_infos_func()
@@ -8,7 +9,7 @@ app_key = database_infos["app_key"]
 app_secret = database_infos["app_secret"]
 
 #NOTE - incluir_ajuste_estoque
-def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque):
+def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque, estoque_destino):
     """Inclui um ajuste de estoque
 
     param:
@@ -18,6 +19,7 @@ def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitari
         - float: valor_unitario
         - string: obs
         - string: codigo_local_estoque
+        - string: estoque_destino
     
     retun:
         - string: descricao_status
@@ -41,7 +43,8 @@ def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitari
                                             "tipo": tipo,
                                             "motivo": "INV",
                                             "valor": valor_unitario,
-                                            "obs": obs
+                                            "obs": obs,
+                                            "codigo_local_estoque_destino": estoque_destino
                                         }
                                     ]
                         })
@@ -167,6 +170,8 @@ def diferenca_quantidade():
     return:
         - list: lista_nCodProd
         - list: lista_quant_diferenca"""
+    data_atual = date.today()
+    data_atual = data_atual.strftime("%d/%m/%Y")
     total_de_paginas = 1
     pagina = 1
     lista_nCodProd = []
@@ -182,8 +187,8 @@ def diferenca_quantidade():
                                                 "pagina": pagina,
                                                 "registros_por_pagina": 500,
                                                 "codigo_local_estoque": 0,
-                                                "data_inicial": "19/01/2023",
-                                                "data_final": "19/01/2023"
+                                                "data_inicial": data_atual,
+                                                "data_final": data_atual
                                             }
                                         ]
                             })
@@ -200,6 +205,7 @@ def diferenca_quantidade():
             movimento = movimentos[0]
             nQtdeSaidas = int(movimento["nQtdeSaidas"])
             nQtdeEntradas = int(movimento["nQtdeEntradas"])
+            #print(f"nQtdeSaidas: {nQtdeSaidas} - nQtdeEntradas: {nQtdeEntradas}")
             quant_diferenca = nQtdeSaidas - nQtdeEntradas
             lista_quant_diferenca.append(quant_diferenca)
         pagina += 1

@@ -17,17 +17,20 @@ def janela_relatorio_diferenca_func():
     relatorio_quant_diferenca = relatorio_quant_diferenca_func(lista_nCodProd, lista_quant_diferenca)
     with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
         lista_produtos_ceasa = arquivo.readlines()
-    for index, item in enumerate(relatorio_quant_diferenca):
+    for index_relatorio, item_relatorio in enumerate(relatorio_quant_diferenca):
+        item_relatorio = str(item_relatorio)
+        item_relatorio = item_relatorio.split("*")
+        nome_item_relatorio = item_relatorio[0]
+        quant_item_relatorio = item_relatorio[1]
         for produto_ceasa in lista_produtos_ceasa:            
             produto_ceasa = produto_ceasa.split("*")
             nome_produto = produto_ceasa[0]
             quant_ceasa = int(produto_ceasa[2])
-            if str(nome_produto) in str(item):
-                item = item.split("*")
-                quant_diferenca = int(item[1])
-                quant_diferenca_soma = quant_diferenca + quant_ceasa
-                item_resultado = f"{item[0]} * {quant_diferenca_soma}"
-                relatorio_quant_diferenca[index] = item_resultado
+            if str(nome_produto) in (nome_item_relatorio):                
+                quant_diferenca = int(quant_item_relatorio)
+                quant_diferenca_soma = quant_diferenca - quant_ceasa
+                item_relatorio_resultado = f"{nome_item_relatorio} * {quant_diferenca_soma}"
+                relatorio_quant_diferenca[index_relatorio] = item_relatorio_resultado
 
     #SECTION - Funções
     #NOTE - gerar_pedido
@@ -57,8 +60,8 @@ def janela_relatorio_diferenca_func():
     corner_radius=10,
     )
     textbox.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
-    for item in relatorio_quant_diferenca:
-        textbox.insert("end", item + "\n")
+    for item_relatorio in relatorio_quant_diferenca:
+        textbox.insert("end", item_relatorio + "\n")
 
     #NOTE - Rodapé
     gerar_pedido_button = ctk.CTkButton(janela_relatorio_diferenca, text="Gerar pedido de venda", command=gerar_pedido)
