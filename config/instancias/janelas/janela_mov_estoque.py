@@ -183,23 +183,36 @@ def janela_mov_estoque_func(tipo):
         nome_estoque_caminhao = combo_estoque_caminhao.get()
         nome_projeto = combo_projeto.get()
         nota = nota_entry.get()
-        obs = f"{nota},\n\nsaida"        
+        if tipo == "SAI":
+            mov_obg = "saida"
+        if tipo == "ENT":
+            mov_obg = "entrada"
+        obs = f"{nota},\n\n{mov_obg}"        
         codigo = get_codigo(nome_produto)
 
         
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
-        nome_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
+        codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
         codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
         cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(codigo)
-        if tipo == "ENT":
+        if tipo == "SAI":
+            #descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque, codigo_estoque_caminhao)
+            descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_local_estoque)
+            descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_estoque_caminhao)
+        elif tipo == "ENT":
             produtos_ceasa = produtos_ceasa_entry.get()
+            if produtos_ceasa == "":
+                produtos_ceasa = "0"
             relatorio_ceasa = f"{nome_produto} * {codigo_produto} * {produtos_ceasa}"
             with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
                 lista_produtos_ceasa = arquivo.readlines()
                 lista_produtos_ceasa.append(f"{relatorio_ceasa}\n")
             with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
                 arquivo.writelines(lista_produtos_ceasa)
-        descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque, nome_estoque_caminhao)
+                #descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_estoque_caminhao, codigo_local_estoque)
+                descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_local_estoque)
+                descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_estoque_caminhao)
+        
     def inicio_func():
         janela_saida_caminhao.destroy()
     #!SECTION

@@ -9,7 +9,7 @@ app_key = database_infos["app_key"]
 app_secret = database_infos["app_secret"]
 
 #NOTE - incluir_ajuste_estoque
-def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque, estoque_destino):
+def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque):
     """Inclui um ajuste de estoque
 
     param:
@@ -43,8 +43,8 @@ def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitari
                                             "tipo": tipo,
                                             "motivo": "INV",
                                             "valor": valor_unitario,
-                                            "obs": obs,
-                                            "codigo_local_estoque_destino": estoque_destino
+                                            "obs": obs
+                                            #"codigo_local_estoque_destino": estoque_destino
                                         }
                                     ]
                         })
@@ -188,7 +188,8 @@ def diferenca_quantidade():
                                                 "registros_por_pagina": 500,
                                                 "codigo_local_estoque": 0,
                                                 "data_inicial": data_atual,
-                                                "data_final": data_atual
+                                                "data_final": data_atual,
+                                                "apenas_importado_api": "S"
                                             }
                                         ]
                             })
@@ -205,7 +206,6 @@ def diferenca_quantidade():
             movimento = movimentos[0]
             nQtdeSaidas = int(movimento["nQtdeSaidas"])
             nQtdeEntradas = int(movimento["nQtdeEntradas"])
-            #print(f"nQtdeSaidas: {nQtdeSaidas} - nQtdeEntradas: {nQtdeEntradas}")
             quant_diferenca = nQtdeSaidas - nQtdeEntradas
             lista_quant_diferenca.append(quant_diferenca)
         pagina += 1
