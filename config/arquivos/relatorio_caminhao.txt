@@ -1,5 +1,9 @@
 6891101179 * 20
-6891101179 * -5
-6891101179 * 100
-6891101179 * -20
-produtos_nao_retornados * 95
+6891101179 * -10
+produtos_nao_retornados * 10
+6891101179 * 20
+6891101179 * -10
+produtos_nao_retornados * 10
+6891101179 * 20
+6891101179 * -10
+produtos_nao_retornados * 10

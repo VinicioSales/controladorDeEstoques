@@ -212,6 +212,7 @@ def diferenca_quantidade():
     return lista_nCodProd, lista_quant_diferenca
 
 def diferenca_quantidade_estoque(codigo_local_estoque):
+    #NOTE - diferenca_quantidade_estoque
     """Busca os ajuste de um estoque específico
     
     param:
@@ -255,11 +256,15 @@ def diferenca_quantidade_estoque(codigo_local_estoque):
             lista_cod_produtos.append(ajuste["id_prod"])
             lista_tipo.append(ajuste["tipo"])
             quantidade = ajuste["quantidade"]
+            quantidade = str(quantidade)
             if ajuste["tipo"] == "SAI":
                 quantidade = f"-{quantidade}"
-            lista_quantidade.append(quantidade)
             produtos_nao_retornados += int(quantidade) 
-            relatorio = f"{codigo_local_estoque} * {quantidade}" 
+            relatorio = f"{codigo_local_estoque} * {quantidade}"
+            relatorio = relatorio.replace("\n", "")
+            codigo_local_estoque = codigo_local_estoque.replace("\n", "")            
+            #print(f"codigo_local_estoque: {codigo_local_estoque} - quantidade: {quantidade}")
+            
             with open("config/arquivos/relatorio_caminhao.txt", "r") as arquivo:
                 relatorio_caminhao = arquivo.readlines()
                 relatorio_caminhao.append(f"{relatorio}\n")
