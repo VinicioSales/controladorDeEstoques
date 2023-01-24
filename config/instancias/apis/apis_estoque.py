@@ -156,7 +156,7 @@ def listar_local_estoque():
         for estoque in locaisEncontrados:
             codigo_local_estoque = estoque["codigo_local_estoque"]
             descricao = estoque["descricao"]
-            locais_estoque.append(f"{descricao} - {codigo_local_estoque}")
+            locais_estoque.append(f"{descricao} * {codigo_local_estoque}")
         pagina += 1
     return locais_estoque
 
@@ -221,6 +221,8 @@ def diferenca_quantidade_estoque(codigo_local_estoque):
     return:
         - list: produtos_nao_retornados
     """
+    with open("config/arquivos/relatorio_caminhao.txt", "w") as arquivo:
+        arquivo.write("")
     data_atual = date.today()
     data_atual = data_atual.strftime("%d/%m/%Y")
     total_de_paginas = 1
@@ -262,9 +264,7 @@ def diferenca_quantidade_estoque(codigo_local_estoque):
             produtos_nao_retornados += int(quantidade) 
             relatorio = f"{codigo_local_estoque} * {quantidade}"
             relatorio = relatorio.replace("\n", "")
-            codigo_local_estoque = codigo_local_estoque.replace("\n", "")            
-            #print(f"codigo_local_estoque: {codigo_local_estoque} - quantidade: {quantidade}")
-            
+            codigo_local_estoque = codigo_local_estoque.replace("\n", "")
             with open("config/arquivos/relatorio_caminhao.txt", "r") as arquivo:
                 relatorio_caminhao = arquivo.readlines()
                 relatorio_caminhao.append(f"{relatorio}\n")
@@ -277,4 +277,91 @@ def diferenca_quantidade_estoque(codigo_local_estoque):
         with open("config/arquivos/relatorio_caminhao.txt", "w") as arquivo:
             arquivo.writelines(relatorio_caminhao)
     return produtos_nao_retornados
+
+def diferenca_quantidade_estoque_produto(codigo_local_estoque):
+    #NOTE - diferenca_quantidade_estoque_produto
+    """Busca os movimentos um estoque específico
+    
+    param:
+        - string: codigo_local_estoque
+    
+    return:
+        - int: total_estoque
+    """
+    with open(f"config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
+        arquivo.write("")
+    data_atual = date.today()
+    data_atual = data_atual.strftime("%d/%m/%Y")
+    total_de_paginas = 1
+    pagina = 1
+    lista_produtos = []
+    while pagina <= total_de_paginas:
+        url = "https://app.omie.com.br/api/v1/estoque/movestoque/"
+        payload = json.dumps({
+                                "call": "ListarMovimentos",
+                                "app_key": "2999342667321",
+                                "app_secret": "337f2cb08516d060a37c47243b91d20f",
+                                "param":[
+                                            {
+                                                "pagina": pagina,
+                                                "registros_por_pagina": 20,
+                                                "codigo_local_estoque": codigo_local_estoque,
+                                                "apenas_importado_api": "S",
+                                                "data_inicial": data_atual,
+                                                "data_final": data_atual,
+                                            }
+                                        ]
+                            })
+        headers ={
+                    "Content-Type": "application/json"
+                }
+        response = requests.request("POST", url, headers=headers, data=payload)
+        response = response.json()
+        cadastros = response["cadastros"]
+        for cadastro in cadastros:
+            cCodigo = cadastro["cCodigo"]
+            movimentos = cadastro["movimentos"]            
+            for movimento in movimentos:                
+                entradas = int(movimento["nQtdeEntradas"])
+                saidas = int(movimento["nQtdeSaidas"])
+                quant_nao_retornados = entradas - saidas                
+                with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
+                    lista_produtos = arquivo.readlines()
+                for linha_lista_produtos in lista_produtos:
+                    linha_lista_produtos = linha_lista_produtos.split("*")
+                    cod_produto = linha_lista_produtos[0]
+                    try:
+                        cod_produto = cod_produto.replace(" ", "")
+                    except:
+                        pass
+                    if cCodigo == cod_produto:
+                        nome_produto = linha_lista_produtos[1]
+                        nome_produto = nome_produto.replace(" ", "")
+                        nome_produto = nome_produto.replace("\n", "")
+                        with open(f"config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
+                            lista_produtos_ceasa = arquivo.readlines()
+                        for linha_lista_ceasa in lista_produtos_ceasa:
+                            print(f"linha_lista_ceasa: {linha_lista_ceasa}")
+                            linha_lista_ceasa = linha_lista_ceasa.split("*")
+                            nome_produto_ceasa = linha_lista_ceasa[0]
+                            nome_produto_ceasa = nome_produto_ceasa.replace(" ", "")
+                            if nome_produto_ceasa == nome_produto:
+                                quant_ceasa = linha_lista_ceasa[2]
+                                quant_ceasa = quant_ceasa.replace(" ", "")
+                                quant_ceasa = int(quant_ceasa.replace("\n", ""))
+                                quant_nao_retornados = quant_nao_retornados - quant_ceasa
+                        with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
+                            quant_diferenca_estoque = arquivo.readlines()
+                        quant_diferenca_estoque.append(f"{nome_produto} * {quant_nao_retornados}\n")
+                        with open("config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
+                            arquivo.writelines(quant_diferenca_estoque)         
+        pagina += 1
+    total_estoque = 0
+    with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
+        quant_diferenca_estoque = arquivo.readlines()
+    for linha_dif_estoque in quant_diferenca_estoque:
+        linha_dif_estoque = linha_dif_estoque.split("*")
+        quant_dif_estoque = int(linha_dif_estoque[1])
+        total_estoque += quant_dif_estoque
+    return total_estoque
 

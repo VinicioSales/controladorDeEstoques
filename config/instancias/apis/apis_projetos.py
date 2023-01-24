@@ -39,6 +39,6 @@ def listar_projetos():
         for projeto in cadastro:
             nome = projeto["nome"]
             codigo = projeto["codigo"]
-            lista_projetos.append(f"{nome} - {codigo}")
+            lista_projetos.append(f"{nome} * {codigo}")
         pagina += 1
         return lista_projetos

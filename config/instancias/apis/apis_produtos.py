@@ -87,7 +87,7 @@ def listar_produtos():
         total_de_paginas = int(response['total_de_paginas'])
         produto_servico_cadastro = response["produto_servico_cadastro"]
         for produto in produto_servico_cadastro:
-            codigo_descricao.append(f'{produto["codigo"]} - {produto["descricao"]}')
+            codigo_descricao.append(f'{produto["codigo"]} * {produto["descricao"]}')
         pagina += 1
     return codigo_descricao
 

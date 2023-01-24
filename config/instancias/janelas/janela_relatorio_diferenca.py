@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter
 from config.instancias.apis.apis_estoque import diferenca_quantidade
 from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque
+from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_produto
 from config.instancias.apis.apis_produtos import listar_produtos_codigo_produto
 from config.instancias.apis.apis_produtos import relatorio_quant_diferenca_func
 
@@ -41,12 +42,24 @@ def janela_relatorio_diferenca_func():
         textbox = ctk.CTkTextbox(
         master=sub_janela_relatorio,
         width=600,
-        height=400,
+        height=5,
         border_width=2,
         corner_radius=10,
         )
         textbox.insert("0.0", produtos_nao_retornados)
-        textbox.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+        textbox.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
+
+        with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
+            quant_diferenca_estoque = arquivo.readlines()
+        textbox_relatorio = ctk.CTkTextbox(
+        master=sub_janela_relatorio,
+        width=600,
+        height=200,
+        border_width=2,
+        corner_radius=10,
+        )
+        textbox_relatorio.insert("0.0", quant_diferenca_estoque)
+        textbox_relatorio.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
         #for item_relatorio in relatorio_quant_diferenca:
         #    textbox.insert("end", item_relatorio + "\n")
     #!SECTION
@@ -65,7 +78,7 @@ def janela_relatorio_diferenca_func():
             lista_estoques = arquivo.readlines()
             for estoque in lista_estoques:
                 if nome_estoque in estoque:
-                    estoque = estoque.split("-")
+                    estoque = estoque.split("*")
                     codigo_local_estoque = estoque[1]
                     codigo_local_estoque = codigo_local_estoque.replace(" ", "")
                     break
@@ -93,11 +106,10 @@ def janela_relatorio_diferenca_func():
             - None"""
         nome_estoque = combo_estoque.get()
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
-        produtos_nao_retornados = diferenca_quantidade_estoque(codigo_local_estoque)
-        produtos_nao_retornados = f"Quantidade: {produtos_nao_retornados}"
+        produtos_nao_retornados = diferenca_quantidade_estoque_produto(codigo_local_estoque)
+        produtos_nao_retornados = f"Total não retornados: {produtos_nao_retornados}"
         sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados)
         janela_relatorio_diferenca.destroy()
-
         criar_pedido_venda_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Criar pedido de venda")
         criar_pedido_venda_btn.place(relx=0.4, rely=0.9, anchor=ctk.S)
 
@@ -108,7 +120,7 @@ def janela_relatorio_diferenca_func():
         lista_estoques = arquivo.readlines()
         lista_estoques_aux = []
         for estoque in lista_estoques:
-            estoque = estoque.split("-")
+            estoque = estoque.split("*")
             del estoque[1]
             estoque = str(estoque)
             estoque = estoque.replace("[", "")

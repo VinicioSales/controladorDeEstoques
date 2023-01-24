@@ -12,7 +12,7 @@ with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
     lista_produtos = arquivo.readlines()
     lista_projetos_aux = []
     for produto in lista_produtos:
-        produto = produto.split("-")
+        produto = produto.split("*")
         del produto[0]
         produto = str(produto)
         produto = produto.replace("[", "")
@@ -26,7 +26,7 @@ with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
     lista_estoques = arquivo.readlines()
     lista_estoques_aux = []
     for estoque in lista_estoques:
-        estoque = estoque.split("-")
+        estoque = estoque.split("*")
         del estoque[1]
         estoque = str(estoque)
         estoque = estoque.replace("[", "")
@@ -39,7 +39,7 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
     lista_projetos = arquivo.readlines()
     lista_projetos_aux = []
     for projeto in lista_projetos:
-        projeto = projeto.split("-")
+        projeto = projeto.split("*")
         del projeto[1]
         projeto = str(projeto)
         projeto = projeto.replace("[", "")
@@ -78,7 +78,7 @@ def janela_mov_estoque_func(tipo):
             lista_produtos = arquivo.readlines()
             for produto in lista_produtos:
                 if nome_produto in produto:
-                    produto = produto.split("-")
+                    produto = produto.split("*")
                     codigo = produto[0]
                     codigo = codigo.replace(" ", "")
                     break
@@ -96,7 +96,7 @@ def janela_mov_estoque_func(tipo):
             lista_estoques = arquivo.readlines()
             for estoque in lista_estoques:
                 if nome_estoque in estoque:
-                    estoque = estoque.split("-")
+                    estoque = estoque.split("*")
                     codigo_local_estoque = estoque[1]
                     codigo_local_estoque = codigo_local_estoque.replace(" ", "")
                     break
@@ -114,7 +114,7 @@ def janela_mov_estoque_func(tipo):
             lista_projetos = arquivo.readlines()
             for projeto in lista_projetos:
                 if nome_projeto in projeto:
-                    projeto = projeto.split("-")
+                    projeto = projeto.split("*")
                     codigo_projeto = projeto[1]
                     codigo_projeto = codigo_projeto.replace(" ", "")
                     break
