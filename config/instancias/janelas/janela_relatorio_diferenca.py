@@ -18,7 +18,7 @@ def janela_relatorio_diferenca_func():
     master = janela_relatorio_diferenca
 
     #SECTION - Sub_janelas
-    def sub_janela_relatorio_func(produtos_nao_retornados_text, produtos_nao_retornados):
+    def sub_janela_relatorio_func(produtos_nao_retornados_text):
         #NOTE - sub_janela_relatorio_func
         """Mostra o relatório de produtos não retornados
         
@@ -31,8 +31,17 @@ def janela_relatorio_diferenca_func():
         sub_janela_relatorio.geometry("800x600")
         sub_janela_relatorio.title("Relatório")
 
-        #SECTION - Funcoes Sub        
+        #SECTION - Funcoes Sub 
+        def inicio_func():
+            #NOTE - inicio_func
+            """
+            Função que destrói a janela de relatórios
+            """
+            sub_janela_relatorio.destroy()
         def criar_pedido_venda_btn_func():
+            """
+            Função que cria um pedido de venda a partir de uma lista de produtos e quantidades.
+            """
             #NOTE - criar_pedido_venda_btn_func
             for linha in quant_diferenca_estoque:
                 linha = linha.split("*")
@@ -45,10 +54,17 @@ def janela_relatorio_diferenca_func():
                 data_previsao = date.today()
                 data_previsao = data_previsao.strftime("%d/%m/%Y")
                 #================ TESTE =================#
-                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
-                
-                incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao , ncm ,unidade, valor_unitario, quantidade_prod)
+                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)                
+                incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod)
+        def inicio_sub_func():
+            """
+            Função que fecha a sub-janela de relatório e reabre a janela principal de relatório de diferença de estoque.
+            """
+            #NOTE - inicio_sub_func
+            sub_janela_relatorio.destroy()
+            janela_relatorio_diferenca.deiconify()
         #!SECTION
+
         #NOTE - Texto
         label = ctk.CTkLabel(sub_janela_relatorio, text="Quantidade de produtos não retornados:")
         label.place(relx=0.3, rely=0.1, anchor=ctk.NW)
@@ -78,6 +94,11 @@ def janela_relatorio_diferenca_func():
         #NOTE - Rodapé
         criar_pedido_venda_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Criar pedido de venda", command=criar_pedido_venda_btn_func)
         criar_pedido_venda_btn.place(relx=0.4, rely=0.9, anchor=ctk.S)
+        estoques_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Estoques", command=inicio_sub_func)
+        estoques_btn.place(relx=0.6, rely=0.9, anchor=ctk.S)
+        inicio_sub_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Início", command=inicio_func)
+        inicio_sub_btn.place(relx=0.8, rely=0.9, anchor=ctk.S)
+        
     #!SECTION
 
     #SECTION - Funções
@@ -124,9 +145,17 @@ def janela_relatorio_diferenca_func():
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
         produtos_nao_retornados = diferenca_quantidade_estoque_produto(codigo_local_estoque)
         produtos_nao_retornados_text = f"Total não retornados: {produtos_nao_retornados}"
-        sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados_text, produtos_nao_retornados)
+        sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados_text)
+        #janela_relatorio_diferenca.destroy()
+        janela_relatorio_diferenca.iconify()
+    def inicio_rel_func():
+        """
+        inicio_rel_func():
+        Função para destruir a janela de relatório de diferença
+        """
+        #NOTE - inicio_rel_func
         janela_relatorio_diferenca.destroy()
-    
+
     #!SECTION
     
     #================== Puxando lista de estoques ===================#
@@ -160,8 +189,11 @@ def janela_relatorio_diferenca_func():
     filtrar_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_estoque)
     filtrar_btn.place(relx=0.8, rely=0.3, anchor=ctk.CENTER)
 
+    #NOTE - Rodapé
     selecionar_estoque_btn = ctk.CTkButton(master=janela_relatorio_diferenca, text="Selecionar", command=confirmar_estoque_func)
     selecionar_estoque_btn.place(relx=0.8, rely=0.4, anchor=ctk.CENTER)
+    inicio_rel_btn = ctk.CTkButton(master=janela_relatorio_diferenca, text="Início", command=inicio_rel_func)
+    inicio_rel_btn.place(relx=0.8, rely=0.5, anchor=ctk.CENTER)
     
     
 
