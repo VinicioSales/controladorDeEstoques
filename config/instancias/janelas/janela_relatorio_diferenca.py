@@ -37,13 +37,17 @@ def janela_relatorio_diferenca_func():
             for linha in quant_diferenca_estoque:
                 linha = linha.split("*")
                 nome_produto = linha[0]
+                quantidade_prod = linha[1]
+                quantidade_prod = quantidade_prod.replace(" ", "")
+                quantidade_prod = quantidade_prod.replace("\n", "")
                 #================ TESTE =================#
                 codigo_cliente = "6873272007"
                 data_previsao = date.today()
                 data_previsao = data_previsao.strftime("%d/%m/%Y")
                 #================ TESTE =================#
-                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)               
-                incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao , ncm ,unidade, valor_unitario, produtos_nao_retornados)
+                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
+                
+                incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao , ncm ,unidade, valor_unitario, quantidade_prod)
         #!SECTION
         #NOTE - Texto
         label = ctk.CTkLabel(sub_janela_relatorio, text="Quantidade de produtos não retornados:")
