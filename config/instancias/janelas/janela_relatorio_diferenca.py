@@ -1,10 +1,6 @@
 import customtkinter as ctk
 import tkinter
-from config.instancias.apis.apis_estoque import diferenca_quantidade
-from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque
 from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_produto
-from config.instancias.apis.apis_produtos import listar_produtos_codigo_produto
-from config.instancias.apis.apis_produtos import relatorio_quant_diferenca_func
 
 def janela_relatorio_diferenca_func():
     """Mostra a diferença de quantidade de itens não retornados

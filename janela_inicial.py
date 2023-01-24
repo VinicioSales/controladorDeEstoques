@@ -3,7 +3,6 @@ import tkinter
 import customtkinter as ctk
 from datetime import date
 from config.instancias.frames import frame_1_inicio_func
-from config.instancias.frames import frame_1_sai_func
 from config.instancias import janela_inicial_func
 from config.instancias import janela_mov_estoque_func
 from config.instancias import janela_relatorio_diferenca_func
