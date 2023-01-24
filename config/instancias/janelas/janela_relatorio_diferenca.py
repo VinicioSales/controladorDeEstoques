@@ -1,10 +1,9 @@
 import customtkinter as ctk
 import tkinter
 from datetime import date
-from datetime import timedelta
 from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_produto
 from config.instancias.apis.apis_vendas import incluir_pedido_venda
-from config.instancias.apis.apis_produtos import pesquisar_produto_func
+from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 
 def janela_relatorio_diferenca_func():
     """Mostra a diferença de quantidade de itens não retornados
@@ -38,12 +37,13 @@ def janela_relatorio_diferenca_func():
             for linha in quant_diferenca_estoque:
                 linha = linha.split("*")
                 nome_produto = linha[0]
+                #================ TESTE =================#
                 codigo_cliente = "6873272007"
-                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(nome_produto)
                 data_previsao = date.today()
                 data_previsao = data_previsao.strftime("%d/%m/%Y")
-                print(f"produtos_nao_retornados: {produtos_nao_retornados}")
-                descricao_status, codigo_pedido, numero_pedido = incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao , ncm ,unidade, valor_unitario, produtos_nao_retornados)
+                #================ TESTE =================#
+                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)               
+                incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao , ncm ,unidade, valor_unitario, produtos_nao_retornados)
         #!SECTION
         #NOTE - Texto
         label = ctk.CTkLabel(sub_janela_relatorio, text="Quantidade de produtos não retornados:")

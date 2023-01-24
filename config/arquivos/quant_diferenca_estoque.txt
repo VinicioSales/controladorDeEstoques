@@ -1,1 +1,3 @@
-Ervilha * 15
+Milho * 13
+Tomate * 12
+Cebola * 29

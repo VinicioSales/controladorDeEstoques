@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import tkinter
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
-from config.instancias.apis.apis_produtos import pesquisar_produto_func
+from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 from config.styles import estilo_janelas_func
 
 
@@ -77,6 +77,7 @@ def janela_mov_estoque_func(tipo):
         with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
             lista_produtos = arquivo.readlines()
             for produto in lista_produtos:
+                print(f"nome_produto: {nome_produto} - produto: {produto}")
                 if nome_produto in produto:
                     produto = produto.split("*")
                     codigo = produto[0]
@@ -189,16 +190,14 @@ def janela_mov_estoque_func(tipo):
             mov_obg = "entrada"
         obs = f"{nota},\n\n{mov_obg}"        
         codigo = get_codigo(nome_produto)
-
         
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
         codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
         codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
-        cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(codigo)
+        cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(codigo)
         if tipo == "SAI":
-            #descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque, codigo_estoque_caminhao)
-            descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_local_estoque)
-            descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_estoque_caminhao)
+            incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_local_estoque)
+            incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_estoque_caminhao)
         elif tipo == "ENT":
             produtos_ceasa = produtos_ceasa_entry.get()
             if produtos_ceasa == "":
@@ -209,9 +208,8 @@ def janela_mov_estoque_func(tipo):
                 lista_produtos_ceasa.append(f"{relatorio_ceasa}\n")
             with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
                 arquivo.writelines(lista_produtos_ceasa)
-                #descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_estoque_caminhao, codigo_local_estoque)
-                descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_local_estoque)
-                descricao_status, id_movest, id_ajuste = incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_estoque_caminhao)
+                incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_local_estoque)
+                incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_estoque_caminhao)
         
     def inicio_func():
         janela_saida_caminhao.destroy()
