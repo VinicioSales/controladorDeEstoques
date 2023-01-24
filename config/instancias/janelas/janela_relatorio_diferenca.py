@@ -1,6 +1,10 @@
 import customtkinter as ctk
 import tkinter
+from datetime import date
+from datetime import timedelta
 from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_produto
+from config.instancias.apis.apis_vendas import incluir_pedido_venda
+from config.instancias.apis.apis_produtos import pesquisar_produto_func
 
 def janela_relatorio_diferenca_func():
     """Mostra a diferença de quantidade de itens não retornados
@@ -15,7 +19,7 @@ def janela_relatorio_diferenca_func():
     master = janela_relatorio_diferenca
 
     #SECTION - Sub_janelas
-    def sub_janela_relatorio_func(produtos_nao_retornados):
+    def sub_janela_relatorio_func(produtos_nao_retornados_text, produtos_nao_retornados):
         #NOTE - sub_janela_relatorio_func
         """Mostra o relatório de produtos não retornados
         
@@ -27,14 +31,24 @@ def janela_relatorio_diferenca_func():
         sub_janela_relatorio = ctk.CTkToplevel()
         sub_janela_relatorio.geometry("800x600")
         sub_janela_relatorio.title("Relatório")
-        #=============== ABRINDO relatorio_caminhao ===============#
-        #with open("config/arquivos/relatorio_caminhao.txt", "r") as arquivo:
-            #relatorio_caminhao = arquivo.readlines()
 
+        #SECTION - Funcoes Sub        
+        def criar_pedido_venda_btn_func():
+            #NOTE - criar_pedido_venda_btn_func
+            for linha in quant_diferenca_estoque:
+                linha = linha.split("*")
+                nome_produto = linha[0]
+                codigo_cliente = "6873272007"
+                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_func(nome_produto)
+                data_previsao = date.today()
+                data_previsao = data_previsao.strftime("%d/%m/%Y")
+                print(f"produtos_nao_retornados: {produtos_nao_retornados}")
+                descricao_status, codigo_pedido, numero_pedido = incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao , ncm ,unidade, valor_unitario, produtos_nao_retornados)
+        #!SECTION
         #NOTE - Texto
         label = ctk.CTkLabel(sub_janela_relatorio, text="Quantidade de produtos não retornados:")
         label.place(relx=0.3, rely=0.1, anchor=ctk.NW)
-        #NOTE - Lista
+        #NOTE - produtos_nao_retornados
         textbox = ctk.CTkTextbox(
         master=sub_janela_relatorio,
         width=600,
@@ -42,9 +56,9 @@ def janela_relatorio_diferenca_func():
         border_width=2,
         corner_radius=10,
         )
-        textbox.insert("0.0", produtos_nao_retornados)
+        textbox.insert("0.0", produtos_nao_retornados_text)
         textbox.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
-
+        #NOTE - quant_diferenca_estoque
         with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
             quant_diferenca_estoque = arquivo.readlines()
         textbox_relatorio = ctk.CTkTextbox(
@@ -56,8 +70,10 @@ def janela_relatorio_diferenca_func():
         )
         textbox_relatorio.insert("0.0", quant_diferenca_estoque)
         textbox_relatorio.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
-        #for item_relatorio in relatorio_quant_diferenca:
-        #    textbox.insert("end", item_relatorio + "\n")
+
+        #NOTE - Rodapé
+        criar_pedido_venda_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Criar pedido de venda", command=criar_pedido_venda_btn_func)
+        criar_pedido_venda_btn.place(relx=0.4, rely=0.9, anchor=ctk.S)
     #!SECTION
 
     #SECTION - Funções
@@ -103,12 +119,10 @@ def janela_relatorio_diferenca_func():
         nome_estoque = combo_estoque.get()
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
         produtos_nao_retornados = diferenca_quantidade_estoque_produto(codigo_local_estoque)
-        produtos_nao_retornados = f"Total não retornados: {produtos_nao_retornados}"
-        sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados)
+        produtos_nao_retornados_text = f"Total não retornados: {produtos_nao_retornados}"
+        sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados_text, produtos_nao_retornados)
         janela_relatorio_diferenca.destroy()
-        criar_pedido_venda_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Criar pedido de venda")
-        criar_pedido_venda_btn.place(relx=0.4, rely=0.9, anchor=ctk.S)
-
+    
     #!SECTION
     
     #================== Puxando lista de estoques ===================#

@@ -223,7 +223,6 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                         with open(f"config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
                             lista_produtos_ceasa = arquivo.readlines()
                         for linha_lista_ceasa in lista_produtos_ceasa:
-                            print(f"linha_lista_ceasa: {linha_lista_ceasa}")
                             linha_lista_ceasa = linha_lista_ceasa.split("*")
                             nome_produto_ceasa = linha_lista_ceasa[0]
                             nome_produto_ceasa = nome_produto_ceasa.replace(" ", "")
