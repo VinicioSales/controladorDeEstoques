@@ -4,17 +4,21 @@ import datetime
 from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_produto
 from config.instancias.apis.apis_vendas import incluir_pedido_venda
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
+from config.styles import estilo_janelas_func
 
-def janela_relatorio_diferenca_func():
+estilo_janelas = estilo_janelas_func()
+dimensao = estilo_janelas["dimensao"]
+
+def janela_relatorio_diferenca_func(janela_inicio):
     """Mostra a diferença de quantidade de itens não retornados
     
     params:
-        - None
+        - ctk: janela_inicio
         
     retun:
         - None"""
     janela_relatorio_diferenca = ctk.CTk()
-    janela_relatorio_diferenca.geometry("800x600")
+    janela_relatorio_diferenca.geometry(dimensao)
     master = janela_relatorio_diferenca
 
     #SECTION - sub_janela_relatorio_func
@@ -28,7 +32,7 @@ def janela_relatorio_diferenca_func():
         return:
             - None"""
         sub_janela_relatorio = ctk.CTkToplevel()
-        sub_janela_relatorio.geometry("800x600")
+        sub_janela_relatorio.geometry(dimensao)
         sub_janela_relatorio.title("Relatório")
 
         #SECTION - Funcoes Sub 
@@ -38,7 +42,8 @@ def janela_relatorio_diferenca_func():
             """
             Função que destrói a janela de relatórios
             """
-            sub_janela_relatorio.destroy()
+            sub_janela_relatorio.withdraw()
+            janela_inicio.deiconify()
         def criar_pedido_venda_btn_func():
             #NOTE - criar_pedido_venda_btn_func
             """
@@ -54,18 +59,21 @@ def janela_relatorio_diferenca_func():
                 quantidade_prod = quantidade_prod.replace("\n", "")
                 #================ TESTE =================#
                 codigo_cliente = "6873272007"
-                '''data_previsao = date.today()
-                data_previsao = data_previsao.strftime("%d/%m/%Y")'''
                 #================ TESTE =================#
                 cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
                 sub_janela_data_vencimento = sub_janela_data_vencimento_func(codigo_produto, codigo_cliente, cfop, descricao, ncm, unidade, valor_unitario, quantidade_prod)              
                 #incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod)
         def inicio_sub_func():
+            #NOTE - inicio_sub_func
             """
             Função que fecha a sub-janela de relatório e reabre a janela principal de relatório de diferença de estoque.
             """
             #NOTE - inicio_sub_func
-            sub_janela_relatorio.destroy()
+            sub_janela_relatorio.withdraw()
+            janela_inicio.deiconify()
+        def estoques_sub_tbn_func():
+            #NOTE - estoques_sub_tbn_func
+            sub_janela_relatorio.withdraw()
             janela_relatorio_diferenca.deiconify()
         #!SECTION
 
@@ -98,7 +106,7 @@ def janela_relatorio_diferenca_func():
         #NOTE - Rodapé
         criar_pedido_venda_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Criar pedido de venda", command=criar_pedido_venda_btn_func)
         criar_pedido_venda_btn.place(relx=0.4, rely=0.9, anchor=ctk.S)
-        estoques_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Estoques", command=inicio_sub_func)
+        estoques_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Estoques", command=estoques_sub_tbn_func)
         estoques_btn.place(relx=0.6, rely=0.9, anchor=ctk.S)
         inicio_sub_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Início", command=inicio_func)
         inicio_sub_btn.place(relx=0.8, rely=0.9, anchor=ctk.S)
@@ -108,7 +116,7 @@ def janela_relatorio_diferenca_func():
         #NOTE - sub_janela_data_vencimento_func
         #=========== Instanciando Janea ================#
         sub_janela_data_vencimento = ctk.CTkToplevel()
-        sub_janela_data_vencimento.geometry("800x600")
+        sub_janela_data_vencimento.geometry(dimensao)
         sub_janela_data_vencimento.title("Data Vencimento")
 
         #SECTION - funções
@@ -221,8 +229,8 @@ def janela_relatorio_diferenca_func():
         search_text = pesquisar_estoque.get()
         filtered_items = [item for item in lista_estoques if search_text in item]
         combo_estoque.configure(values=filtered_items)
-    def confirmar_estoque_func():
-        #NOTE - confirmar_estoque_func
+    def selecionar_estoque_func():
+        #NOTE - selecionar_estoque_func
         """Cofirma o estoque escolhido
         
         params:
@@ -235,15 +243,15 @@ def janela_relatorio_diferenca_func():
         produtos_nao_retornados = diferenca_quantidade_estoque_produto(codigo_local_estoque)
         produtos_nao_retornados_text = f"Total não retornados: {produtos_nao_retornados}"
         sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados_text)
-        #janela_relatorio_diferenca.destroy()
-        janela_relatorio_diferenca.iconify()
+        janela_relatorio_diferenca.withdraw()
     def inicio_rel_func():
         """
         inicio_rel_func():
         Função para destruir a janela de relatório de diferença
         """
         #NOTE - inicio_rel_func
-        janela_relatorio_diferenca.destroy()
+        janela_relatorio_diferenca.withdraw()
+        janela_inicio.deiconify()
 
     #!SECTION
     
@@ -279,7 +287,7 @@ def janela_relatorio_diferenca_func():
     filtrar_btn.place(relx=0.8, rely=0.3, anchor=ctk.CENTER)
 
     #NOTE - Rodapé
-    selecionar_estoque_btn = ctk.CTkButton(master=janela_relatorio_diferenca, text="Selecionar", command=confirmar_estoque_func)
+    selecionar_estoque_btn = ctk.CTkButton(master=janela_relatorio_diferenca, text="Selecionar", command=selecionar_estoque_func)
     selecionar_estoque_btn.place(relx=0.8, rely=0.4, anchor=ctk.CENTER)
     inicio_rel_btn = ctk.CTkButton(master=janela_relatorio_diferenca, text="Início", command=inicio_rel_func)
     inicio_rel_btn.place(relx=0.8, rely=0.5, anchor=ctk.CENTER)
@@ -288,6 +296,6 @@ def janela_relatorio_diferenca_func():
 
     #SECTION - Funções
     def inicio():
-        janela_relatorio_diferenca.destroy()
+        janela_relatorio_diferenca.withdraw()
 
     janela_relatorio_diferenca.mainloop()

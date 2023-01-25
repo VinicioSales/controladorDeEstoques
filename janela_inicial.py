@@ -72,10 +72,8 @@ def btn_saida_caminhao_func():
     return:
         - None
     """
-    
-    janela_sai_caminhoes = janela_mov_estoque_func(tipo="SAI")
-    #janela_inicio.withdraw()
-    janela_inicio.destroy
+    janela_inicio.withdraw()
+    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, tipo="SAI")
 def btn_entrada_caminhao_func():
     #//NOTE - btn_entrada_caminhao_func
     """Abre a janela de movimento de estoque
@@ -85,7 +83,8 @@ def btn_entrada_caminhao_func():
     return:
         - None
     """
-    janela_sai_caminhoes = janela_mov_estoque_func(tipo="ENT")
+    janela_inicio.withdraw()
+    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, tipo="ENT")
 def btn_relatorio_func():
     #//NOTE - btn_relatorio_func
     """Abre a janela de relatorio de diferença de quantidade
@@ -95,7 +94,8 @@ def btn_relatorio_func():
     return:
         - None
     """
-    janela_relatorio_diferenca = janela_relatorio_diferenca_func()
+    janela_inicio.withdraw()
+    janela_relatorio_diferenca = janela_relatorio_diferenca_func(janela_inicio)
 
 #==================== PAGINA INICIAL ================#
 #========= BOTOES ===========#

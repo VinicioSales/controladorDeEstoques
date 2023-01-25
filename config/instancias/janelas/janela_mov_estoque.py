@@ -3,6 +3,7 @@ import tkinter
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 from config.styles import estilo_janelas_func
+from config.instancias.janelas.janela_produtos import janela_produtos_func
 
 
 estilo_janela = estilo_janelas_func()
@@ -52,9 +53,10 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
 #!SECTION
 
 #NOTE - Instancia Janela
-def janela_mov_estoque_func(tipo):
+def janela_mov_estoque_func(janela_inicio, tipo):
     """Instancia a janela de saida de caminhões
     params:
+        - ctk: janela_inicio
         - string: tipo
         
     return:
@@ -210,9 +212,13 @@ def janela_mov_estoque_func(tipo):
                 arquivo.writelines(lista_produtos_ceasa)
                 incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_local_estoque)
                 incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_estoque_caminhao)
-        
     def inicio_func():
+        #NOTE - inicio_func 
         janela_saida_caminhao.destroy()
+        janela_inicio.deiconify()
+    def produtos_btn_func():
+        #NOTE - produtos_btn_func
+        janela_produtos = janela_produtos_func()
     #!SECTION
 
     #NOTE - Produtos
@@ -333,6 +339,8 @@ def janela_mov_estoque_func(tipo):
     inicio_btn.place(relx=0.6, rely=0.8, anchor=ctk.CENTER)
     enviar_btn = ctk.CTkButton(master, text="Enviar", command=ajustar_estoque_func)
     enviar_btn.place(relx=0.8, rely=0.8, anchor=ctk.CENTER)
+    produtos_btn = ctk.CTkButton(master, text="Produtos", command=produtos_btn_func)
+    produtos_btn.place(relx=0.1, rely=0.8, anchor=ctk.CENTER)
 
     janela_saida_caminhao.mainloop()
 
