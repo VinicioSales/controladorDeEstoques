@@ -41,4 +41,5 @@ def listar_projetos():
             codigo = projeto["codigo"]
             lista_projetos.append(f"{nome} * {codigo}")
         pagina += 1
+        total_de_paginas = int(response["total_de_paginas"])
         return lista_projetos

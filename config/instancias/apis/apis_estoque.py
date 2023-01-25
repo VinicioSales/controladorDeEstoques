@@ -158,6 +158,7 @@ def listar_local_estoque():
             descricao = estoque["descricao"]
             locais_estoque.append(f"{descricao} * {codigo_local_estoque}")
         pagina += 1
+        total_de_paginas = int(response["nPagina"])
     return locais_estoque
 
 def diferenca_quantidade_estoque_produto(codigo_local_estoque):
@@ -237,6 +238,7 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                         with open("config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
                             arquivo.writelines(quant_diferenca_estoque)         
         pagina += 1
+        total_de_paginas = int(response["total_de_paginas"])
     total_estoque = 0
     with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
         quant_diferenca_estoque = arquivo.readlines()
