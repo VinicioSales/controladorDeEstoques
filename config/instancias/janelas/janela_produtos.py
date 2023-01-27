@@ -40,6 +40,10 @@ def janela_produtos_func():
             box_prod_selecionados.configure(state="normal")
             box_prod_selecionados.insert("0.0", f"{produto_quantidade}\n")
             box_prod_selecionados.configure(state="disabled")
+    def click_func(event):
+        prod = box_prod_selecionados.get("0.0")
+        print(f'prod: {prod}')
+        print("Click")
 
     lista_produtos = ["Banana", "Cebola", "Tomate"]
     #SECTION - BODY
@@ -104,6 +108,7 @@ def janela_produtos_func():
     text_prod_selecionados.place(relx=0.75, rely=0.1, anchor=tkinter.CENTER)
     text_prod_selecionados.insert("0.0", "Produtos Selecionados")
     text_prod_selecionados.configure(state="disabled")
+    text_prod_selecionados
 
     #NOTE - Linha 2.2
     box_prod_selecionados = ctk.CTkTextbox(
@@ -113,6 +118,7 @@ def janela_produtos_func():
         )
     box_prod_selecionados.place(relx=0.75, rely=0.30, anchor=tkinter.CENTER)
     box_prod_selecionados.configure(state="disabled")
+    box_prod_selecionados.bind("<Button-1>", click_func)
 
     #box_prod_selecionados.bind("<Return>", printar)
     #!SECTION    
