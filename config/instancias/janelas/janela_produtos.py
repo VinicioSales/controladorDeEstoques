@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from PIL import Image
 import tkinter
 from unidecode import unidecode
 #from config.styles import estilo_janelas_func
@@ -80,6 +81,15 @@ def janela_produtos_func():
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("0.0", "end")
         text_prod_selecionados.configure(state="disabled")
+    def confirmar_btn_func():
+        #NOTE - confirmar_btn_func
+        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
+        for index, item in enumerate(prods_selecionados):
+            if item == "":
+                del prods_selecionados[index]
+        if prods_selecionados[-1] == "":
+            prods_selecionados.pop()
+        janela_produtos.withdraw()
     #!SECTION
 
 
@@ -95,14 +105,16 @@ def janela_produtos_func():
         master=janela_produtos,
         width=200,
         height=400,
-        font=("Arial", 15)
+        font=("Arial", 18)
         )
     text_prod.place(relx=0.2, rely=0.45, anchor=tkinter.CENTER)
     for item in lista_teste:
         text_prod.insert("0.0", f"{item}\n")
-    text_prod.configure(state="disabled")
-    #text_prod.bind("<Button-1>", adicionar_prod_func)
-    entry_pesquisar_prod = ctk.CTkEntry(master=janela_produtos)
+    text_prod.configure(state="disabled")    
+    entry_pesquisar_prod = ctk.CTkEntry(
+        master=janela_produtos,
+        width=150,
+        height=25,)
     entry_pesquisar_prod.place(relx=0.34, rely=0.2, anchor=tkinter.CENTER)
     entry_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
     btn_pesquisar_produto = ctk.CTkButton(
@@ -118,7 +130,10 @@ def janela_produtos_func():
     )
     label_quantidade.place(relx=0.2, rely=0.7, anchor=tkinter.CENTER)
     label_quantidade.place(relx=0.34, rely=0.3)
-    entry_quantidade = ctk.CTkEntry(master=janela_produtos)
+    entry_quantidade = ctk.CTkEntry(
+        master=janela_produtos,
+        width=150,
+        height=25,)
     entry_quantidade.place(relx=0.34, rely=0.35, anchor=tkinter.CENTER)
     btn_adicionar_produto = ctk.CTkButton(
         master=janela_produtos,
@@ -126,7 +141,7 @@ def janela_produtos_func():
         height=25,
         text="Adicionar Produto",
         command = adicionar_prod_btn_func)
-    btn_adicionar_produto.place(relx=0.34, rely=0.42, anchor=ctk.CENTER)    
+    btn_adicionar_produto.place(relx=0.34, rely=0.4, anchor=ctk.CENTER)    
 
     #NOTE - Produtos Selecionados
     btn_remover_ultimo = ctk.CTkButton(
@@ -152,7 +167,8 @@ def janela_produtos_func():
     text_prod_selecionados = ctk.CTkTextbox(
         master=janela_produtos,
         width=200,
-        height=400
+        height=400,
+        font=("Arial", 18)
         )
     text_prod_selecionados.place(relx=0.8, rely=0.45, anchor=tkinter.CENTER)
     text_prod_selecionados.configure(state="disabled")
@@ -163,7 +179,8 @@ def janela_produtos_func():
     #SECTION - Rodapé
     btn_confirmar = ctk.CTkButton(
         master=janela_produtos,
-        text="Confirmar"
+        text="Confirmar",
+        command=confirmar_btn_func
     )
     btn_confirmar.place(relx=0.34, rely=0.7)
     btn_voltar = ctk.CTkButton(
