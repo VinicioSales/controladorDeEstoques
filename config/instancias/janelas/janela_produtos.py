@@ -135,12 +135,12 @@ def janela_produtos_func():
         text="Produtos",
         font= (font_texto, 18)
     )
-    label_pesquisar_prod.place(relx=0.34, rely=0.17, anchor=tkinter.CENTER)
+    label_pesquisar_prod.place(relx=0.50, rely=0.34, anchor=tkinter.CENTER)
     entry_pesquisar_prod = ctk.CTkEntry(
         master=janela_produtos,
         width=150,
         height=25,)
-    entry_pesquisar_prod.place(relx=0.34, rely=0.2, anchor=tkinter.CENTER)
+    entry_pesquisar_prod.place(relx=0.50, rely=0.37, anchor=tkinter.CENTER)
     entry_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
     lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
     btn_lupa = ctk.CTkButton(
@@ -159,12 +159,12 @@ def janela_produtos_func():
         font=(font_texto, 18)
     )
     label_quantidade.place(relx=0.2, rely=0.7, anchor=tkinter.CENTER)
-    label_quantidade.place(relx=0.34, rely=0.25)
+    label_quantidade.place(relx=0.50, rely=0.42)
     entry_quantidade = ctk.CTkEntry(
         master=janela_produtos,
         width=150,
         height=25,)
-    entry_quantidade.place(relx=0.34, rely=0.28, anchor=tkinter.CENTER)
+    entry_quantidade.place(relx=0.50, rely=0.45, anchor=tkinter.CENTER)
     entry_quantidade.bind("<Return>", adicionar_prod_func)
     btn_adicionar_produto = ctk.CTkButton(
         master=janela_produtos,
@@ -173,18 +173,18 @@ def janela_produtos_func():
         text="Adicionar Produto",
         font=(font_btn, 15),
         command = adicionar_prod_btn_func)
-    btn_adicionar_produto.place(relx=0.34, rely=0.35, anchor=ctk.CENTER)
+    btn_adicionar_produto.place(relx=0.50, rely=0.55, anchor=ctk.CENTER)
     
 
     #NOTE - Produtos Selecionados
     btn_remover_ultimo = ctk.CTkButton(
         master=janela_produtos,
-        width=150,
+        width=125,
         height=25,
         text="Remover último produto",
-        font=(font_btn, 15),
+        font=(font_btn, 13),
         command = remover_ultimo_btn_func)
-    btn_remover_ultimo.place(relx=0.65, rely=0.2, anchor=ctk.CENTER)
+    btn_remover_ultimo.place(relx=0.50, rely=0.60, anchor=ctk.CENTER)
     btn_limpar = ctk.CTkButton(
         master=janela_produtos,
         width=150,
@@ -192,7 +192,7 @@ def janela_produtos_func():
         text="Limpar",
         font=(font_btn, 15),
         command = limpar_prods_selecionados)
-    btn_limpar.place(relx=0.65, rely=0.25, anchor=ctk.CENTER)
+    btn_limpar.place(relx=0.50, rely=0.65, anchor=ctk.CENTER)
     label_prod_selecionados = ctk.CTkLabel(
         master=janela_produtos,
         text="Produtos Selecionados",
@@ -218,19 +218,19 @@ def janela_produtos_func():
         font=(font_btn, 15),
         command=confirmar_btn_func
     )
-    btn_confirmar.place(relx=0.34, rely=0.7)
+    btn_confirmar.place(relx=0.34, rely=0.75)
     btn_voltar = ctk.CTkButton(
         master=janela_produtos,
         text="Voltar",
         font=(font_btn, 15),
     )
-    btn_voltar.place(relx=0.45, rely=0.7)
+    btn_voltar.place(relx=0.45, rely=0.75)
     btn_inicio = ctk.CTkButton(
         master=janela_produtos,
         text="Início",
         font=(font_btn, 15),
     )
-    btn_inicio.place(relx=0.56, rely=0.7)
+    btn_inicio.place(relx=0.56, rely=0.75)
     
 
     janela_produtos.mainloop()
