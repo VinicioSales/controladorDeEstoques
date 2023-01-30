@@ -114,7 +114,7 @@ def janela_produtos_func():
 
     #SECTION - Esquerda
     #NOTE - Produtos    
-    label_produtos_titulo = ctk.CTkLabel(
+    """label_produtos_titulo = ctk.CTkLabel(
         master=janela_produtos,
         text="Produtos",
         font=("Arial", 15, "bold")
@@ -129,7 +129,7 @@ def janela_produtos_func():
     text_prod.place(relx=0.3, rely=0.45, anchor=tkinter.CENTER)
     '''for item in lista_teste:
         text_prod.insert("0.0", f"{item}\n")'''
-    text_prod.configure(state="disabled")
+    text_prod.configure(state="disabled")"""
     #!SECTION
 
     
