@@ -10,7 +10,7 @@ font_texto = "arial"
 font_btn = "arial"
 
 lista_produtos_adicionados=[]
-lista_teste = ["banana", "pera", "abacate", "Cebola", "Cenoura", "Milho"]
+lista_produtos = ["banana", "pera", "abacate", "Cebola", "Cenoura", "Milho"]
 
 def janela_produtos_func():
     #NOTE - janela_produtos_func
@@ -24,46 +24,41 @@ def janela_produtos_func():
     #SECTION - Funções
     def adicionar_prod_btn_func():
         #NOTE - adicionar_prod_btn_func
-        pesquisar_prod_btn_func()
-        prod_selecionado = text_prod.get("0.0", "1.1000")
+        prod_selecionado = entry_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
         if prod_selecionado != "" and quantidade != "":
             text_prod_selecionados.configure(state="normal")
             text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
             text_prod_selecionados.configure(state="disabled")
-            text_prod.configure(state="normal")   
-            text_prod.delete("0.0", "end")
-            '''for item in lista_teste:                
-                text_prod.insert("0.0", f"{item}\n")'''        
-            text_prod.configure(state="disabled")
+            entry_pesquisar_prod.configure(state="normal")
             entry_pesquisar_prod.delete("0", "end")
             entry_quantidade.delete("0", "end")
     def adicionar_prod_func(event):
         #NOTE - adicionar_prod_func
-        pesquisar_prod_btn_func()
-        prod_selecionado = text_prod.get("0.0", "1.1000")
-        quantidade = entry_quantidade.get()
+        prod_selecionado = entry_pesquisar_prod.get()
+        quantidade = entry_quantidade.get()        
         if prod_selecionado != "" and quantidade != "":
-            text_prod_selecionados.configure(state="normal")
-            text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
-            text_prod_selecionados.configure(state="disabled")
-            text_prod.configure(state="normal")   
-            text_prod.delete("0.0", "end")
-            '''for item in lista_teste:                
-                text_prod.insert("0.0", f"{item}\n")'''      
-            text_prod.configure(state="disabled")
-            entry_pesquisar_prod.delete("0", "end")
-            entry_quantidade.delete("0", "end")
+            filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
+            for produto in lista_produtos:
+                print(f"prod_selecionado: {prod_selecionado} - produto: {produto}")
+                if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
+                    text_prod_selecionados.configure(state="normal")
+                    text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
+                    text_prod_selecionados.configure(state="disabled")
+                    entry_pesquisar_prod.configure(state="normal")   
+                    entry_pesquisar_prod.delete("0", "end")
+                    entry_quantidade.delete("0", "end")
+                    break
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
         produto_pesquisado = entry_pesquisar_prod.get()
         text_prod.configure(state="normal")
         if str(produto_pesquisado) == "":
             text_prod.delete("1.0", "end")
-            '''for item in lista_teste:                
+            '''for item in lista_produtos:                
                 text_prod.insert("0.0", f"{item}\n")'''
         elif str(produto_pesquisado) != "":            
-            filtered_items = [item for item in lista_teste if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]        
+            filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]        
             text_prod.delete("1.0", "end")
             for item in filtered_items:
                 text_prod.insert("0.0", f"{item}\n")
@@ -74,10 +69,10 @@ def janela_produtos_func():
         text_prod.configure(state="normal")
         if str(produto_pesquisado) == "":
             text_prod.delete("1.0", "end")
-            '''for item in lista_teste:                
+            '''for item in lista_produtos:                
                 text_prod.insert("0.0", f"{item}\n")'''
         elif str(produto_pesquisado) != "":            
-            filtered_items = [item for item in lista_teste if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]        
+            filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]        
             text_prod.delete("1.0", "end")
             for item in filtered_items:
                 text_prod.insert("0.0", f"{item}\n")
@@ -112,27 +107,6 @@ def janela_produtos_func():
     #!SECTION
 
 
-    #SECTION - Esquerda
-    #NOTE - Produtos    
-    """label_produtos_titulo = ctk.CTkLabel(
-        master=janela_produtos,
-        text="Produtos",
-        font=("Arial", 15, "bold")
-    )
-    label_produtos_titulo.place(relx=0.30, rely=0.15, anchor=tkinter.CENTER)
-    text_prod = ctk.CTkTextbox(
-        master=janela_produtos,
-        width=200,
-        height=400,
-        font=("Arial", 18)
-        )
-    text_prod.place(relx=0.3, rely=0.45, anchor=tkinter.CENTER)
-    '''for item in lista_teste:
-        text_prod.insert("0.0", f"{item}\n")'''
-    text_prod.configure(state="disabled")"""
-    #!SECTION
-
-    
     #SECTION - Centro
     #NOTE - Cabeçalho
     img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
@@ -180,7 +154,7 @@ def janela_produtos_func():
         height=25,
         fg_color= ("#3b3b3b"))
     entry_pesquisar_prod.place(relx=0.50, rely=0.36, anchor=tkinter.CENTER)
-    entry_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
+    #entry_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
     img_lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
     btn_lupa = ctk.CTkButton(
         master=janela_produtos,
