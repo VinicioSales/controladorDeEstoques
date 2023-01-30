@@ -22,18 +22,37 @@ def janela_produtos_func():
     #SECTION - Funções
     def adicionar_prod_btn_func():
         #NOTE - adicionar_prod_btn_func
+        pesquisar_prod_btn_func()
         prod_selecionado = text_prod.get("0.0", "1.1000")
         quantidade = entry_quantidade.get()
-        text_prod_selecionados.configure(state="normal")
-        text_prod_selecionados.insert("0.0", f"{prod_selecionado} \ {quantidade}\n")
-        text_prod_selecionados.configure(state="disabled")
-        text_prod.configure(state="normal")   
-        text_prod.delete("0.0", "end")
-        for item in lista_teste:                
-            text_prod.insert("0.0", f"{item}\n")        
-        text_prod.configure(state="disabled")
-        entry_pesquisar_prod.delete("0", "end")
-        entry_quantidade.delete("0", "end")
+        if prod_selecionado != "" and quantidade != "":
+            text_prod_selecionados.configure(state="normal")
+            text_prod_selecionados.insert("0.0", f"{prod_selecionado} \ {quantidade}\n")
+            text_prod_selecionados.configure(state="disabled")
+            text_prod.configure(state="normal")   
+            text_prod.delete("0.0", "end")
+            for item in lista_teste:                
+                text_prod.insert("0.0", f"{item}\n")        
+            text_prod.configure(state="disabled")
+            entry_pesquisar_prod.delete("0", "end")
+            entry_quantidade.delete("0", "end")
+    def adicionar_prod_func(event):
+        #NOTE - adicionar_prod_func
+        pesquisar_prod_btn_func()
+        prod_selecionado = text_prod.get("0.0", "1.1000")
+        quantidade = entry_quantidade.get()
+        print(f"prod_selecionado: {prod_selecionado} - quantidade: {quantidade}")
+        if prod_selecionado != "" and quantidade != "":
+            text_prod_selecionados.configure(state="normal")
+            text_prod_selecionados.insert("0.0", f"{prod_selecionado} \ {quantidade}\n")
+            text_prod_selecionados.configure(state="disabled")
+            text_prod.configure(state="normal")   
+            text_prod.delete("0.0", "end")
+            for item in lista_teste:                
+                text_prod.insert("0.0", f"{item}\n")        
+            text_prod.configure(state="disabled")
+            entry_pesquisar_prod.delete("0", "end")
+            entry_quantidade.delete("0", "end")
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
         produto_pesquisado = entry_pesquisar_prod.get()
@@ -110,38 +129,45 @@ def janela_produtos_func():
     text_prod.place(relx=0.2, rely=0.45, anchor=tkinter.CENTER)
     for item in lista_teste:
         text_prod.insert("0.0", f"{item}\n")
-    text_prod.configure(state="disabled")    
+    text_prod.configure(state="disabled")
+    label_prod = ctk.CTkLabel(
+        master=janela_produtos,
+        text="Produtos"
+    )
+    label_prod.place(relx=0.34, rely=0.17, anchor=tkinter.CENTER)
     entry_pesquisar_prod = ctk.CTkEntry(
         master=janela_produtos,
         width=150,
         height=25,)
     entry_pesquisar_prod.place(relx=0.34, rely=0.2, anchor=tkinter.CENTER)
     entry_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
-    btn_pesquisar_produto = ctk.CTkButton(
+    '''btn_pesquisar_produto = ctk.CTkButton(
         master=janela_produtos,
         width=150,
         height=25,
         text="Pesquisar Produto",
         command = pesquisar_prod_btn_func)
-    btn_pesquisar_produto.place(relx=0.34, rely=0.25, anchor=ctk.CENTER)
+    btn_pesquisar_produto.place(relx=0.34, rely=0.25, anchor=ctk.CENTER)'''
     label_quantidade = ctk.CTkLabel(
         master=janela_produtos,
         text="Quantidade"
     )
     label_quantidade.place(relx=0.2, rely=0.7, anchor=tkinter.CENTER)
-    label_quantidade.place(relx=0.34, rely=0.3)
+    label_quantidade.place(relx=0.34, rely=0.25)
     entry_quantidade = ctk.CTkEntry(
         master=janela_produtos,
         width=150,
         height=25,)
-    entry_quantidade.place(relx=0.34, rely=0.35, anchor=tkinter.CENTER)
+    entry_quantidade.place(relx=0.34, rely=0.28, anchor=tkinter.CENTER)
+    entry_quantidade.bind("<Return>", adicionar_prod_func)
     btn_adicionar_produto = ctk.CTkButton(
         master=janela_produtos,
         width=150,
         height=25,
         text="Adicionar Produto",
         command = adicionar_prod_btn_func)
-    btn_adicionar_produto.place(relx=0.34, rely=0.4, anchor=ctk.CENTER)    
+    btn_adicionar_produto.place(relx=0.34, rely=0.35, anchor=ctk.CENTER)
+    
 
     #NOTE - Produtos Selecionados
     btn_remover_ultimo = ctk.CTkButton(
