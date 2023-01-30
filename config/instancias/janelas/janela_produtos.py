@@ -27,7 +27,7 @@ def janela_produtos_func():
         quantidade = entry_quantidade.get()
         if prod_selecionado != "" and quantidade != "":
             text_prod_selecionados.configure(state="normal")
-            text_prod_selecionados.insert("0.0", f"{prod_selecionado} \ {quantidade}\n")
+            text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
             text_prod_selecionados.configure(state="disabled")
             text_prod.configure(state="normal")   
             text_prod.delete("0.0", "end")
@@ -44,12 +44,12 @@ def janela_produtos_func():
         print(f"prod_selecionado: {prod_selecionado} - quantidade: {quantidade}")
         if prod_selecionado != "" and quantidade != "":
             text_prod_selecionados.configure(state="normal")
-            text_prod_selecionados.insert("0.0", f"{prod_selecionado} \ {quantidade}\n")
+            text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
             text_prod_selecionados.configure(state="disabled")
             text_prod.configure(state="normal")   
             text_prod.delete("0.0", "end")
-            for item in lista_teste:                
-                text_prod.insert("0.0", f"{item}\n")        
+            '''for item in lista_teste:                
+                text_prod.insert("0.0", f"{item}\n")'''      
             text_prod.configure(state="disabled")
             entry_pesquisar_prod.delete("0", "end")
             entry_quantidade.delete("0", "end")
@@ -59,8 +59,8 @@ def janela_produtos_func():
         text_prod.configure(state="normal")
         if str(produto_pesquisado) == "":
             text_prod.delete("1.0", "end")
-            for item in lista_teste:                
-                text_prod.insert("0.0", f"{item}\n")
+            '''for item in lista_teste:                
+                text_prod.insert("0.0", f"{item}\n")'''
         elif str(produto_pesquisado) != "":            
             filtered_items = [item for item in lista_teste if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]        
             text_prod.delete("1.0", "end")
@@ -73,9 +73,8 @@ def janela_produtos_func():
         text_prod.configure(state="normal")
         if str(produto_pesquisado) == "":
             text_prod.delete("1.0", "end")
-            for item in lista_teste:                
-                text_prod.insert("0.0", f"{item}\n")
-                print(f"item: {item}")
+            '''for item in lista_teste:                
+                text_prod.insert("0.0", f"{item}\n")'''
         elif str(produto_pesquisado) != "":            
             filtered_items = [item for item in lista_teste if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]        
             text_prod.delete("1.0", "end")
@@ -127,8 +126,8 @@ def janela_produtos_func():
         font=("Arial", 18)
         )
     text_prod.place(relx=0.2, rely=0.45, anchor=tkinter.CENTER)
-    for item in lista_teste:
-        text_prod.insert("0.0", f"{item}\n")
+    '''for item in lista_teste:
+        text_prod.insert("0.0", f"{item}\n")'''
     text_prod.configure(state="disabled")
     label_prod = ctk.CTkLabel(
         master=janela_produtos,
@@ -141,13 +140,16 @@ def janela_produtos_func():
         height=25,)
     entry_pesquisar_prod.place(relx=0.34, rely=0.2, anchor=tkinter.CENTER)
     entry_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
-    '''btn_pesquisar_produto = ctk.CTkButton(
+    lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
+    btn_lupa = ctk.CTkButton(
         master=janela_produtos,
-        width=150,
-        height=25,
-        text="Pesquisar Produto",
-        command = pesquisar_prod_btn_func)
-    btn_pesquisar_produto.place(relx=0.34, rely=0.25, anchor=ctk.CENTER)'''
+        image=lupa,
+        text="",
+        width=8,
+        height=8,
+        fg_color="transparent"
+    )
+    btn_lupa.place(relx=0.41, rely=0.2, anchor=tkinter.CENTER)
     label_quantidade = ctk.CTkLabel(
         master=janela_produtos,
         text="Quantidade"
