@@ -1,8 +1,8 @@
 import json
 import requests
 
-app_key = "2999342667321"
-app_secret = "337f2cb08516d060a37c47243b91d20f"
+app_key = "3167947832049"
+app_secret = "1d8e4d03c432a464ef95cc920ae34026"
 
 def excluir_ajuste_estoque(id_ajuste):
     """List todos os produtos da base. Coleta a tag "codigo_produto"
@@ -138,4 +138,4 @@ def listar_pedido_vendas():
         total_de_paginas = int(response["total_de_paginas"])
 
 listar_ajuste_estoque()
-listar_pedido_vendas()
+#listar_pedido_vendas()

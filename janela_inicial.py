@@ -108,14 +108,6 @@ btn_saida_caminhao = ctk.CTkButton(
 )
 btn_saida_caminhao.place(relx=0.1, rely=0.1, anchor=tkinter.CENTER)
 
-btn_entrada_caminhao = ctk.CTkButton(
-    master=frame_1_inicio,
-    text="Entrada de caminhões",
-    hover_color = "#AA0",
-    command=btn_entrada_caminhao_func
-)
-btn_entrada_caminhao.place(relx=0.3, rely=0.1, anchor=tkinter.CENTER)
-
 btn_relatorio = ctk.CTkButton(
     master=frame_1_inicio,
     text="Relatório",

@@ -2,11 +2,9 @@ import customtkinter as ctk
 import tkinter
 from PIL import Image
 from unidecode import unidecode
-#from janela_produtos import janela_produtos_func
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 from config.instancias.apis.apis_projetos import get_cod_projeto
-#from config.instancias.apis.apis_projeto import listar_local_estoque
 from config.styles import estilo_janelas_func
 from config.instancias.janelas.janela_produtos import janela_produtos_func
 
@@ -26,9 +24,6 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     font_btn = "arial"
     cor_frame_meio = "#3b3b3b"
 
-    lista_produtos_adicionados=[]
-    #lista_produtos = ["banana", "pera", "abacate", "Cebola", "Cenoura", "Milho"]
-
     #SECTION - Funções
     def adicionar_prod_btn_func():
         #NOTE - adicionar_prod_btn_func
@@ -36,7 +31,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         quantidade = entry_quantidade.get()
         if prod_selecionado != "" and quantidade != "":
             text_prod_selecionados.configure(state="normal")
-            text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
+            text_prod_selecionados.insert("0.0", f"------------------------------------\n{prod_selecionado} | {quantidade}\n")
             text_prod_selecionados.configure(state="disabled")
             combo_pesquisar_prod.configure(state="normal")
             entry_quantidade.delete("0", "end")
@@ -49,7 +44,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
             for produto in lista_produtos:
                 if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
                     text_prod_selecionados.configure(state="normal")
-                    text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
+                    text_prod_selecionados.insert("0.0", f"------------------------------------\n{prod_selecionado} | {quantidade}\n")
                     text_prod_selecionados.configure(state="disabled")
                     combo_pesquisar_prod.configure(state="normal")
                     entry_quantidade.delete("0", "end")
@@ -65,20 +60,6 @@ def janela_produtos_func(janela_mov_estoque, tipo):
             combo_pesquisar_prod.configure(values=filtered_items)
         elif str(produto_pesquisado) == "":
             combo_pesquisar_prod.configure(values=lista_produtos)
-    def pesquisar_prod_btn_func():
-        #NOTE - pesquisar_prod_btn_func
-        produto_pesquisado = combo_pesquisar_prod.get()
-        text_prod.configure(state="normal")
-        if str(produto_pesquisado) == "":
-            text_prod.delete("1.0", "end")
-            '''for item in lista_produtos:                
-                text_prod.insert("0.0", f"{item}\n")'''
-        elif str(produto_pesquisado) != "":            
-            filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]        
-            text_prod.delete("1.0", "end")
-            for item in filtered_items:
-                text_prod.insert("0.0", f"{item}\n")
-        text_prod.configure(state="disabled")
     def remover_ultimo_btn_func():
         #NOTE - remover_ultimo_btn_func
         text_prod_selecionados.configure(state="normal")
@@ -118,7 +99,8 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         height=500,
         fg_color="transparent"
         )
-    frame_meio.place(relx=0.3, rely=0.3)
+    #frame_meio.place(relx=0.3, rely=0.3)
+    frame_meio.pack()
     #NOTE - Cabeçalho
     img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
     btn_voltar = ctk.CTkButton(
@@ -128,7 +110,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         text="Voltar",
         font=(font_btn, 15),
         #image=img_voltar,
-        fg_color="transparent",
+        fg_color="transparent"
     )
     btn_voltar.place(relx=0.30, rely=0.1)
     img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
@@ -216,7 +198,6 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         font=(font_btn, 15),
         command = limpar_prods_selecionados)
     btn_limpar.place(relx=0.50, rely=0.68, anchor=ctk.CENTER)
-    
     btn_confirmar = ctk.CTkButton(
         master=frame_meio,
         width=150,
@@ -242,7 +223,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         master=frame_meio,
         width=200,
         height=400,
-        font=("Arial", 18)
+        font=("Arial", 15)
         )
     text_prod_selecionados.place(relx=0.85, rely=0.48, anchor=tkinter.CENTER)
     text_prod_selecionados.configure(state="disabled")
@@ -251,8 +232,6 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     janela_produtos.mainloop()
 #!SECTION
 
-#estilo_janela = estilo_janelas_func()
-#dimensao = estilo_janela["dimensao"]
 dimensao = "20x20"
 #SECTION - Abrindo arquivos
 with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
@@ -312,7 +291,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
     janela_saida_caminhao.title("Saida de caminhões")
     janela_saida_caminhao.state("zoomed")
     ctk.set_appearance_mode("dark")
-    master = janela_saida_caminhao
 
     #SECTION - Funcoes mov
     def get_codigo(nome_produto):
@@ -450,33 +428,20 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
             mov_obg = "saida"
         if tipo == "ENT":
             mov_obg = "entrada"
-        obs = f"{nota},\n\n{mov_obg}"
+        obs_ent = f"{nota},\n\nentrada"
+        obs_sai = f"{nota},\n\nsaida"
         
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
         codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
-        #codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
         for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
-            codigo_projeto = get_cod_projeto(nome_produto)
             cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
-            if tipo == "SAI":
-                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs, codigo_local_estoque)
-                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs, codigo_estoque_caminhao)
-            elif tipo == "ENT":
-                '''produtos_ceasa = produtos_ceasa_entry.get()
-                if produtos_ceasa == "":
-                    produtos_ceasa = "0"
-                relatorio_ceasa = f"{nome_produto} * {codigo_produto} * {produtos_ceasa}"
-                with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
-                    lista_produtos_ceasa = arquivo.readlines()
-                    lista_produtos_ceasa.append(f"{relatorio_ceasa}\n")
-                with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
-                    arquivo.writelines(lista_produtos_ceasa)'''
-                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs, codigo_local_estoque)
-                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs, codigo_estoque_caminhao)
+            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_ent, codigo_local_estoque)
+            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_sai, codigo_estoque_caminhao)
     def inicio_func():
         #NOTE - inicio_func 
         janela_saida_caminhao.destroy()
         janela_inicio.deiconify()
+        janela_inicio.state("zoomed")
     def produtos_btn_func():
         #NOTE - produtos_btn_func
         janela_produtos = janela_produtos_func()
@@ -516,36 +481,29 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
 
     #NOTE - Cabeçalho
     img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
-    btn_voltar = ctk.CTkButton(
+    btn_voltar_mov = ctk.CTkButton(
         master=frame_1,
         width=15,
         height=15,
         text="",
         image=img_voltar,
-        fg_color="transparent"
+        fg_color="transparent",
+        command=inicio_func
     )
-    btn_voltar.place(relx=0.30, rely=0.20, anchor=tkinter.CENTER)
-    img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
-    btn_inicio = ctk.CTkButton(
-        master=frame_1,
-        width=15,
-        height=15,
-        text="",
-        image=img_home,
-        fg_color="transparent"
-    )
-    btn_inicio.place(relx=0.38, rely=0.20, anchor=tkinter.CENTER)
+    btn_voltar_mov.place(relx=0.30, rely=0.20, anchor=tkinter.CENTER)
 
     #NOTE - text_produtos
     label_prods_selecionados = ctk.CTkLabel(
         master=frame_1,
-        text="Produtos Selecionados"
+        text="Produtos Selecionados",
+        font=("Arial", 15, "bold")
     )
     label_prods_selecionados.place(relx=0.68, rely=0.18, anchor=tkinter.CENTER)
     text_produtos = ctk.CTkTextbox(
         master=frame_1,
         width=200,
         height=350,
+        font=("arial", 15)
     )
     text_produtos.place(relx=0.68, rely=0.45, anchor=tkinter.CENTER)
     for item in prods_selecionados:
@@ -569,38 +527,25 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
         height=25
         )
     estoques_interno_text.place(relx=0.35, rely=0.61, anchor=tkinter.CENTER)
-    estoques_interno_text.insert("0.0", "Estoque interno:")
+    estoques_interno_text.insert("0.0", "Estoque Origem:")
     estoques_interno_text.configure(state="disabled")
     combo_estoque_interno = ctk.CTkComboBox(master=frame_1, values=lista_estoques)
     combo_estoque_interno.place(relx=0.5, rely=0.61, anchor=ctk.CENTER)
     combo_estoque_interno.bind("<Return>", procurar_estoque_interno)
     pesquisar_estoque_interno = ctk.StringVar()
-    #filtrar_estoque_interno_entry = ctk.CTkEntry(master=frame_1, textvariable=pesquisar_estoque_interno)
-    #filtrar_estoque_interno_entry.place(relx=0.7, rely=0.61, anchor=ctk.CENTER)
-    #filtrar_interno_btn = ctk.CTkButton(master=frame_1, text="Filtrar", command=procurar_estoque_interno)
-    #filtrar_interno_btn.place(relx=0.8, rely=0.61, anchor=ctk.CENTER)
     estoques_caminhao_text = ctk.CTkTextbox(
         master=frame_1,
         width=200,
         height=25
         )
     estoques_caminhao_text.place(relx=0.35, rely=0.68, anchor=tkinter.CENTER)
-    estoques_caminhao_text.insert("0.0", "Estoque caminhao:")
+    estoques_caminhao_text.insert("0.0", "Estoque Destino:")
     estoques_caminhao_text.configure(state="disabled")
     combo_estoque_caminhao = ctk.CTkComboBox(master=frame_1, values=lista_estoques)
     combo_estoque_caminhao.place(relx=0.5, rely=0.68, anchor=ctk.CENTER)
     combo_estoque_caminhao.bind("<Return>", procurar_estoque_caminhao)
     pesquisar_estoque_caminhao = ctk.StringVar()
-    #filtrar_estoque_caminhao_entry = ctk.CTkEntry(master=frame_1, textvariable=pesquisar_estoque_caminhao)
-    #filtrar_estoque_caminhao_entry.place(relx=0.7, rely=0.68, anchor=ctk.CENTER)
-    #filtrar_caminhao_btn = ctk.CTkButton(master=frame_1, text="Filtrar", command=procurar_estoque_caminhao)
-    #filtrar_caminhao_btn.place(relx=0.8, rely=0.68, anchor=ctk.CENTER)
-
-
-    #NOTE - Projeto
-
-    #NOTE - Numero Nota
-    #============== Numero Nota ==============#
+    
     nota_text = ctk.CTkTextbox(
         master=frame_1,
         width=200,
@@ -617,18 +562,12 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
         master=frame_1,
         text="Movimentar estoque",
         width=200,
+        fg_color="#00993D",
+        hover_color=("#007830"),
         command=ajustar_estoque_func
     )
     btn_mov_estoque.place(relx=0.68, rely=0.75, anchor=tkinter.CENTER)
-
-    #NOTE - Rodapé
-    '''inicio_btn = ctk.CTkButton(master=frame_1, text="início", command=inicio_func)
-    inicio_btn.place(relx=0.6, rely=0.9, anchor=ctk.CENTER)
-    enviar_btn = ctk.CTkButton(master=frame_1, text="Enviar", command=ajustar_estoque_func)
-    enviar_btn.place(relx=0.8, rely=0.9, anchor=ctk.CENTER)
-    produtos_btn = ctk.CTkButton(master=frame_1, text="Produtos", command=produtos_btn_func)
-    produtos_btn.place(relx=0.1, rely=0.9, anchor=ctk.CENTER)'''
-
     janela_saida_caminhao.mainloop()
+
 prods_selecionados = ""
 #janela_mov_estoque_func("janela_inicio", prods_selecionados, "SAI")
