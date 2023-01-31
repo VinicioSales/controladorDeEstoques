@@ -56,6 +56,7 @@ with open("config/arquivos/lista_produtos.txt", "w") as arquivo:
 janela_inicio = janela_inicial_func()
 estilo_janelas = estilo_janelas_func()
 tema_janela = estilo_janelas["tema_janela"]
+janela_inicio.state("zoomed")
 ctk.set_appearance_mode(tema_janela)
 
 #SECTION - INICIO

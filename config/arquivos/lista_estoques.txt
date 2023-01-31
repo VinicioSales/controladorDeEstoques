@@ -1,9 +1,4 @@
-Galpão * 6873272006
-Caminhão 1 * 6900938496
-Caminhão 2 * 6900938511
-Caminhão 3 * 6900938512
-Caminhão 4 * 6900938517
-Caminhão 5 * 6900938520
-Caminhão 6 * 6900938545
-Estoque Box * 6900976395
-Caminhão 7 * 6900976492
+Local de Estoque Padrão * 5646179801
+Caminhão 1 * 5646180100
+Caminhão 2 * 5646180101
+Caminhão 3 * 5646180102

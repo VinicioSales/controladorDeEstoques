@@ -1,13 +1,15 @@
 import customtkinter as ctk
 import tkinter
-from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
+from PIL import Image
+'''from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 from config.styles import estilo_janelas_func
-from config.instancias.janelas.janela_produtos import janela_produtos_func
+from config.instancias.janelas.janela_produtos import janela_produtos_func'''
 
 
-estilo_janela = estilo_janelas_func()
-dimensao = estilo_janela["dimensao"]
+#estilo_janela = estilo_janelas_func()
+#dimensao = estilo_janela["dimensao"]
+dimensao = "20x20"
 #SECTION - Abrindo arquivos
 with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
     lista_produtos = arquivo.readlines()
@@ -64,6 +66,8 @@ def janela_mov_estoque_func(janela_inicio, tipo):
     janela_saida_caminhao = ctk.CTkToplevel()
     janela_saida_caminhao.geometry(dimensao)
     janela_saida_caminhao.title("Saida de caminhões")
+    janela_saida_caminhao.state("zoomed")
+    ctk.set_appearance_mode("dark")
     master = janela_saida_caminhao
 
     #SECTION - Funcoes
@@ -223,7 +227,7 @@ def janela_mov_estoque_func(janela_inicio, tipo):
 
     #NOTE - Produtos
     #============= Produtos ================#
-    produtos_text = ctk.CTkTextbox(
+    '''produtos_text = ctk.CTkTextbox(
         master,
         width=200,
         height=25
@@ -237,9 +241,9 @@ def janela_mov_estoque_func(janela_inicio, tipo):
     filtrar_produto_entry = ctk.CTkEntry(master, textvariable=pesquisar_produto)
     filtrar_produto_entry.place(relx=0.7, rely=0.1, anchor=ctk.CENTER)
     filtrar_produto_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_produto)
-    filtrar_produto_btn.place(relx=0.8, rely=0.1, anchor=ctk.CENTER)
+    filtrar_produto_btn.place(relx=0.8, rely=0.1, anchor=ctk.CENTER)'''
 
-    #NOTE - Itens
+    '''#NOTE - Itens
     #============= Itens ================#
     quantidade_itens_text = ctk.CTkTextbox(
         master,
@@ -267,80 +271,141 @@ def janela_mov_estoque_func(janela_inicio, tipo):
             master=master,
             width=150,
             height=25)
-        produtos_ceasa_entry.place(relx=0.9, rely=0.2, anchor=tkinter.CENTER)     
+        produtos_ceasa_entry.place(relx=0.9, rely=0.2, anchor=tkinter.CENTER)'''     
+    
+    #NOTE - Frame
+    frame_1 = ctk.CTkFrame(
+        master=janela_saida_caminhao,
+        width=1300,
+        height=700
+    )
+    frame_1.pack()
+    frame_1.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+
+    #NOTE - Cabeçalho
+    img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
+    btn_voltar = ctk.CTkButton(
+        master=frame_1,
+        width=15,
+        height=15,
+        text="",
+        image=img_voltar,
+        fg_color="transparent"
+    )
+    btn_voltar.place(relx=0.30, rely=0.20, anchor=tkinter.CENTER)
+    img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
+    btn_inicio = ctk.CTkButton(
+        master=frame_1,
+        width=15,
+        height=15,
+        text="",
+        image=img_home,
+        fg_color="transparent"
+    )
+    btn_inicio.place(relx=0.38, rely=0.20, anchor=tkinter.CENTER)
+
+    #NOTE - text_produtos
+    label_prods_selecionados = ctk.CTkLabel(
+        master=frame_1,
+        text="Produtos Selecionados"
+    )
+    label_prods_selecionados.place(relx=0.68, rely=0.18, anchor=tkinter.CENTER)
+    text_produtos = ctk.CTkTextbox(
+        master=frame_1,
+        width=200,
+        height=350,
+    )
+    text_produtos.place(relx=0.68, rely=0.45, anchor=tkinter.CENTER)
+    text_produtos.configure(state="disabled")
+    
+    btn_produtos = ctk.CTkButton(
+        master=frame_1,
+        text="Selecionar Produtos",
+        width=200
+    )
+    btn_produtos.place(relx=0.35, rely=0.52, anchor=tkinter.CENTER)
 
     #NOTE - Estoque
     #============= Estoque ===============#
     estoques_interno_text = ctk.CTkTextbox(
-        master,
+        master=frame_1,
         width=200,
         height=25
         )
-    estoques_interno_text.place(relx=0.3, rely=0.3, anchor=tkinter.CENTER)
+    estoques_interno_text.place(relx=0.35, rely=0.61, anchor=tkinter.CENTER)
     estoques_interno_text.insert("0.0", "Estoque interno:")
     estoques_interno_text.configure(state="disabled")
-    combo_estoque_interno = ctk.CTkComboBox(master, values=lista_estoques)
-    combo_estoque_interno.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)    
+    combo_estoque_interno = ctk.CTkComboBox(master=frame_1, values=lista_estoques)
+    combo_estoque_interno.place(relx=0.5, rely=0.61, anchor=ctk.CENTER)    
     pesquisar_estoque_interno = ctk.StringVar()
-    filtrar_estoque_interno_entry = ctk.CTkEntry(master, textvariable=pesquisar_estoque_interno)
-    filtrar_estoque_interno_entry.place(relx=0.7, rely=0.3, anchor=ctk.CENTER)
-    filtrar_interno_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_estoque_interno)
-    filtrar_interno_btn.place(relx=0.8, rely=0.3, anchor=ctk.CENTER)
+    #filtrar_estoque_interno_entry = ctk.CTkEntry(master=frame_1, textvariable=pesquisar_estoque_interno)
+    #filtrar_estoque_interno_entry.place(relx=0.7, rely=0.61, anchor=ctk.CENTER)
+    #filtrar_interno_btn = ctk.CTkButton(master=frame_1, text="Filtrar", command=procurar_estoque_interno)
+    #filtrar_interno_btn.place(relx=0.8, rely=0.61, anchor=ctk.CENTER)
     estoques_caminhao_text = ctk.CTkTextbox(
-        master,
+        master=frame_1,
         width=200,
         height=25
         )
-    estoques_caminhao_text.place(relx=0.3, rely=0.4, anchor=tkinter.CENTER)
+    estoques_caminhao_text.place(relx=0.35, rely=0.68, anchor=tkinter.CENTER)
     estoques_caminhao_text.insert("0.0", "Estoque caminhao:")
     estoques_caminhao_text.configure(state="disabled")
-    combo_estoque_caminhao = ctk.CTkComboBox(master, values=lista_estoques)
-    combo_estoque_caminhao.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)    
+    combo_estoque_caminhao = ctk.CTkComboBox(master=frame_1, values=lista_estoques)
+    combo_estoque_caminhao.place(relx=0.5, rely=0.68, anchor=ctk.CENTER)    
     pesquisar_estoque_caminhao = ctk.StringVar()
-    filtrar_estoque_caminhao_entry = ctk.CTkEntry(master, textvariable=pesquisar_estoque_caminhao)
-    filtrar_estoque_caminhao_entry.place(relx=0.7, rely=0.4, anchor=ctk.CENTER)
-    filtrar_caminhao_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_estoque_caminhao)
-    filtrar_caminhao_btn.place(relx=0.8, rely=0.4, anchor=ctk.CENTER)
+    #filtrar_estoque_caminhao_entry = ctk.CTkEntry(master=frame_1, textvariable=pesquisar_estoque_caminhao)
+    #filtrar_estoque_caminhao_entry.place(relx=0.7, rely=0.68, anchor=ctk.CENTER)
+    #filtrar_caminhao_btn = ctk.CTkButton(master=frame_1, text="Filtrar", command=procurar_estoque_caminhao)
+    #filtrar_caminhao_btn.place(relx=0.8, rely=0.68, anchor=ctk.CENTER)
 
 
     #NOTE - Projeto
     #============== Projeto ==============#
-    projeto_text = ctk.CTkTextbox(
-        master,
+    '''projeto_text = ctk.CTkTextbox(
+        master=frame_1,
         width=200,
         height=25
         )
     projeto_text.place(relx=0.3, rely=0.5, anchor=tkinter.CENTER)
     projeto_text.insert("0.0", "Selecione o projeto:")
     projeto_text.configure(state="disabled")
-    combo_projeto = ctk.CTkComboBox(master, values=lista_projetos)
+    combo_projeto = ctk.CTkComboBox(master=frame_1, values=lista_projetos)
     combo_projeto.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
     pesquisar_projeto = ctk.StringVar()
-    projeto_entry = ctk.CTkEntry(master, textvariable=pesquisar_projeto)
-    projeto_entry.place(relx=0.7, rely=0.5, anchor=ctk.CENTER)
-    filtrar_projeto_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_projeto)
-    filtrar_projeto_btn.place(relx=0.8, rely=0.5, anchor=ctk.CENTER)
+    #projeto_entry = ctk.CTkEntry(master=frame_1, textvariable=pesquisar_projeto)
+    #projeto_entry.place(relx=0.7, rely=0.5, anchor=ctk.CENTER)
+    #filtrar_projeto_btn = ctk.CTkButton(master=frame_1, text="Filtrar", command=procurar_projeto)
+    #filtrar_projeto_btn.place(relx=0.8, rely=0.5, anchor=ctk.CENTER)'''
 
     #NOTE - Numero Nota
     #============== Numero Nota ==============#
     nota_text = ctk.CTkTextbox(
-        master,
+        master=frame_1,
         width=200,
         height=25
         )
-    nota_text.place(relx=0.3, rely=0.6, anchor=tkinter.CENTER)
+    nota_text.place(relx=0.35, rely=0.75, anchor=tkinter.CENTER)
     nota_text.insert("0.0", "Adicione código da nota:")
     nota_text.configure(state="disabled")
-    nota_entry = ctk.CTkEntry(master)
-    nota_entry.place(relx=0.5, rely=0.6, anchor=ctk.CENTER)
+    nota_entry = ctk.CTkEntry(master=frame_1)
+    nota_entry.place(relx=0.5, rely=0.75, anchor=ctk.CENTER)
+
+    #NOTE - btn_mov_estoque
+    btn_mov_estoque = ctk.CTkButton(
+        master=frame_1,
+        text="Movimentar estoque",
+        width=200
+    )
+    btn_mov_estoque.place(relx=0.68, rely=0.75, anchor=tkinter.CENTER)
 
     #NOTE - Rodapé
-    inicio_btn = ctk.CTkButton(master, text="início", command=inicio_func)
-    inicio_btn.place(relx=0.6, rely=0.8, anchor=ctk.CENTER)
-    enviar_btn = ctk.CTkButton(master, text="Enviar", command=ajustar_estoque_func)
-    enviar_btn.place(relx=0.8, rely=0.8, anchor=ctk.CENTER)
-    produtos_btn = ctk.CTkButton(master, text="Produtos", command=produtos_btn_func)
-    produtos_btn.place(relx=0.1, rely=0.8, anchor=ctk.CENTER)
+    '''inicio_btn = ctk.CTkButton(master=frame_1, text="início", command=inicio_func)
+    inicio_btn.place(relx=0.6, rely=0.9, anchor=ctk.CENTER)
+    enviar_btn = ctk.CTkButton(master=frame_1, text="Enviar", command=ajustar_estoque_func)
+    enviar_btn.place(relx=0.8, rely=0.9, anchor=ctk.CENTER)
+    produtos_btn = ctk.CTkButton(master=frame_1, text="Produtos", command=produtos_btn_func)
+    produtos_btn.place(relx=0.1, rely=0.9, anchor=ctk.CENTER)'''
 
     janela_saida_caminhao.mainloop()
 
+#janela_mov_estoque_func("janela_inicio", "SAI")

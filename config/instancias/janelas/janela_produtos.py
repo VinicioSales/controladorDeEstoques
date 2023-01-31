@@ -19,10 +19,8 @@ def janela_produtos_func():
     janela_produtos = ctk.CTk()
     janela_produtos.geometry("1100x580")
     janela_produtos.title("CustomTkinter simple_example.py")
-    #janela_produtos._set_appearance_mode("dark")
-    ctk.set_appearance_mode("dark")
     janela_produtos.state("zoomed")
-    #ctk.set_default_color_theme("dark-blue")
+    
 
     #SECTION - Funções
     def adicionar_prod_btn_func():
@@ -34,7 +32,6 @@ def janela_produtos_func():
             text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
             text_prod_selecionados.configure(state="disabled")
             combo_pesquisar_prod.configure(state="normal")
-            combo_pesquisar_prod.delete("0", "end")
             entry_quantidade.delete("0", "end")
     def adicionar_prod_func(event):
         #NOTE - adicionar_prod_func
@@ -43,13 +40,11 @@ def janela_produtos_func():
         if prod_selecionado != "" and quantidade != "":
             filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
             for produto in lista_produtos:
-                print(f"prod_selecionado: {prod_selecionado} - produto: {produto}")
                 if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
                     text_prod_selecionados.configure(state="normal")
                     text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
                     text_prod_selecionados.configure(state="disabled")
-                    combo_pesquisar_prod.configure(state="normal")   
-                    combo_pesquisar_prod.delete("0", "end")
+                    combo_pesquisar_prod.configure(state="normal")
                     entry_quantidade.delete("0", "end")
                     break
     def pesquisar_prod_func(event):
@@ -242,16 +237,11 @@ def janela_produtos_func():
         font=("Arial", 18)
         )
     text_prod_selecionados.place(relx=0.85, rely=0.48, anchor=tkinter.CENTER)
-    #text_prod_selecionados.pack()
     text_prod_selecionados.configure(state="disabled")
-
     #!SECTION
-
-    
-    
 
     janela_produtos.mainloop()
 
     return janela_produtos
 
-janela_produtos_func()
+#janela_produtos_func()
