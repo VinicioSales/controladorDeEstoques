@@ -11,7 +11,7 @@ font_btn = "arial"
 cor_frame_meio = "#3b3b3b"
 
 lista_produtos_adicionados=[]
-lista_produtos = ["banana", "pera", "abacate", "Cebola", "Cenoura", "Milho"]
+#lista_produtos = ["banana", "pera", "abacate", "Cebola", "Cenoura", "Milho"]
 
 def janela_produtos_func(janela_mov_estoque, tipo):
     #NOTE - janela_produtos_func

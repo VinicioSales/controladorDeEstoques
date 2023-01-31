@@ -2,11 +2,11 @@ import customtkinter as ctk
 import tkinter
 from PIL import Image
 from unidecode import unidecode
-from janela_produtos import janela_produtos_func
-'''from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
+#from janela_produtos import janela_produtos_func
+from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 from config.styles import estilo_janelas_func
-from config.instancias.janelas.janela_produtos import janela_produtos_func'''
+from config.instancias.janelas.janela_produtos import janela_produtos_func
 
 #SECTION - janela_produtos
 
@@ -24,7 +24,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     cor_frame_meio = "#3b3b3b"
 
     lista_produtos_adicionados=[]
-    lista_produtos = ["banana", "pera", "abacate", "Cebola", "Cenoura", "Milho"]
+    #lista_produtos = ["banana", "pera", "abacate", "Cebola", "Cenoura", "Milho"]
 
     #SECTION - Funções
     def adicionar_prod_btn_func():
@@ -103,7 +103,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         if prods_selecionados[-1] == "":
             prods_selecionados.pop()
         janela_produtos.withdraw()
-        janela_mov_estoque = janela_mov_estoque_func(janela_produtos, tipo, prods_selecionados)
+        janela_mov_estoque = janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo)
     #!SECTION
 
 
@@ -263,7 +263,7 @@ with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
         produto = produto.replace("]", "")
         produto = produto.replace("'", "")
         produto = produto.replace("\\n", "")
-        produto = produto.replace(" ", "")
+        #produto = produto.replace(" ", "")
         lista_projetos_aux.append(produto)
     lista_produtos = lista_projetos_aux
 with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
@@ -296,7 +296,7 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
 #!SECTION
 
 #NOTE - Instancia Janela
-def janela_mov_estoque_func(janela_inicio, tipo, prods_selecionados):
+def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
     """Instancia a janela de saida de caminhões
     params:
         - ctk: janela_inicio
@@ -323,13 +323,15 @@ def janela_mov_estoque_func(janela_inicio, tipo, prods_selecionados):
             - string: codigo"""
         with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
             lista_produtos = arquivo.readlines()
-            for produto in lista_produtos:
-                print(f"nome_produto: {nome_produto} - produto: {produto}")
-                if nome_produto in produto:
-                    produto = produto.split("*")
-                    codigo = produto[0]
-                    codigo = codigo.replace(" ", "")
-                    break
+        nome_produto= nome_produto.replace(" ", "")
+        for produto in lista_produtos:                
+            produto = produto.split("*")
+            nome = produto[1]
+            nome = nome.replace(" ", "")
+            if str(nome_produto) in str(nome):
+                codigo = produto[0]
+                codigo = codigo.replace(" ", "")
+                break
         return codigo
     def get_codigo_local_estoque(nome_estoque):
         #NOTE - get_codigo_local_estoque
@@ -425,26 +427,37 @@ def janela_mov_estoque_func(janela_inicio, tipo, prods_selecionados):
         return:
             - None"""
         # Pegando variaveis
-        nome_produto = combo_produtos.get()
-        quantidade_itens = quantidade_itens_entry.get()
+        lista_nome_produto = []
+        lista_cod_produto = []
+        lista_quantidade_produto = []
+        for item in prods_selecionados:
+            item = item.split("|")
+            nome_produto = item[0]
+            codigo = get_codigo(nome_produto)
+            quantidade_produto = item[1]
+            lista_nome_produto.append(nome_produto)
+            lista_cod_produto.append(codigo)
+            lista_quantidade_produto.append(quantidade_produto)            
+
         nome_estoque_interno = combo_estoque_interno.get()
         nome_estoque_caminhao = combo_estoque_caminhao.get()
-        nome_projeto = combo_projeto.get()
+        #nome_projeto = combo_projeto.get()
         nota = nota_entry.get()
         if tipo == "SAI":
             mov_obg = "saida"
         if tipo == "ENT":
             mov_obg = "entrada"
         obs = f"{nota},\n\n{mov_obg}"        
-        codigo = get_codigo(nome_produto)
+        
         
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
         codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
-        codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
+        #codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
         cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(codigo)
         if tipo == "SAI":
-            incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_local_estoque)
-            incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_estoque_caminhao)
+            print(1)
+            #incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_local_estoque)
+            #incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_estoque_caminhao)
         elif tipo == "ENT":
             produtos_ceasa = produtos_ceasa_entry.get()
             if produtos_ceasa == "":
@@ -455,8 +468,8 @@ def janela_mov_estoque_func(janela_inicio, tipo, prods_selecionados):
                 lista_produtos_ceasa.append(f"{relatorio_ceasa}\n")
             with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
                 arquivo.writelines(lista_produtos_ceasa)
-                incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_local_estoque)
-                incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_estoque_caminhao)
+                #incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_local_estoque)
+                #incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_estoque_caminhao)
     def inicio_func():
         #NOTE - inicio_func 
         janela_saida_caminhao.destroy()
@@ -483,57 +496,11 @@ def janela_mov_estoque_func(janela_inicio, tipo, prods_selecionados):
     def selecionar_prod_btn_func():
         #NOTE - selecionar_prod_btn_func
         janela_saida_caminhao.withdraw()
-        prods_selecionados = janela_produtos_func(janela_saida_caminhao, tipo)
+        janela_produtos_func(janela_saida_caminhao, tipo)
 
     #!SECTION
 
-    #NOTE - Produtos
-    #============= Produtos ================#
-    '''produtos_text = ctk.CTkTextbox(
-        master,
-        width=200,
-        height=25
-        )
-    produtos_text.place(relx=0.3, rely=0.1, anchor=tkinter.CENTER)
-    produtos_text.insert("0.0", "Selecione o produto")
-    produtos_text.configure(state="disabled")
-    combo_produtos = ctk.CTkComboBox(master, values=lista_produtos)
-    combo_produtos.place(relx=0.5, rely=0.1, anchor=ctk.CENTER)
-    pesquisar_produto = ctk.StringVar()
-    filtrar_produto_entry = ctk.CTkEntry(master, textvariable=pesquisar_produto)
-    filtrar_produto_entry.place(relx=0.7, rely=0.1, anchor=ctk.CENTER)
-    filtrar_produto_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_produto)
-    filtrar_produto_btn.place(relx=0.8, rely=0.1, anchor=ctk.CENTER)'''
-
-    '''#NOTE - Itens
-    #============= Itens ================#
-    quantidade_itens_text = ctk.CTkTextbox(
-        master,
-        width=200,
-        height=25
-        )
-    quantidade_itens_text.place(relx=0.3, rely=0.2, anchor=tkinter.CENTER)
-    quantidade_itens_text.insert("0.0", "Quantidade de itens")
-    quantidade_itens_text.configure(state="disabled")
-    quantidade_itens_entry = ctk.CTkEntry(
-        master=master,
-        width=150,
-        height=25)
-    quantidade_itens_entry.place(relx=0.5, rely=0.2, anchor=tkinter.CENTER)
-    if tipo == "ENT":
-        produtos_ceasa_text = ctk.CTkTextbox(
-            master,
-            width=150,
-            height=25
-            )
-        produtos_ceasa_text.place(relx=0.7, rely=0.2, anchor=tkinter.CENTER)
-        produtos_ceasa_text.insert("0.0", "Produtos na Ceasa")
-        produtos_ceasa_text.configure(state="disabled")
-        produtos_ceasa_entry = ctk.CTkEntry(
-            master=master,
-            width=150,
-            height=25)
-        produtos_ceasa_entry.place(relx=0.9, rely=0.2, anchor=tkinter.CENTER)'''     
+    #NOTE - Produtos    
     
     #NOTE - Frame
     frame_1 = ctk.CTkFrame(
@@ -628,22 +595,6 @@ def janela_mov_estoque_func(janela_inicio, tipo, prods_selecionados):
 
 
     #NOTE - Projeto
-    #============== Projeto ==============#
-    '''projeto_text = ctk.CTkTextbox(
-        master=frame_1,
-        width=200,
-        height=25
-        )
-    projeto_text.place(relx=0.3, rely=0.5, anchor=tkinter.CENTER)
-    projeto_text.insert("0.0", "Selecione o projeto:")
-    projeto_text.configure(state="disabled")
-    combo_projeto = ctk.CTkComboBox(master=frame_1, values=lista_projetos)
-    combo_projeto.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
-    pesquisar_projeto = ctk.StringVar()
-    #projeto_entry = ctk.CTkEntry(master=frame_1, textvariable=pesquisar_projeto)
-    #projeto_entry.place(relx=0.7, rely=0.5, anchor=ctk.CENTER)
-    #filtrar_projeto_btn = ctk.CTkButton(master=frame_1, text="Filtrar", command=procurar_projeto)
-    #filtrar_projeto_btn.place(relx=0.8, rely=0.5, anchor=ctk.CENTER)'''
 
     #NOTE - Numero Nota
     #============== Numero Nota ==============#
@@ -662,7 +613,8 @@ def janela_mov_estoque_func(janela_inicio, tipo, prods_selecionados):
     btn_mov_estoque = ctk.CTkButton(
         master=frame_1,
         text="Movimentar estoque",
-        width=200
+        width=200,
+        command=ajustar_estoque_func
     )
     btn_mov_estoque.place(relx=0.68, rely=0.75, anchor=tkinter.CENTER)
 
@@ -676,4 +628,4 @@ def janela_mov_estoque_func(janela_inicio, tipo, prods_selecionados):
 
     janela_saida_caminhao.mainloop()
 prods_selecionados = ""
-janela_mov_estoque_func("janela_inicio", "SAI", prods_selecionados)
+#janela_mov_estoque_func("janela_inicio", prods_selecionados, "SAI")
