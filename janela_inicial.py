@@ -62,7 +62,7 @@ ctk.set_appearance_mode(tema_janela)
 #SECTION - INICIO
 #====================== FRAMES ===================#
 frame_1_inicio = frame_1_inicio_func(janela_inicio)
-
+prods_selecionados = ""
 #=============== FUNCAO BOTAO ==================#
 def btn_saida_caminhao_func():
     #//NOTE - btn_saida_caminhao_func
@@ -74,7 +74,7 @@ def btn_saida_caminhao_func():
         - None
     """
     janela_inicio.withdraw()
-    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, tipo="SAI")
+    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, tipo="SAI", prods_selecionados)
 def btn_entrada_caminhao_func():
     #//NOTE - btn_entrada_caminhao_func
     """Abre a janela de movimento de estoque
@@ -85,7 +85,7 @@ def btn_entrada_caminhao_func():
         - None
     """
     janela_inicio.withdraw()
-    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, tipo="ENT")
+    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, tipo="ENT", prods_selecionados)
 def btn_relatorio_func():
     #//NOTE - btn_relatorio_func
     """Abre a janela de relatorio de diferença de quantidade

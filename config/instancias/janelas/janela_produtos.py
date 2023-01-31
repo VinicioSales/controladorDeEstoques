@@ -13,7 +13,7 @@ cor_frame_meio = "#3b3b3b"
 lista_produtos_adicionados=[]
 lista_produtos = ["banana", "pera", "abacate", "Cebola", "Cenoura", "Milho"]
 
-def janela_produtos_func():
+def janela_produtos_func(janela_mov_estoque, tipo):
     #NOTE - janela_produtos_func
     """Cria a janela inicial"""
     janela_produtos = ctk.CTk()
@@ -99,6 +99,8 @@ def janela_produtos_func():
         if prods_selecionados[-1] == "":
             prods_selecionados.pop()
         janela_produtos.withdraw()
+        janela_mov_estoque = janela_mov_estoque_func(janela_produtos, tipo)
+        return prods_selecionados
     #!SECTION
 
 
@@ -117,10 +119,10 @@ def janela_produtos_func():
         master=frame_meio,
         width=15,
         height=15,
-        text="",
+        text="Voltar",
         font=(font_btn, 15),
-        image=img_voltar,
-        fg_color="transparent"
+        #image=img_voltar,
+        fg_color="transparent",
     )
     btn_voltar.place(relx=0.30, rely=0.1)
     img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
@@ -128,9 +130,9 @@ def janela_produtos_func():
         master=frame_meio,
         width=15,
         height=15,
-        text="",
+        text="Início",
         font=(font_btn, 15),
-        image=img_home,
+        #image=img_home,
         fg_color="transparent"
     )
     btn_inicio.place(relx=0.38, rely=0.1)
@@ -162,7 +164,7 @@ def janela_produtos_func():
     img_lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
     btn_lupa = ctk.CTkButton(
         master=frame_meio,
-        image=img_lupa,
+        #image=img_lupa,
         text="",
         width=8,
         height=8,
@@ -241,7 +243,5 @@ def janela_produtos_func():
     #!SECTION
 
     janela_produtos.mainloop()
-
-    return janela_produtos
 
 #janela_produtos_func()
