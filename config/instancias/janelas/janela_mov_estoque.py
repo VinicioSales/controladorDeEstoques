@@ -5,9 +5,11 @@ from unidecode import unidecode
 #from janela_produtos import janela_produtos_func
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
-from config.instancias.apis.apis_projeto import listar_local_estoque
+from config.instancias.apis.apis_projetos import get_cod_projeto
+#from config.instancias.apis.apis_projeto import listar_local_estoque
 from config.styles import estilo_janelas_func
 from config.instancias.janelas.janela_produtos import janela_produtos_func
+
 
 #SECTION - janela_produtos
 
@@ -448,29 +450,29 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
             mov_obg = "saida"
         if tipo == "ENT":
             mov_obg = "entrada"
-        obs = f"{nota},\n\n{mov_obg}"        
+        obs = f"{nota},\n\n{mov_obg}"
         
-        codigo_projeto = listar_local_estoque(nome_produto)
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
         codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
         #codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
-        cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(codigo)
-        if tipo == "SAI":
-            print(1)
-            #incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_local_estoque)
-            #incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_estoque_caminhao)
-        elif tipo == "ENT":
-            produtos_ceasa = produtos_ceasa_entry.get()
-            if produtos_ceasa == "":
-                produtos_ceasa = "0"
-            relatorio_ceasa = f"{nome_produto} * {codigo_produto} * {produtos_ceasa}"
-            with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
-                lista_produtos_ceasa = arquivo.readlines()
-                lista_produtos_ceasa.append(f"{relatorio_ceasa}\n")
-            with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
-                arquivo.writelines(lista_produtos_ceasa)
-                #incluir_ajuste_estoque(codigo_produto, quantidade_itens, "ENT", valor_unitario, obs, codigo_local_estoque)
-                #incluir_ajuste_estoque(codigo_produto, quantidade_itens, "SAI", valor_unitario, obs, codigo_estoque_caminhao)
+        for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
+            codigo_projeto = get_cod_projeto(nome_produto)
+            cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
+            if tipo == "SAI":
+                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs, codigo_local_estoque)
+                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs, codigo_estoque_caminhao)
+            elif tipo == "ENT":
+                '''produtos_ceasa = produtos_ceasa_entry.get()
+                if produtos_ceasa == "":
+                    produtos_ceasa = "0"
+                relatorio_ceasa = f"{nome_produto} * {codigo_produto} * {produtos_ceasa}"
+                with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
+                    lista_produtos_ceasa = arquivo.readlines()
+                    lista_produtos_ceasa.append(f"{relatorio_ceasa}\n")
+                with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
+                    arquivo.writelines(lista_produtos_ceasa)'''
+                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs, codigo_local_estoque)
+                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs, codigo_estoque_caminhao)
     def inicio_func():
         #NOTE - inicio_func 
         janela_saida_caminhao.destroy()

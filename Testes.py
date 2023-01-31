@@ -10,7 +10,7 @@ app_secret = database_infos["app_secret"]"""
 app_key = "3167947832049"
 app_secret = "1d8e4d03c432a464ef95cc920ae34026"
 
-def incluir_ajuste_estoque_lote(codigo_projeto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque):
+def incluir_ajuste_estoque_lote(ajuste_estoque_lista):
     #NOTE - incluir_ajuste_estoque_lote
     """Inclui um ajuste de estoque
 
@@ -37,16 +37,7 @@ def incluir_ajuste_estoque_lote(codigo_projeto, quantidade_itens, tipo, valor_un
                             "app_secret": app_secret,
                             "param":[
                                         {
-                                            "codigo_local_estoque": codigo_local_estoque,
-                                            "id_prod": codigo_projeto,
-                                            "data": data,
-                                            "quan": quantidade_itens,
-                                            "origem": "AJU",
-                                            "tipo": tipo,
-                                            "motivo": "INV",
-                                            "valor": valor_unitario,
-                                            "obs": obs
-                                            #"codigo_local_estoque_destino": estoque_destino
+                                            "ajuste_estoque_listaArray": ajuste_estoque_lista
                                         }
                                     ]
                         })
@@ -69,3 +60,27 @@ def incluir_ajuste_estoque_lote(codigo_projeto, quantidade_itens, tipo, valor_un
     else:
         id_ajuste = "ERRO"
     return descricao_status, id_movest, id_ajuste
+
+dict_ajuste = {
+    "codigo_local_estoque": "5646179801",
+    "codigo_local_estoque_destino": "5646180100",
+    "id_prod": "5646179955",
+    "obs": "",
+    "quan": "10",
+    "valor": "10",
+    "tipo": "SAI",
+    "motivo": "INV"
+}
+dict_ajuste_2 = {
+    "codigo_local_estoque": "5646179801",
+    "codigo_local_estoque_destino": "5646180100",
+    "id_prod": "5646179955",
+    "obs": "",
+    "quan": "20",
+    "valor": "20",
+    "tipo": "SAI",
+    "motivo": "INV"
+}
+ajuste_estoque_lista = [dict_ajuste, dict_ajuste_2]
+
+incluir_ajuste_estoque_lote(ajuste_estoque_lista)

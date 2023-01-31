@@ -9,8 +9,8 @@ app_secret = database_infos["app_secret"]"""
 app_key = "3167947832049"
 app_secret = "1d8e4d03c432a464ef95cc920ae34026"
 
-def listar_local_estoque(nome_produto):
-    #NOTE - listar_local_estoque
+def get_cod_projeto(nome_produto):
+    #NOTE - get_cod_projeto
     """Busca o código do projeto
     
     param:

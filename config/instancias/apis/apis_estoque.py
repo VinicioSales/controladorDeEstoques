@@ -9,7 +9,7 @@ app_key = database_infos["app_key"]
 app_secret = database_infos["app_secret"]
 
 #NOTE - incluir_ajuste_estoque
-def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque):
+def incluir_ajuste_estoque(codigo_produto, quantidade_itens, tipo, valor_unitario, obs, codigo_local_estoque):
     """Inclui um ajuste de estoque
 
     param:
@@ -36,7 +36,7 @@ def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitari
                             "param":[
                                         {
                                             "codigo_local_estoque": codigo_local_estoque,
-                                            "id_prod": codigo_projeto,
+                                            "id_prod": codigo_produto,
                                             "data": data,
                                             "quan": quantidade_itens,
                                             "origem": "AJU",
@@ -44,7 +44,6 @@ def incluir_ajuste_estoque(codigo_projeto, quantidade_itens, tipo, valor_unitari
                                             "motivo": "INV",
                                             "valor": valor_unitario,
                                             "obs": obs
-                                            #"codigo_local_estoque_destino": estoque_destino
                                         }
                                     ]
                         })
