@@ -58,20 +58,6 @@ def janela_produtos_func(janela_mov_estoque, tipo):
             combo_pesquisar_prod.configure(values=filtered_items)
         elif str(produto_pesquisado) == "":
             combo_pesquisar_prod.configure(values=lista_produtos)
-    def pesquisar_prod_btn_func():
-        #NOTE - pesquisar_prod_btn_func
-        produto_pesquisado = combo_pesquisar_prod.get()
-        text_prod.configure(state="normal")
-        if str(produto_pesquisado) == "":
-            text_prod.delete("1.0", "end")
-            '''for item in lista_produtos:                
-                text_prod.insert("0.0", f"{item}\n")'''
-        elif str(produto_pesquisado) != "":            
-            filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]        
-            text_prod.delete("1.0", "end")
-            for item in filtered_items:
-                text_prod.insert("0.0", f"{item}\n")
-        text_prod.configure(state="disabled")
     def remover_ultimo_btn_func():
         #NOTE - remover_ultimo_btn_func
         text_prod_selecionados.configure(state="normal")

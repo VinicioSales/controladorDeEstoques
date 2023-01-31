@@ -5,6 +5,7 @@ from unidecode import unidecode
 #from janela_produtos import janela_produtos_func
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
+from config.instancias.apis.apis_projeto import listar_local_estoque
 from config.styles import estilo_janelas_func
 from config.instancias.janelas.janela_produtos import janela_produtos_func
 
@@ -311,7 +312,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
     ctk.set_appearance_mode("dark")
     master = janela_saida_caminhao
 
-    #SECTION - Funcoes
+    #SECTION - Funcoes mov
     def get_codigo(nome_produto):
         #NOTE - get_codigo
         """Pega o codigo do produto na lista de produtos
@@ -449,7 +450,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
             mov_obg = "entrada"
         obs = f"{nota},\n\n{mov_obg}"        
         
-        
+        codigo_projeto = listar_local_estoque(nome_produto)
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
         codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
         #codigo_projeto = get_codigo_projeto(nome_projeto=nome_projeto)
