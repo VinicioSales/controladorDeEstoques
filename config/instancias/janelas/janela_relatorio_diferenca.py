@@ -19,6 +19,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
         - None"""
     janela_relatorio_diferenca = ctk.CTk()
     janela_relatorio_diferenca.geometry(dimensao)
+    janela_relatorio_diferenca.state("zoomed")
     master = janela_relatorio_diferenca
 
     #SECTION - sub_janela_relatorio_func
@@ -34,6 +35,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
         sub_janela_relatorio = ctk.CTkToplevel()
         sub_janela_relatorio.geometry(dimensao)
         sub_janela_relatorio.title("Relatório")
+        sub_janela_relatorio.state("zoomed")
 
         #SECTION - Funcoes Sub 
         
@@ -52,13 +54,13 @@ def janela_relatorio_diferenca_func(janela_inicio):
             
             for linha in quant_diferenca_estoque:
                 
-                linha = linha.split("*")
+                linha = linha.split("|")
                 nome_produto = linha[0]
                 quantidade_prod = linha[1]
                 quantidade_prod = quantidade_prod.replace(" ", "")
                 quantidade_prod = quantidade_prod.replace("\n", "")
                 #================ TESTE =================#
-                codigo_cliente = "6873272007"
+                codigo_cliente = "5646179802"
                 #================ TESTE =================#
                 cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
                 sub_janela_data_vencimento = sub_janela_data_vencimento_func(codigo_produto, codigo_cliente, cfop, descricao, ncm, unidade, valor_unitario, quantidade_prod)              
@@ -87,8 +89,10 @@ def janela_relatorio_diferenca_func(janela_inicio):
         height=5,
         border_width=2,
         corner_radius=10,
+        font=("arial", 14, "bold")
         )
         textbox.insert("0.0", produtos_nao_retornados_text)
+        textbox.configure(state="disabled")
         textbox.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
         #NOTE - quant_diferenca_estoque
         with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
@@ -102,6 +106,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
         )
         textbox_relatorio.insert("0.0", quant_diferenca_estoque)
         textbox_relatorio.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+        textbox_relatorio.configure(state="disabled")
 
         #NOTE - Rodapé
         criar_pedido_venda_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Criar pedido de venda", command=criar_pedido_venda_btn_func)
@@ -212,7 +217,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             lista_estoques = arquivo.readlines()
             for estoque in lista_estoques:
                 if nome_estoque in estoque:
-                    estoque = estoque.split("*")
+                    estoque = estoque.split("|")
                     codigo_local_estoque = estoque[1]
                     codigo_local_estoque = codigo_local_estoque.replace(" ", "")
                     break
@@ -260,7 +265,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
         lista_estoques = arquivo.readlines()
         lista_estoques_aux = []
         for estoque in lista_estoques:
-            estoque = estoque.split("*")
+            estoque = estoque.split("|")
             del estoque[1]
             estoque = str(estoque)
             estoque = estoque.replace("[", "")

@@ -73,7 +73,7 @@ def btn_saida_caminhao_func():
     return:
         - None
     """
-    janela_inicio.withdraw()
+    #janela_inicio.withdraw()
     janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo="SAI")
 def btn_entrada_caminhao_func():
     #//NOTE - btn_entrada_caminhao_func

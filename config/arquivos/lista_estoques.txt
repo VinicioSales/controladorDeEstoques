@@ -1,4 +1,4 @@
-Local de Estoque Padrão * 5646179801
-Caminhão 1 * 5646180100
-Caminhão 2 * 5646180101
-Caminhão 3 * 5646180102
+Local de Estoque Padrão | 5646179801
+Caminhão 1 | 5646180100
+Caminhão 2 | 5646180101
+Caminhão 3 | 5646180102

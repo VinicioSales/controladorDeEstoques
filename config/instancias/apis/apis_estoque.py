@@ -155,7 +155,7 @@ def listar_local_estoque():
         for estoque in locaisEncontrados:
             codigo_local_estoque = estoque["codigo_local_estoque"]
             descricao = estoque["descricao"]
-            locais_estoque.append(f"{descricao} * {codigo_local_estoque}")
+            locais_estoque.append(f"{descricao} | {codigo_local_estoque}")
         pagina += 1
         total_de_paginas = int(response["nPagina"])
     return locais_estoque
@@ -181,8 +181,8 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
         url = "https://app.omie.com.br/api/v1/estoque/movestoque/"
         payload = json.dumps({
                                 "call": "ListarMovimentos",
-                                "app_key": "2999342667321",
-                                "app_secret": "337f2cb08516d060a37c47243b91d20f",
+                                "app_key": app_key,
+                                "app_secret": app_secret,
                                 "param":[
                                             {
                                                 "pagina": pagina,
@@ -210,7 +210,7 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                 with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
                     lista_produtos = arquivo.readlines()
                 for linha_lista_produtos in lista_produtos:
-                    linha_lista_produtos = linha_lista_produtos.split("*")
+                    linha_lista_produtos = linha_lista_produtos.split("|")
                     cod_produto = linha_lista_produtos[0]
                     try:
                         cod_produto = cod_produto.replace(" ", "")
@@ -218,22 +218,24 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                         pass
                     if cCodigo == cod_produto:
                         nome_produto = linha_lista_produtos[1]
-                        nome_produto = nome_produto.replace(" ", "")
-                        nome_produto = nome_produto.replace("\n", "")
+                        nome_produto_aux = nome_produto.replace(" ", "")
+                        nome_produto_aux = nome_produto_aux.replace("\n", "")
                         with open(f"config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
                             lista_produtos_ceasa = arquivo.readlines()
                         for linha_lista_ceasa in lista_produtos_ceasa:
-                            linha_lista_ceasa = linha_lista_ceasa.split("*")
+                            linha_lista_ceasa = linha_lista_ceasa.split("|")
                             nome_produto_ceasa = linha_lista_ceasa[0]
                             nome_produto_ceasa = nome_produto_ceasa.replace(" ", "")
-                            if nome_produto_ceasa == nome_produto:
+                            if nome_produto_ceasa == nome_produto_aux:
                                 quant_ceasa = linha_lista_ceasa[2]
                                 quant_ceasa = quant_ceasa.replace(" ", "")
                                 quant_ceasa = int(quant_ceasa.replace("\n", ""))
                                 quant_nao_retornados = quant_nao_retornados - quant_ceasa
                         with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
                             quant_diferenca_estoque = arquivo.readlines()
-                        quant_diferenca_estoque.append(f"{nome_produto} * {quant_nao_retornados}\n")
+                            nome_produto = nome_produto.replace("\n", "")
+                            print(f"nome_produto: {nome_produto} - quant_nao_retornados: {quant_nao_retornados}")
+                        quant_diferenca_estoque.append(f"{nome_produto} | {quant_nao_retornados}\n")
                         with open("config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
                             arquivo.writelines(quant_diferenca_estoque)         
         pagina += 1
@@ -242,7 +244,7 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
     with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
         quant_diferenca_estoque = arquivo.readlines()
     for linha_dif_estoque in quant_diferenca_estoque:
-        linha_dif_estoque = linha_dif_estoque.split("*")
+        linha_dif_estoque = linha_dif_estoque.split("|")
         quant_dif_estoque = int(linha_dif_estoque[1])
         total_estoque += quant_dif_estoque
     return total_estoque

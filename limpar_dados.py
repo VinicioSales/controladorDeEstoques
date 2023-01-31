@@ -138,4 +138,4 @@ def listar_pedido_vendas():
         total_de_paginas = int(response["total_de_paginas"])
 
 listar_ajuste_estoque()
-#listar_pedido_vendas()
+listar_pedido_vendas()

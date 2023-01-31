@@ -7,6 +7,7 @@ from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 from config.instancias.apis.apis_projetos import get_cod_projeto
 from config.styles import estilo_janelas_func
 from config.instancias.janelas.janela_produtos import janela_produtos_func
+from config.instancias.janelas.janela_inicial import janela_inicial_func
 
 
 #SECTION - janela_produtos
@@ -31,7 +32,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         quantidade = entry_quantidade.get()
         if prod_selecionado != "" and quantidade != "":
             text_prod_selecionados.configure(state="normal")
-            text_prod_selecionados.insert("0.0", f"------------------------------------\n{prod_selecionado} | {quantidade}\n")
+            text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
             text_prod_selecionados.configure(state="disabled")
             combo_pesquisar_prod.configure(state="normal")
             entry_quantidade.delete("0", "end")
@@ -44,7 +45,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
             for produto in lista_produtos:
                 if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
                     text_prod_selecionados.configure(state="normal")
-                    text_prod_selecionados.insert("0.0", f"------------------------------------\n{prod_selecionado} | {quantidade}\n")
+                    text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
                     text_prod_selecionados.configure(state="disabled")
                     combo_pesquisar_prod.configure(state="normal")
                     entry_quantidade.delete("0", "end")
@@ -86,8 +87,17 @@ def janela_produtos_func(janela_mov_estoque, tipo):
                 del prods_selecionados[index]
         if prods_selecionados[-1] == "":
             prods_selecionados.pop()
-        janela_produtos.withdraw()
+        janela_produtos.destroy()
         janela_mov_estoque = janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo)
+    def voltar_prod_func():
+        #NOTE - voltar_prod_func
+        janela_produtos.destroy()
+        janela_mov_estoque.deiconify()
+        janela_mov_estoque.state("zoomed")
+    def inicio_prod_func():
+        #NOTE - inicio_prod_func
+        janela_produtos.destroy()
+        janela_mov_estoque.destroy()
     #!SECTION
 
 
@@ -110,7 +120,8 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         text="Voltar",
         font=(font_btn, 15),
         #image=img_voltar,
-        fg_color="transparent"
+        #fg_color="transparent",
+        command=voltar_prod_func
     )
     btn_voltar.place(relx=0.30, rely=0.1)
     img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
@@ -121,7 +132,8 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         text="Início",
         font=(font_btn, 15),
         #image=img_home,
-        fg_color="transparent"
+        #fg_color="transparent",
+        command=inicio_prod_func
     )
     btn_inicio.place(relx=0.38, rely=0.1)
 
@@ -223,7 +235,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         master=frame_meio,
         width=200,
         height=400,
-        font=("Arial", 15)
+        font=("Arial", 12)
         )
     text_prod_selecionados.place(relx=0.85, rely=0.48, anchor=tkinter.CENTER)
     text_prod_selecionados.configure(state="disabled")
@@ -238,21 +250,20 @@ with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
     lista_produtos = arquivo.readlines()
     lista_projetos_aux = []
     for produto in lista_produtos:
-        produto = produto.split("*")
+        produto = produto.split("|")
         del produto[0]
         produto = str(produto)
         produto = produto.replace("[", "")
         produto = produto.replace("]", "")
         produto = produto.replace("'", "")
         produto = produto.replace("\\n", "")
-        #produto = produto.replace(" ", "")
         lista_projetos_aux.append(produto)
     lista_produtos = lista_projetos_aux
 with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
     lista_estoques = arquivo.readlines()
     lista_estoques_aux = []
     for estoque in lista_estoques:
-        estoque = estoque.split("*")
+        estoque = estoque.split("|")
         del estoque[1]
         estoque = str(estoque)
         estoque = estoque.replace("[", "")
@@ -265,7 +276,7 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
     lista_projetos = arquivo.readlines()
     lista_projetos_aux = []
     for projeto in lista_projetos:
-        projeto = projeto.split("*")
+        projeto = projeto.split("|")
         del projeto[1]
         projeto = str(projeto)
         projeto = projeto.replace("[", "")
@@ -304,12 +315,13 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
             - string: codigo"""
         with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
             lista_produtos = arquivo.readlines()
-        nome_produto= nome_produto.replace(" ", "")
+        nome_produto_aux= nome_produto.replace(" ", "")
         for produto in lista_produtos:                
-            produto = produto.split("*")
+            produto = produto.split("|")
             nome = produto[1]
-            nome = nome.replace(" ", "")
-            if str(nome_produto) in str(nome):
+            nome_aux = nome.replace(" ", "")
+            print(f"nome_produto: {nome_produto} - nome: {nome}")
+            if str(nome_produto_aux) in str(nome_aux):
                 codigo = produto[0]
                 codigo = codigo.replace(" ", "")
                 break
@@ -327,7 +339,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
             lista_estoques = arquivo.readlines()
             for estoque in lista_estoques:
                 if nome_estoque in estoque:
-                    estoque = estoque.split("*")
+                    estoque = estoque.split("|")
                     codigo_local_estoque = estoque[1]
                     codigo_local_estoque = codigo_local_estoque.replace(" ", "")
                     break
@@ -345,12 +357,12 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
             lista_projetos = arquivo.readlines()
             for projeto in lista_projetos:
                 if nome_projeto in projeto:
-                    projeto = projeto.split("*")
+                    projeto = projeto.split("|")
                     codigo_projeto = projeto[1]
                     codigo_projeto = codigo_projeto.replace(" ", "")
                     break
         return codigo_projeto
-    def procurar_produto():
+    '''def procurar_produto():
         #NOTE - procurar_produto
         """Procura o produto na lista de produtos
 
@@ -361,7 +373,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
             - None"""
         search_text = pesquisar_produto.get()
         filtered_items = [item for item in lista_produtos if search_text in item]
-        combo_produtos.configure(values=filtered_items)
+        combo_produtos.configure(values=filtered_items)'''
     def procurar_estoque_interno():
         #NOTE - procurar_estoque_interno
         """Procura o estoque na lista de estoques
@@ -385,19 +397,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
             - None"""
         search_text = pesquisar_estoque_caminhao.get()
         filtered_items = [item for item in lista_estoques if search_text in item]
-        combo_estoque_caminhao.configure(values=filtered_items)
-    def procurar_projeto():
-        #NOTE - procurar_projeto
-        """Procura o projeto pesquisado
-        
-        params:
-            - None
-        
-        return:
-            - None"""
-        search_text = pesquisar_projeto.get()
-        filtered_items = [item for item in lista_projetos if search_text in item]
-        combo_projeto.configure(values=filtered_items)    
+        combo_estoque_caminhao.configure(values=filtered_items) 
     def ajustar_estoque_func():
         #NOTE - ajustar_estoque_func
         """Lança um ajuste de movimento de estoque
@@ -424,10 +424,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
         nome_estoque_caminhao = combo_estoque_caminhao.get()
         #nome_projeto = combo_projeto.get()
         nota = nota_entry.get()
-        if tipo == "SAI":
-            mov_obg = "saida"
-        if tipo == "ENT":
-            mov_obg = "entrada"
         obs_ent = f"{nota},\n\nentrada"
         obs_sai = f"{nota},\n\nsaida"
         
@@ -440,11 +436,8 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
     def inicio_func():
         #NOTE - inicio_func 
         janela_saida_caminhao.destroy()
-        janela_inicio.deiconify()
-        janela_inicio.state("zoomed")
-    def produtos_btn_func():
-        #NOTE - produtos_btn_func
-        janela_produtos = janela_produtos_func()
+        #sjanela_inicio.deiconify()
+        #janela_inicio.state("zoomed")
     def procurar_estoque_interno(event):
         #NOTE - procurar_estoque_interno
         estoque_interno = combo_estoque_interno.get()
@@ -503,7 +496,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
         master=frame_1,
         width=200,
         height=350,
-        font=("arial", 15)
+        font=("arial", 12)
     )
     text_produtos.place(relx=0.68, rely=0.45, anchor=tkinter.CENTER)
     for item in prods_selecionados:
