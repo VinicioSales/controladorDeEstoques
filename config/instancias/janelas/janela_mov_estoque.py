@@ -27,7 +27,23 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
     def btn_confimar_ceasa_1_func():
         """Função que pega o conteúdo digitado em uma entrada e fecha uma subjanela"""
         #NOTE - btn_confimar_ceasa_1_func
-        quant_produtos_ceasa = entry_confirmar_ceasa_1.get()
+        quant_produtos_ceasa = text_prod_selecionados.get("0.0", "end").split("\n")
+        sub_janela_confirmar_ceasa.destroy()
+        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
+        if len(prods_selecionados) <= 2:
+            sub_janela_confirmar_produtos_func()
+        else:
+            for index, item in enumerate(prods_selecionados):
+                if item == "":
+                    del prods_selecionados[index]
+            if prods_selecionados[-1] == "":
+                prods_selecionados.pop()
+            janela_produtos.destroy()
+            janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
+    def btn_confimar_ceasa_1_event_func(event):
+        """Função que pega o conteúdo digitado em uma entrada e fecha uma subjanela"""
+        #NOTE - btn_confimar_ceasa_1_event_func
+        quant_produtos_ceasa = text_prod_selecionados.get("0.0", "end").split("\n")
         sub_janela_confirmar_ceasa.destroy()
         prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
         if len(prods_selecionados) <= 2:
@@ -49,6 +65,8 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
         quant_produtos_ceasa = ""
         janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
     #!SECTION
+
+
     #NOTE - frame_confirmar_ceasa
     frame_confirmar_ceasa = ctk.CTkFrame(
         master=sub_janela_confirmar_ceasa,
@@ -63,21 +81,43 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
         text="Há algum produto na Ceasa?",
         font=("arial", 20, "bold")
     )
-    label_confirmar_ceasa_1.place(relx=0.5, rely=0.25, anchor=tkinter.CENTER)
-    
+    label_confirmar_ceasa_1.place(relx=0.5, rely=0.20, anchor=tkinter.CENTER)
+
     #NOTE - label_confirmar_ceasa_2
     label_confirmar_ceasa_2 = ctk.CTkLabel(
+        master=frame_confirmar_ceasa,
+        text="Produto:"
+    )
+    label_confirmar_ceasa_2.place(relx=0.2, rely=0.40, anchor=tkinter.CENTER)
+
+    #NOTE - btn_adicionar
+    btn_adicionar = ctk.CTkButton(
+        master=frame_confirmar_ceasa,
+        text="Adicionar",
+    )
+    btn_adicionar.place(relx=0.82, rely=0.50, anchor=tkinter.CENTER)
+
+    #NOTE - combo_produto_1
+    combo_produto_1 = ctk.CTkComboBox(
+        master=frame_confirmar_ceasa,
+        values=lista_produtos
+    )
+    combo_produto_1.place(relx=0.5, rely=0.40, anchor=tkinter.CENTER)
+    
+    #NOTE - label_confirmar_ceasa_3
+    label_confirmar_ceasa_3 = ctk.CTkLabel(
         master=frame_confirmar_ceasa,
         text="Quantidade:",
         font=("arial", 14)
     )
-    label_confirmar_ceasa_2.place(relx=0.2, rely=0.40, anchor=tkinter.CENTER)
+    label_confirmar_ceasa_3.place(relx=0.2, rely=0.50, anchor=tkinter.CENTER)
 
     #NOTE - entry_confirmar_ceasa_1
     entry_confirmar_ceasa_1 = ctk.CTkEntry(
         master=frame_confirmar_ceasa,
     )
-    entry_confirmar_ceasa_1.place(relx=0.5, rely=0.40, anchor=tkinter.CENTER)
+    entry_confirmar_ceasa_1.bind("<Return>", btn_confimar_ceasa_1_event_func)
+    entry_confirmar_ceasa_1.place(relx=0.5, rely=0.50, anchor=tkinter.CENTER)
 
     #NOTE - btn_confimar_ceasa_1
     btn_confimar_ceasa_1 = ctk.CTkButton(
@@ -85,7 +125,7 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
         text="Sim, enviar",
         command=btn_confimar_ceasa_1_func
     )
-    btn_confimar_ceasa_1.place(relx=0.35, rely=0.60, anchor=tkinter.CENTER)
+    btn_confimar_ceasa_1.place(relx=0.35, rely=0.70, anchor=tkinter.CENTER)
     
     #NOTE - btn_confimar_ceasa_2
     btn_confimar_ceasa_2 = ctk.CTkButton(
@@ -93,7 +133,7 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
         text="Não",
         command=btn_confimar_ceasa_2_func
     )
-    btn_confimar_ceasa_2.place(relx=0.65, rely=0.60, anchor=tkinter.CENTER)
+    btn_confimar_ceasa_2.place(relx=0.65, rely=0.70, anchor=tkinter.CENTER)
 #!SECTION
 
 
@@ -416,6 +456,8 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
 
 #!SECTION
 
+
+#SECTION - janela_mov_estoque_func
 #NOTE - Instancia Janela
 def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produtos_ceasa):
     """Instancia a janela de saida de caminhões
@@ -594,7 +636,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produ
 
     #NOTE - Produtos    
     
-    #NOTE - Frame
+    #NOTE - frame_1
     frame_1 = ctk.CTkFrame(
         master=janela_saida_caminhao,
         width=1300,
@@ -603,7 +645,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produ
     frame_1.pack()
     frame_1.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
-    #NOTE - Cabeçalho
+    #NOTE - btn_voltar_mov
     img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
     btn_voltar_mov = ctk.CTkButton(
         master=frame_1,
@@ -616,7 +658,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produ
     )
     btn_voltar_mov.place(relx=0.30, rely=0.20, anchor=tkinter.CENTER)
 
-    #NOTE - text_produtos
+    #NOTE - label_prods_selecionados
     label_prods_selecionados = ctk.CTkLabel(
         master=frame_1,
         text="Produtos Selecionados",
@@ -629,57 +671,74 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produ
         height=350,
         font=("arial", 12)
     )
+    #NOTE - text_produtos
     text_produtos.place(relx=0.68, rely=0.45, anchor=tkinter.CENTER)
     for item in prods_selecionados:
         text_produtos.insert("0.0", f"{item}\n")
     text_produtos.configure(state="disabled")
     
-    #NOTE - Selecionar Produtos
+    #NOTE - btn_produtos
     btn_produtos = ctk.CTkButton(
         master=frame_1,
         text="Selecionar Produtos",
         width=200,
         command=selecionar_prod_btn_func
     )
-    btn_produtos.place(relx=0.35, rely=0.52, anchor=tkinter.CENTER)
+    btn_produtos.place(relx=0.35, rely=0.45, anchor=tkinter.CENTER)
 
-    #NOTE - Estoque
-    #============= Estoque ===============#
+    #NOTE - estoques_interno_text
     estoques_interno_text = ctk.CTkTextbox(
         master=frame_1,
         width=200,
         height=25
         )
-    estoques_interno_text.place(relx=0.35, rely=0.61, anchor=tkinter.CENTER)
+    estoques_interno_text.place(relx=0.35, rely=0.54, anchor=tkinter.CENTER)
     estoques_interno_text.insert("0.0", "Estoque Origem:")
     estoques_interno_text.configure(state="disabled")
     combo_estoque_interno = ctk.CTkComboBox(master=frame_1, values=lista_estoques)
-    combo_estoque_interno.place(relx=0.5, rely=0.61, anchor=ctk.CENTER)
+    combo_estoque_interno.place(relx=0.5, rely=0.54, anchor=ctk.CENTER)
     combo_estoque_interno.bind("<Return>", procurar_estoque_interno)
     pesquisar_estoque_interno = ctk.StringVar()
+    #NOTE - estoques_caminhao_text
     estoques_caminhao_text = ctk.CTkTextbox(
         master=frame_1,
         width=200,
         height=25
         )
-    estoques_caminhao_text.place(relx=0.35, rely=0.68, anchor=tkinter.CENTER)
+    estoques_caminhao_text.place(relx=0.35, rely=0.61, anchor=tkinter.CENTER)
     estoques_caminhao_text.insert("0.0", "Estoque Destino:")
     estoques_caminhao_text.configure(state="disabled")
     combo_estoque_caminhao = ctk.CTkComboBox(master=frame_1, values=lista_estoques)
-    combo_estoque_caminhao.place(relx=0.5, rely=0.68, anchor=ctk.CENTER)
+    combo_estoque_caminhao.place(relx=0.5, rely=0.61, anchor=ctk.CENTER)
     combo_estoque_caminhao.bind("<Return>", procurar_estoque_caminhao)
     pesquisar_estoque_caminhao = ctk.StringVar()
-    
+    #NOTE - nota_text
     nota_text = ctk.CTkTextbox(
         master=frame_1,
         width=200,
         height=25
         )
-    nota_text.place(relx=0.35, rely=0.75, anchor=tkinter.CENTER)
+    nota_text.place(relx=0.35, rely=0.68, anchor=tkinter.CENTER)
     nota_text.insert("0.0", "Adicione código da nota:")
     nota_text.configure(state="disabled")
+    #NOTE - nota_entry
     nota_entry = ctk.CTkEntry(master=frame_1)
-    nota_entry.place(relx=0.5, rely=0.75, anchor=ctk.CENTER)
+    nota_entry.place(relx=0.5, rely=0.68, anchor=ctk.CENTER)
+
+    #NOTE - text_prod_ceasa
+    text_prod_ceasa = ctk.CTkTextbox(
+        master=frame_1,
+        width=200,
+        height=25
+        )
+    text_prod_ceasa.place(relx=0.35, rely=0.75, anchor=tkinter.CENTER)
+    text_prod_ceasa.insert("0.0", "Produtos na Ceasa:")
+    text_prod_ceasa.configure(state="disabled")
+
+    #NOTE - text_quant_produtos_ceasa
+    text_quant_produtos_ceasa = ctk.CTkTextbox(master=frame_1)
+    text_quant_produtos_ceasa.place(relx=0.5, rely=0.75, anchor=ctk.CENTER)
+    text_quant_produtos_ceasa.configure(state="disabled")
 
     #NOTE - btn_mov_estoque
     btn_mov_estoque = ctk.CTkButton(
@@ -691,7 +750,10 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produ
         command=ajustar_estoque_func
     )
     btn_mov_estoque.place(relx=0.68, rely=0.75, anchor=tkinter.CENTER)
+    
+
     janela_saida_caminhao.mainloop()
+#!SECTION
 
 prods_selecionados = ""
 #janela_mov_estoque_func("janela_inicio", prods_selecionados, "SAI")
