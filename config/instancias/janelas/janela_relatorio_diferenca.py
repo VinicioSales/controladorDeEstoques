@@ -1,14 +1,14 @@
 import customtkinter as ctk
 import tkinter
 import datetime
+from PIL import Image
 from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_produto
 from config.instancias.apis.apis_vendas import incluir_pedido_venda
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 from config.styles import estilo_janelas_func
 
-estilo_janelas = estilo_janelas_func()
-dimensao = estilo_janelas["dimensao"]
-
+#estilo_janelas = estilo_janelas_func()
+#dimensao = estilo_janelas["dimensao"]
 def janela_relatorio_diferenca_func(janela_inicio):
     """Mostra a diferença de quantidade de itens não retornados
     
@@ -17,8 +17,9 @@ def janela_relatorio_diferenca_func(janela_inicio):
         
     retun:
         - None"""
+    ctk.set_appearance_mode("dark")
     janela_relatorio_diferenca = ctk.CTk()
-    janela_relatorio_diferenca.geometry(dimensao)
+    #janela_relatorio_diferenca.geometry(dimensao)
     janela_relatorio_diferenca.state("zoomed")
     master = janela_relatorio_diferenca
 
@@ -33,7 +34,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
         return:
             - None"""
         sub_janela_relatorio = ctk.CTkToplevel()
-        sub_janela_relatorio.geometry(dimensao)
         sub_janela_relatorio.title("Relatório")
         sub_janela_relatorio.state("zoomed")
 
@@ -121,7 +121,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
         #NOTE - sub_janela_data_vencimento_func
         #=========== Instanciando Janea ================#
         sub_janela_data_vencimento = ctk.CTkToplevel()
-        sub_janela_data_vencimento.geometry(dimensao)
         sub_janela_data_vencimento.title("Data Vencimento")
 
         #SECTION - funções
@@ -257,7 +256,11 @@ def janela_relatorio_diferenca_func(janela_inicio):
         #NOTE - inicio_rel_func
         janela_relatorio_diferenca.withdraw()
         janela_inicio.deiconify()
-
+    def voltar_btn_func():
+        #NOTE - voltar_btn_func
+        janela_relatorio_diferenca.destroy()
+        janela_inicio.deiconify()
+        janela_inicio.state("zoomed")
     #!SECTION
     
     #================== Puxando lista de estoques ===================#
@@ -275,27 +278,50 @@ def janela_relatorio_diferenca_func(janela_inicio):
             lista_estoques_aux.append(estoque)
         lista_estoques = lista_estoques_aux
 
-    estoques_text = ctk.CTkTextbox(
-        master,
+    #NOTE - Frames
+    frame_principal = ctk.CTkFrame(
+        master=janela_relatorio_diferenca,
+        width=500,
+        height=500
+    )
+    frame_principal.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    
+    img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
+    btn_voltar = ctk.CTkButton(
+        master=frame_principal,
+        width=50,
+        height=30,
+        text="Voltar",
+        #image=img_voltar,
+        command=voltar_btn_func
+    )
+    btn_voltar.place(relx=0.1, rely=0.05)
+    label_estoque = ctk.CTkLabel(
+        master=frame_principal,
+        text="Selecione o Estoque",
         width=200,
-        height=25
+        height=25,
+        font=("arial", 19, "bold")
         )
-    estoques_text.place(relx=0.3, rely=0.3, anchor=tkinter.CENTER)
-    estoques_text.insert("0.0", "Estoque interno:")
-    estoques_text.configure(state="disabled")
-    combo_estoque = ctk.CTkComboBox(master, values=lista_estoques)
-    combo_estoque.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)    
-    pesquisar_estoque = ctk.StringVar()
-    filtrar_estoque_entry = ctk.CTkEntry(master, textvariable=pesquisar_estoque)
-    filtrar_estoque_entry.place(relx=0.7, rely=0.3, anchor=ctk.CENTER)
-    filtrar_btn = ctk.CTkButton(master, text="Filtrar", command=procurar_estoque)
-    filtrar_btn.place(relx=0.8, rely=0.3, anchor=ctk.CENTER)
-
-    #NOTE - Rodapé
-    selecionar_estoque_btn = ctk.CTkButton(master=janela_relatorio_diferenca, text="Selecionar", command=selecionar_estoque_func)
-    selecionar_estoque_btn.place(relx=0.8, rely=0.4, anchor=ctk.CENTER)
-    inicio_rel_btn = ctk.CTkButton(master=janela_relatorio_diferenca, text="Início", command=inicio_rel_func)
-    inicio_rel_btn.place(relx=0.8, rely=0.5, anchor=ctk.CENTER)
+    label_estoque.place(relx=0.5, rely=0.23, anchor=tkinter.CENTER)
+    combo_estoque = ctk.CTkComboBox(
+        master=frame_principal,
+        width=200,
+        height=35,
+        values=lista_estoques)
+    combo_estoque.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
+    btn_selecionar = ctk.CTkButton(
+        master=frame_principal,
+        width=200,
+        height=35,
+        text="Selecionar",
+        command=selecionar_estoque_func)
+    btn_selecionar.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
+    inicio_rel_btn = ctk.CTkButton(
+        master=frame_principal,
+        text="Início",
+        command=inicio_rel_func)
+    inicio_rel_btn.place(relx=0.5, rely=0.48, anchor=ctk.CENTER)
     
     
 
@@ -304,3 +330,4 @@ def janela_relatorio_diferenca_func(janela_inicio):
         janela_relatorio_diferenca.withdraw()
 
     janela_relatorio_diferenca.mainloop()
+#janela_relatorio_diferenca_func("ok")

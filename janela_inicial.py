@@ -11,6 +11,7 @@ from config.instancias.apis import listar_local_estoque
 from config.instancias.apis import listar_projetos
 from config.instancias.apis import listar_produtos
 
+
 #SECTION - Puxando listas
 #NOTE - listar_local_estoque
 data_atual = date.today()
@@ -61,11 +62,18 @@ ctk.set_appearance_mode(tema_janela)
 
 #SECTION - INICIO
 #====================== FRAMES ===================#
-frame_1_inicio = frame_1_inicio_func(janela_inicio)
+
+frame_1_inicio = ctk.CTkFrame(
+    master=janela_inicio,
+    width=500,
+    height=500
+    )
+frame_1_inicio.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 prods_selecionados = ""
+
 #=============== FUNCAO BOTAO ==================#
-def btn_saida_caminhao_func():
-    #//NOTE - btn_saida_caminhao_func
+def btn_mov_estoque_func():
+    #//NOTE - btn_mov_estoque_func
     """Abre a janela de movimento de estoque
     params:
         - None
@@ -100,22 +108,25 @@ def btn_relatorio_func():
 
 #==================== PAGINA INICIAL ================#
 #========= BOTOES ===========#
-btn_saida_caminhao = ctk.CTkButton(
+btn_mov_estoque = ctk.CTkButton(
     master=frame_1_inicio,
-    text="Saída de caminhões",
+    text="Movimento de estoque",
     hover_color = "#AA0",
-    command=btn_saida_caminhao_func
+    width=200,
+    height=50,
+    font=("Arial", 20, "bold"),
+    command=btn_mov_estoque_func
 )
-btn_saida_caminhao.place(relx=0.1, rely=0.1, anchor=tkinter.CENTER)
+btn_mov_estoque.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
 btn_relatorio = ctk.CTkButton(
     master=frame_1_inicio,
     text="Relatório",
+    font=("Arial", 20, "bold"),
     hover_color = "#AA0",
     command=btn_relatorio_func
 )
-btn_relatorio.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
+btn_relatorio.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 #!SECTION
-
 
 janela_inicio.mainloop()
