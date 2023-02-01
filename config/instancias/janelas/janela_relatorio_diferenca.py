@@ -137,7 +137,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
         sub_janela_data_vencimento = ctk.CTkToplevel()
         sub_janela_data_vencimento.title("")
         sub_janela_data_vencimento.update_idletasks()
-
         x = (sub_janela_data_vencimento.winfo_screenwidth() // 2) - (sub_janela_data_vencimento.winfo_width() // 2)
         y = (sub_janela_data_vencimento.winfo_screenheight() // 2) - (sub_janela_data_vencimento.winfo_height() // 2)
         sub_janela_data_vencimento.geometry(f"+{x}+{y}")
