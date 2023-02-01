@@ -319,7 +319,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
             produto = produto.split("|")
             nome = produto[1]
             nome_aux = nome.replace(" ", "")
-            print(f"nome_produto: {nome_produto} - nome: {nome}")
             if str(nome_produto_aux) in str(nome_aux):
                 codigo = produto[0]
                 codigo = codigo.replace(" ", "")

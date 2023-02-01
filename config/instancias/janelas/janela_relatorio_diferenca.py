@@ -6,6 +6,10 @@ from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_pro
 from config.instancias.apis.apis_vendas import incluir_pedido_venda
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 from config.styles import estilo_janelas_func
+from config.credenciais.database import database_infos_func
+
+database_infos = database_infos_func()
+codigo_cliente = database_infos["codigo_cliente"]
 
 #estilo_janelas = estilo_janelas_func()
 #dimensao = estilo_janelas["dimensao"]
@@ -53,19 +57,8 @@ def janela_relatorio_diferenca_func(janela_inicio):
             Função que cria um pedido de venda a partir de uma lista de produtos e quantidades.
             """
             
-            for linha in quant_diferenca_estoque:
-                
-                linha = linha.split("|")
-                nome_produto = linha[0]
-                quantidade_prod = linha[1]
-                quantidade_prod = quantidade_prod.replace(" ", "")
-                quantidade_prod = quantidade_prod.replace("\n", "")
-                #================ TESTE =================#
-                codigo_cliente = "5646179802"
-                #================ TESTE =================#
-                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
-                sub_janela_data_vencimento = sub_janela_data_vencimento_func(codigo_produto, codigo_cliente, cfop, descricao, ncm, unidade, valor_unitario, quantidade_prod)              
-                #incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod)
+            
+            sub_janela_data_vencimento = sub_janela_data_vencimento_func(quant_diferenca_estoque)
         def inicio_sub_func():
             #NOTE - inicio_sub_func
             """
@@ -138,7 +131,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
         inicio_sub_btn.place(relx=0.19, rely=0.9, anchor=ctk.S)
     #!SECTION
     #SECTION - sub_janela_data_vencimento_func
-    def sub_janela_data_vencimento_func(codigo_produto, codigo_cliente, cfop, descricao, ncm, unidade, valor_unitario, quantidade_prod):
+    def sub_janela_data_vencimento_func(quant_diferenca_estoque):
         #NOTE - sub_janela_data_vencimento_func
         #=========== Instanciando Janea ================#
         sub_janela_data_vencimento = ctk.CTkToplevel()
@@ -188,7 +181,15 @@ def janela_relatorio_diferenca_func(janela_inicio):
             dias_uteis = int(dias_uteis)
             data_vencimento = somar_dias_uteis(dias_uteis)
             data_vencimento = data_vencimento.strftime("%d/%m/%Y")
-            incluir_pedido_venda(codigo_produto, codigo_cliente, data_vencimento, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod)
+            for linha in quant_diferenca_estoque:                
+                linha = linha.split("|")
+                nome_produto = linha[0]
+                quantidade_prod = linha[1]
+                quantidade_prod = quantidade_prod.replace(" ", "")
+                quantidade_prod = quantidade_prod.replace("\n", "")                
+                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
+                incluir_pedido_venda(codigo_produto, codigo_cliente, data_vencimento, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod)
+            sub_janela_data_vencimento.destroy()
 
         #NOTE - Frame
         frame_principal_data = ctk.CTkFrame(
