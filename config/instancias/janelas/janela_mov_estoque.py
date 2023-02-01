@@ -17,7 +17,6 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     #NOTE - janela_produtos_func
     """Cria a janela inicial"""
     janela_produtos = ctk.CTk()
-    janela_produtos.geometry("1100x580")
     janela_produtos.title("CustomTkinter simple_example.py")
     janela_produtos.state("zoomed")
     
@@ -109,8 +108,8 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         height=500,
         fg_color="transparent"
         )
-    #frame_meio.place(relx=0.3, rely=0.3)
-    frame_meio.pack()
+    frame_meio.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    #frame_meio.pack()
     #NOTE - Cabeçalho
     img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
     btn_voltar = ctk.CTkButton(

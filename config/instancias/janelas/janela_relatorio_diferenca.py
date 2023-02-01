@@ -46,6 +46,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             """
             sub_janela_relatorio.withdraw()
             janela_inicio.deiconify()
+            janela_inicio.state("zoomed")
         def criar_pedido_venda_btn_func():
             #NOTE - criar_pedido_venda_btn_func
             """
@@ -77,14 +78,26 @@ def janela_relatorio_diferenca_func(janela_inicio):
             #NOTE - estoques_sub_tbn_func
             sub_janela_relatorio.withdraw()
             janela_relatorio_diferenca.deiconify()
+            janela_relatorio_diferenca.state("zoomed")
         #!SECTION
 
+        #NOTE - Frame
+        frame_principal = ctk.CTkFrame(
+            master=sub_janela_relatorio,
+            width=500,
+            height=350
+        )
+        frame_principal.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
         #NOTE - Texto
-        label = ctk.CTkLabel(sub_janela_relatorio, text="Quantidade de produtos não retornados:")
-        label.place(relx=0.3, rely=0.1, anchor=ctk.NW)
+        label = ctk.CTkLabel(
+            master=frame_principal,
+            text="Quantidade de produtos não retornados:",
+            font=("arial", 16, "bold")
+            )
+        label.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
         #NOTE - produtos_nao_retornados
         textbox = ctk.CTkTextbox(
-        master=sub_janela_relatorio,
+        master=frame_principal,
         width=600,
         height=5,
         border_width=2,
@@ -98,8 +111,8 @@ def janela_relatorio_diferenca_func(janela_inicio):
         with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
             quant_diferenca_estoque = arquivo.readlines()
         textbox_relatorio = ctk.CTkTextbox(
-        master=sub_janela_relatorio,
-        width=600,
+        master=frame_principal,
+        width=500,
         height=200,
         border_width=2,
         corner_radius=10,
@@ -109,19 +122,32 @@ def janela_relatorio_diferenca_func(janela_inicio):
         textbox_relatorio.configure(state="disabled")
 
         #NOTE - Rodapé
-        criar_pedido_venda_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Criar pedido de venda", command=criar_pedido_venda_btn_func)
-        criar_pedido_venda_btn.place(relx=0.4, rely=0.9, anchor=ctk.S)
-        estoques_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Estoques", command=estoques_sub_tbn_func)
-        estoques_btn.place(relx=0.6, rely=0.9, anchor=ctk.S)
-        inicio_sub_btn = ctk.CTkButton(master=sub_janela_relatorio, text="Início", command=inicio_func)
-        inicio_sub_btn.place(relx=0.8, rely=0.9, anchor=ctk.S)
+        criar_pedido_venda_btn = ctk.CTkButton(
+            master=frame_principal,
+            text="Criar pedido de venda",
+            fg_color="#00993D",
+            hover_color=("#007830"),
+            command=criar_pedido_venda_btn_func)
+        criar_pedido_venda_btn.place(relx=0.8, rely=0.9, anchor=ctk.S)
+        estoques_btn = ctk.CTkButton(
+            master=frame_principal,
+            text="Estoques",
+            command=estoques_sub_tbn_func)
+        estoques_btn.place(relx=0.5, rely=0.9, anchor=ctk.S)
+        inicio_sub_btn = ctk.CTkButton(master=frame_principal, text="Início", command=inicio_func)
+        inicio_sub_btn.place(relx=0.19, rely=0.9, anchor=ctk.S)
     #!SECTION
     #SECTION - sub_janela_data_vencimento_func
     def sub_janela_data_vencimento_func(codigo_produto, codigo_cliente, cfop, descricao, ncm, unidade, valor_unitario, quantidade_prod):
         #NOTE - sub_janela_data_vencimento_func
         #=========== Instanciando Janea ================#
         sub_janela_data_vencimento = ctk.CTkToplevel()
-        sub_janela_data_vencimento.title("Data Vencimento")
+        sub_janela_data_vencimento.title("")
+        sub_janela_data_vencimento.update_idletasks()
+
+        x = (sub_janela_data_vencimento.winfo_screenwidth() // 2) - (sub_janela_data_vencimento.winfo_width() // 2)
+        y = (sub_janela_data_vencimento.winfo_screenheight() // 2) - (sub_janela_data_vencimento.winfo_height() // 2)
+        sub_janela_data_vencimento.geometry(f"+{x}+{y}")
 
         #SECTION - funções
         def somar_dias_uteis(dias_a_somar):
@@ -164,6 +190,13 @@ def janela_relatorio_diferenca_func(janela_inicio):
             data_vencimento = data_vencimento.strftime("%d/%m/%Y")
             incluir_pedido_venda(codigo_produto, codigo_cliente, data_vencimento, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod)
 
+        #NOTE - Frame
+        frame_principal_data = ctk.CTkFrame(
+            master=sub_janela_data_vencimento,
+            width=350,
+            height=250
+        )
+        frame_principal_data.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
         #NOTE - Body
         lista_data_vencimento = ["A vista",
                                 "7 dias",
@@ -173,31 +206,34 @@ def janela_relatorio_diferenca_func(janela_inicio):
                                 "45 Dias",
                                 "60 Dias"]
         data_vencimento_text = ctk.CTkTextbox(
-            master=sub_janela_data_vencimento,
+            master=frame_principal_data,
             width=300,
-            height=25)
-        data_vencimento_text.insert("0.0", "Selecione os dias para a data de vencimento")
-        data_vencimento_text.place(relx=0.4, rely=0.3, anchor=tkinter.CENTER)
+            height=25,
+            font=("arial", 12, "bold"))
+        data_vencimento_text.insert("0.0", "                  Selecione a data de vencimento")
+        data_vencimento_text.place(relx=0.5, rely=0.15, anchor=tkinter.CENTER)
         data_vencimento_text.configure(state="disabled")
-        data_vencimento_combo = ctk.CTkComboBox(master=sub_janela_data_vencimento, values=lista_data_vencimento)
-        data_vencimento_combo.place(relx=0.7, rely=0.3, anchor=tkinter.CENTER)
+        data_vencimento_combo = ctk.CTkComboBox(master=frame_principal_data, values=lista_data_vencimento)
+        data_vencimento_combo.place(relx=0.5, rely=0.35, anchor=tkinter.CENTER)
         data_vencimento_text_2 = ctk.CTkTextbox(
-            master=sub_janela_data_vencimento,
-            width=200,
-            height=2)
-        data_vencimento_text_2.insert("0.0", "Ou digite os dias")
-        data_vencimento_text_2.place(relx=0.4, rely=0.4, anchor=tkinter.CENTER)
+            master=frame_principal_data,
+            width=210,
+            height=2,
+            font=("arial", 12, "bold")
+            )
+        data_vencimento_text_2.insert("0.0", "                Ou digite os dias")
+        data_vencimento_text_2.place(relx=0.5, rely=0.50, anchor=tkinter.CENTER)
         data_vencimento_text_2.configure(state="disabled")
-        data_vencimento_entry = ctk.CTkEntry(master=sub_janela_data_vencimento)
-        data_vencimento_entry.place(relx=0.7, rely=0.4, anchor=tkinter.CENTER)
-
-        #NOTE - Rodapé
+        data_vencimento_entry = ctk.CTkEntry(master=frame_principal_data)
+        data_vencimento_entry.place(relx=0.5, rely=0.65, anchor=tkinter.CENTER)
         confirmar_venda_btn = ctk.CTkButton(
-            master=sub_janela_data_vencimento,
+            master=frame_principal_data,
             text="Confirmar e gerar venda",
+            fg_color="#00993D",
+            hover_color=("#007830"),
             command=confirmar_venda_btn_func
         )
-        confirmar_venda_btn.place(relx=0.4, rely=0.8, anchor=tkinter.CENTER)
+        confirmar_venda_btn.place(relx=0.5, rely=0.83, anchor=tkinter.CENTER)
         
 
     #!SECTION
@@ -256,6 +292,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
         #NOTE - inicio_rel_func
         janela_relatorio_diferenca.withdraw()
         janela_inicio.deiconify()
+        janela_inicio.state("zoomed")
     def voltar_btn_func():
         #NOTE - voltar_btn_func
         janela_relatorio_diferenca.destroy()
