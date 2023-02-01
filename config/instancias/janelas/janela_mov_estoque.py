@@ -9,6 +9,93 @@ from config.styles import estilo_janelas_func
 from config.instancias.janelas.janela_produtos import janela_produtos_func
 from config.instancias.janelas.janela_inicial import janela_inicial_func
 
+#SECTION - sub_janela_confirmar_ceasa_func
+def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo):
+    """Cria uma subjanela "sub_janela_confirmar_ceasa", centraliza a janela na tela,
+    e apresenta uma pergunta "Há algum produto na Ceasa?" com uma entrada para a
+    quantidade e dois botões "Ok" e "Cancelar".
+    """
+    sub_janela_confirmar_ceasa = ctk.CTkToplevel()
+    sub_janela_confirmar_ceasa.geometry("500x200")
+    sub_janela_confirmar_ceasa.title("")
+    sub_janela_confirmar_ceasa.update_idletasks()
+    x = (sub_janela_confirmar_ceasa.winfo_screenwidth() // 2) - (sub_janela_confirmar_ceasa.winfo_width() // 2)
+    y = (sub_janela_confirmar_ceasa.winfo_screenheight() // 2) - (sub_janela_confirmar_ceasa.winfo_height() // 2)
+    sub_janela_confirmar_ceasa.geometry(f"+{x}+{y}")
+
+    #SECTION - Funções confirmar Ceasa
+    def btn_confimar_ceasa_1_func():
+        """Função que pega o conteúdo digitado em uma entrada e fecha uma subjanela"""
+        #NOTE - btn_confimar_ceasa_1_func
+        quant_produtos_ceasa = entry_confirmar_ceasa_1.get()
+        sub_janela_confirmar_ceasa.destroy()
+        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
+        if len(prods_selecionados) <= 2:
+            sub_janela_confirmar_produtos_func()
+        else:
+            for index, item in enumerate(prods_selecionados):
+                if item == "":
+                    del prods_selecionados[index]
+            if prods_selecionados[-1] == "":
+                prods_selecionados.pop()
+            janela_produtos.destroy()
+            janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
+    def btn_confimar_ceasa_2_func():
+        """
+        Esta função fecha a sub-janela "sub_janela_confirmar_ceasa".
+        """
+        sub_janela_confirmar_ceasa.destroy()
+        quant_produtos_ceasa = ""
+        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
+    #!SECTION
+    #NOTE - frame_confirmar_ceasa
+    frame_confirmar_ceasa = ctk.CTkFrame(
+        master=sub_janela_confirmar_ceasa,
+        width=470,
+        height=270
+    )
+    frame_confirmar_ceasa.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    
+    #NOTE - label_confirmar_ceasa_1
+    label_confirmar_ceasa_1 = ctk.CTkLabel(
+        master=frame_confirmar_ceasa,
+        text="Há algum produto na Ceasa?",
+        font=("arial", 20, "bold")
+    )
+    label_confirmar_ceasa_1.place(relx=0.5, rely=0.25, anchor=tkinter.CENTER)
+    
+    #NOTE - label_confirmar_ceasa_2
+    label_confirmar_ceasa_2 = ctk.CTkLabel(
+        master=frame_confirmar_ceasa,
+        text="Quantidade:",
+        font=("arial", 14)
+    )
+    label_confirmar_ceasa_2.place(relx=0.2, rely=0.40, anchor=tkinter.CENTER)
+
+    #NOTE - entry_confirmar_ceasa_1
+    entry_confirmar_ceasa_1 = ctk.CTkEntry(
+        master=frame_confirmar_ceasa,
+    )
+    entry_confirmar_ceasa_1.place(relx=0.5, rely=0.40, anchor=tkinter.CENTER)
+
+    #NOTE - btn_confimar_ceasa_1
+    btn_confimar_ceasa_1 = ctk.CTkButton(
+        master=frame_confirmar_ceasa,
+        text="Sim, enviar",
+        command=btn_confimar_ceasa_1_func
+    )
+    btn_confimar_ceasa_1.place(relx=0.35, rely=0.60, anchor=tkinter.CENTER)
+    
+    #NOTE - btn_confimar_ceasa_2
+    btn_confimar_ceasa_2 = ctk.CTkButton(
+        master=frame_confirmar_ceasa,
+        text="Não",
+        command=btn_confimar_ceasa_2_func
+    )
+    btn_confimar_ceasa_2.place(relx=0.65, rely=0.60, anchor=tkinter.CENTER)
+#!SECTION
+
+
 #SECTION - sub_janela_confirmar_produtos
 def sub_janela_confirmar_produtos_func():
     #NOTE - sub_janela_confirmar_produtos_func
@@ -124,18 +211,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         text_prod_selecionados.configure(state="disabled")
     def confirmar_btn_func():
         #NOTE - confirmar_btn_func
-        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
-        if len(prods_selecionados) <= 2:
-            sub_janela_confirmar_produtos = sub_janela_confirmar_produtos_func()
-
-        else:
-            for index, item in enumerate(prods_selecionados):
-                if item == "":
-                    del prods_selecionados[index]
-            if prods_selecionados[-1] == "":
-                prods_selecionados.pop()
-            janela_produtos.destroy()
-            janela_mov_estoque = janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo)
+        sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_produtos.destroy()
@@ -336,7 +412,7 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
 #!SECTION
 
 #NOTE - Instancia Janela
-def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
+def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produtos_ceasa):
     """Instancia a janela de saida de caminhões
     params:
         - ctk: janela_inicio

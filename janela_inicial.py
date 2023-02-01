@@ -72,6 +72,7 @@ frame_1_inicio.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 prods_selecionados = ""
 
 #=============== FUNCAO BOTAO ==================#
+quant_produtos_ceasa = ""
 def btn_mov_estoque_func():
     #//NOTE - btn_mov_estoque_func
     """Abre a janela de movimento de estoque
@@ -82,7 +83,7 @@ def btn_mov_estoque_func():
         - None
     """
     #janela_inicio.withdraw()
-    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo="SAI")
+    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, "SAI", quant_produtos_ceasa)
 def btn_entrada_caminhao_func():
     #//NOTE - btn_entrada_caminhao_func
     """Abre a janela de movimento de estoque
@@ -92,8 +93,8 @@ def btn_entrada_caminhao_func():
     return:
         - None
     """
-    janela_inicio.withdraw()
-    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo="ENT")
+    janela_inicio.withdraw()    
+    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, "ENT", quant_produtos_ceasa)
 def btn_relatorio_func():
     #//NOTE - btn_relatorio_func
     """Abre a janela de relatorio de diferença de quantidade
