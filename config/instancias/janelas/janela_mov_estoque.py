@@ -45,6 +45,7 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
         Esta função fecha a sub-janela "sub_janela_confirmar_ceasa".
         """
         sub_janela_confirmar_ceasa.destroy()
+        janela_produtos.destroy()
         quant_produtos_ceasa = ""
         janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
     #!SECTION
@@ -211,7 +212,11 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         text_prod_selecionados.configure(state="disabled")
     def confirmar_btn_func():
         #NOTE - confirmar_btn_func
-        sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo)
+        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
+        if len(prods_selecionados) <= 2:
+            sub_janela_confirmar_produtos_func()
+        else:
+            sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_produtos.destroy()
