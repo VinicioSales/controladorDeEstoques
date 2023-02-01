@@ -407,6 +407,13 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
         return:
             - None"""
         # Pegando variaveis
+        #barra_proresso = ctk.CTkProgressBar(master=frame_1)
+        #barra_proresso.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        #barra_proresso.place(relx=0.5, rely=0.8)
+        #barra_proresso.configure(mode="indeterminnate")
+        #barra_proresso.start()
+        
+
         lista_nome_produto = []
         lista_cod_produto = []
         lista_quantidade_produto = []
@@ -424,10 +431,9 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
         #nome_projeto = combo_projeto.get()
         nota = nota_entry.get()
         obs_ent = f"{nota},\n\nentrada"
-        obs_sai = f"{nota},\n\nsaida"
-        
+        obs_sai = f"{nota},\n\nsaida"        
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
-        codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
+        codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
         for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
             cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
             incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_ent, codigo_local_estoque)
@@ -435,8 +441,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
     def inicio_func():
         #NOTE - inicio_func 
         janela_saida_caminhao.destroy()
-        #sjanela_inicio.deiconify()
-        #janela_inicio.state("zoomed")
     def procurar_estoque_interno(event):
         #NOTE - procurar_estoque_interno
         estoque_interno = combo_estoque_interno.get()
