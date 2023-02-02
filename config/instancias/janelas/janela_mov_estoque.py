@@ -10,7 +10,7 @@ from config.instancias.janelas.janela_produtos import janela_produtos_func
 from config.instancias.janelas.janela_inicial import janela_inicial_func
 
 #SECTION - sub_janela_confirmar_ceasa_func
-def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo):
+def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo, janela_mov_estoque):
     """Cria uma subjanela "sub_janela_confirmar_ceasa", centraliza a janela na tela,
     e apresenta uma pergunta "Há algum produto na Ceasa?" com uma entrada para a
     quantidade e dois botões "Ok" e "Cancelar".
@@ -25,37 +25,13 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
 
     #SECTION - Funções confirmar Ceasa
     def btn_confimar_ceasa_1_func():
-        """Função que pega o conteúdo digitado em uma entrada e fecha uma subjanela"""
-        #NOTE - btn_confimar_ceasa_1_func
-        quant_produtos_ceasa = text_prod_selecionados.get("0.0", "end").split("\n")
         sub_janela_confirmar_ceasa.destroy()
-        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
-        if len(prods_selecionados) <= 2:
-            sub_janela_confirmar_produtos_func()
-        else:
-            for index, item in enumerate(prods_selecionados):
-                if item == "":
-                    del prods_selecionados[index]
-            if prods_selecionados[-1] == "":
-                prods_selecionados.pop()
-            janela_produtos.destroy()
-            janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
+        janela_produtos.destroy()
+        sub_janela_ceasa = sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos)
     def btn_confimar_ceasa_1_event_func(event):
-        """Função que pega o conteúdo digitado em uma entrada e fecha uma subjanela"""
-        #NOTE - btn_confimar_ceasa_1_event_func
-        quant_produtos_ceasa = text_prod_selecionados.get("0.0", "end").split("\n")
+        janela_produtos.destroy()
         sub_janela_confirmar_ceasa.destroy()
-        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
-        if len(prods_selecionados) <= 2:
-            sub_janela_confirmar_produtos_func()
-        else:
-            for index, item in enumerate(prods_selecionados):
-                if item == "":
-                    del prods_selecionados[index]
-            if prods_selecionados[-1] == "":
-                prods_selecionados.pop()
-            janela_produtos.destroy()
-            janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
+        sub_janela_ceasa = sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos)
     def btn_confimar_ceasa_2_func():
         """
         Esta função fecha a sub-janela "sub_janela_confirmar_ceasa".
@@ -81,51 +57,15 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
         text="Há algum produto na Ceasa?",
         font=("arial", 20, "bold")
     )
-    label_confirmar_ceasa_1.place(relx=0.5, rely=0.20, anchor=tkinter.CENTER)
-
-    #NOTE - label_confirmar_ceasa_2
-    label_confirmar_ceasa_2 = ctk.CTkLabel(
-        master=frame_confirmar_ceasa,
-        text="Produto:"
-    )
-    label_confirmar_ceasa_2.place(relx=0.2, rely=0.40, anchor=tkinter.CENTER)
-
-    #NOTE - btn_adicionar
-    btn_adicionar = ctk.CTkButton(
-        master=frame_confirmar_ceasa,
-        text="Adicionar",
-    )
-    btn_adicionar.place(relx=0.82, rely=0.50, anchor=tkinter.CENTER)
-
-    #NOTE - combo_produto_1
-    combo_produto_1 = ctk.CTkComboBox(
-        master=frame_confirmar_ceasa,
-        values=lista_produtos
-    )
-    combo_produto_1.place(relx=0.5, rely=0.40, anchor=tkinter.CENTER)
-    
-    #NOTE - label_confirmar_ceasa_3
-    label_confirmar_ceasa_3 = ctk.CTkLabel(
-        master=frame_confirmar_ceasa,
-        text="Quantidade:",
-        font=("arial", 14)
-    )
-    label_confirmar_ceasa_3.place(relx=0.2, rely=0.50, anchor=tkinter.CENTER)
-
-    #NOTE - entry_confirmar_ceasa_1
-    entry_confirmar_ceasa_1 = ctk.CTkEntry(
-        master=frame_confirmar_ceasa,
-    )
-    entry_confirmar_ceasa_1.bind("<Return>", btn_confimar_ceasa_1_event_func)
-    entry_confirmar_ceasa_1.place(relx=0.5, rely=0.50, anchor=tkinter.CENTER)
+    label_confirmar_ceasa_1.place(relx=0.5, rely=0.32, anchor=tkinter.CENTER)
 
     #NOTE - btn_confimar_ceasa_1
     btn_confimar_ceasa_1 = ctk.CTkButton(
         master=frame_confirmar_ceasa,
-        text="Sim, enviar",
+        text="Sim",
         command=btn_confimar_ceasa_1_func
     )
-    btn_confimar_ceasa_1.place(relx=0.35, rely=0.70, anchor=tkinter.CENTER)
+    btn_confimar_ceasa_1.place(relx=0.35, rely=0.60, anchor=tkinter.CENTER)
     
     #NOTE - btn_confimar_ceasa_2
     btn_confimar_ceasa_2 = ctk.CTkButton(
@@ -133,7 +73,7 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
         text="Não",
         command=btn_confimar_ceasa_2_func
     )
-    btn_confimar_ceasa_2.place(relx=0.65, rely=0.70, anchor=tkinter.CENTER)
+    btn_confimar_ceasa_2.place(relx=0.65, rely=0.60, anchor=tkinter.CENTER)
 #!SECTION
 
 
@@ -256,7 +196,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         if len(prods_selecionados) <= 2:
             sub_janela_confirmar_produtos_func()
         else:
-            sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo)
+            sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo, janela_mov_estoque)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_produtos.destroy()
@@ -304,6 +244,14 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         command=inicio_prod_func
     )
     btn_inicio.place(relx=0.38, rely=0.1)
+
+    #NOTE - label_titulo
+    label_titulo = ctk.CTkLabel(
+        master=frame_meio,
+        text="Selecionar Produtos",
+        font=("arial", 18, "bold")
+    )
+    label_titulo.place(relx=0.5, rely=0.19, anchor=tkinter.CENTER)
 
     #NOTE - frame_central
     frame_central = ctk.CTkFrame(
@@ -410,6 +358,243 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     #!SECTION
 
     janela_produtos.mainloop()
+#!SECTION
+
+
+#SECTION - sub_janela_ceasa_func
+def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos):
+    #NOTE - sub_janela_ceasa_func
+    """Cria a janela inicial"""
+    sub_janela_ceasa = ctk.CTk()
+    sub_janela_ceasa.title("CustomTkinter simple_example.py")
+    sub_janela_ceasa.state("zoomed")
+    
+    font_texto = "arial"
+    font_btn = "arial"
+    cor_frame_meio = "#3b3b3b"
+
+    #SECTION - Funções
+    def adicionar_prod_btn_func():
+        #NOTE - adicionar_prod_btn_func
+        prod_selecionado = combo_pesquisar_prod.get()
+        quantidade = entry_quantidade.get()
+        if prod_selecionado != "" and quantidade != "":
+            text_prod_ceasa.configure(state="normal")
+            text_prod_ceasa.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
+            text_prod_ceasa.configure(state="disabled")
+            combo_pesquisar_prod.configure(state="normal")
+            entry_quantidade.delete("0", "end")
+    def adicionar_prod_func(event):
+        #NOTE - adicionar_prod_func
+        prod_selecionado = combo_pesquisar_prod.get()
+        quantidade = entry_quantidade.get()        
+        if prod_selecionado != "" and quantidade != "":
+            filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
+            for produto in lista_produtos:
+                if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
+                    text_prod_ceasa.configure(state="normal")
+                    text_prod_ceasa.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
+                    text_prod_ceasa.configure(state="disabled")
+                    combo_pesquisar_prod.configure(state="normal")
+                    entry_quantidade.delete("0", "end")
+                    break
+    def pesquisar_prod_func(event):
+        #NOTE - pesquisaar_prod
+        produto_pesquisado = combo_pesquisar_prod.get()
+        print(f"produto_pesquisado: {produto_pesquisado}")
+        #text_prod.configure(state="normal")
+        if str(produto_pesquisado) != "":            
+            filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]
+            print(f"filtered_items: {filtered_items}")
+            combo_pesquisar_prod.configure(values=filtered_items)
+        elif str(produto_pesquisado) == "":
+            combo_pesquisar_prod.configure(values=lista_produtos)
+    def remover_ultimo_btn_func():
+        #NOTE - remover_ultimo_btn_func
+        text_prod_ceasa.configure(state="normal")
+        text_prod_ceasa.delete("1.0", "1.1000")
+        prods_selecionados = text_prod_ceasa.get("1.0", "end").split("\n")
+        text_prod_ceasa.delete("1.0", "end")        
+        for index, item in enumerate(prods_selecionados):
+            if item == "":
+                del prods_selecionados[index]
+        prods_selecionados.pop()
+        for item in prods_selecionados:
+            text_prod_ceasa.insert("1.0", f"{item}\n")
+        text_prod_ceasa.configure(state="disabled")
+    def limpar_prods_selecionados():
+        #NOTE - limpar_prods_selecionados
+        text_prod_ceasa.configure(state="normal")
+        text_prod_ceasa.delete("0.0", "end")
+        text_prod_ceasa.configure(state="disabled")
+    def btn_confirmar_func():
+        #NOTE - btn_confirmar_func
+        prods_selecionados = text_prod_ceasa.get("0.0", "end").split("\n")
+        print(f"OK")
+        sub_janela_ceasa.destroy()
+        #sub_janela_confirmar_ceasa.destroy()
+        #janela_produtos.destroy()
+        quant_produtos_ceasa = ""
+        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
+
+    def voltar_prod_func():
+        #NOTE - voltar_prod_func
+        sub_janela_ceasa.destroy()
+        janela_mov_estoque.deiconify()
+        janela_mov_estoque.state("zoomed")
+    def inicio_prod_func():
+        #NOTE - inicio_prod_func
+        sub_janela_ceasa.destroy()
+        janela_mov_estoque.destroy()
+    #!SECTION
+
+    #SECTION - Centro
+    #NOTE - frame_meio
+    frame_meio = ctk.CTkFrame(
+        master=sub_janela_ceasa,
+        width=750,
+        height=500,
+        fg_color="transparent"
+        )
+    frame_meio.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    #frame_meio.pack()
+    #NOTE - Cabeçalho
+    img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
+    btn_voltar = ctk.CTkButton(
+        master=frame_meio,
+        width=15,
+        height=15,
+        text="Voltar",
+        font=(font_btn, 15),
+        #image=img_voltar,
+        #fg_color="transparent",
+        command=voltar_prod_func
+    )
+    btn_voltar.place(relx=0.30, rely=0.1)
+    img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
+    btn_inicio = ctk.CTkButton(
+        master=frame_meio,
+        width=15,
+        height=15,
+        text="Início",
+        font=(font_btn, 15),
+        #image=img_home,
+        #fg_color="transparent",
+        command=inicio_prod_func
+    )
+    btn_inicio.place(relx=0.38, rely=0.1)
+
+    #NOTE - label_titulo
+    label_titulo = ctk.CTkLabel(
+        master=frame_meio,
+        text="Estoque Box",
+        font=("arial", 18, "bold")
+    )
+    label_titulo.place(relx=0.5, rely=0.19, anchor=tkinter.CENTER)
+    #NOTE - frame_central
+    frame_central = ctk.CTkFrame(
+            master=frame_meio,
+            width=300,
+            height=326,
+            fg_color= ("#3b3b3b")
+        )
+    frame_central.place(relx=0.5, rely=0.55, anchor=tkinter.CENTER)
+    
+    label_pesquisar_prod = ctk.CTkLabel(
+        master=frame_meio,
+        text="Produtos",
+        font= (font_texto, 18),
+        fg_color=cor_frame_meio
+    )
+    label_pesquisar_prod.place(relx=0.50, rely=0.31, anchor=tkinter.CENTER)
+    combo_pesquisar_prod = ctk.CTkComboBox(
+        master=frame_meio,
+        values=lista_produtos,
+        width=150,
+        height=25,        
+        )
+    combo_pesquisar_prod.place(relx=0.50, rely=0.36, anchor=tkinter.CENTER)
+    combo_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
+    img_lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
+    btn_lupa = ctk.CTkButton(
+        master=frame_meio,
+        #image=img_lupa,
+        text="",
+        width=8,
+        height=8,
+        hover=False,
+        fg_color=cor_frame_meio
+    )
+    btn_lupa.place(relx=0.62, rely=0.36, anchor=tkinter.CENTER)
+    label_quantidade = ctk.CTkLabel(
+        master=frame_meio,
+        text="Quantidade",
+        font=(font_texto, 18),
+        fg_color=cor_frame_meio
+    )
+    label_quantidade.place(relx=0.50, rely=0.41, anchor=tkinter.CENTER)
+    entry_quantidade = ctk.CTkEntry(
+        master=frame_meio,
+        width=150,
+        height=25,)
+    entry_quantidade.place(relx=0.50, rely=0.46, anchor=tkinter.CENTER)
+    entry_quantidade.bind("<Return>", adicionar_prod_func)
+    btn_adicionar_produto = ctk.CTkButton(
+        master=frame_meio,
+        width=150,
+        height=25,
+        text="Adicionar Produto",
+        font=(font_btn, 15),
+        border_width=0,
+        command = adicionar_prod_btn_func)
+    btn_adicionar_produto.place(relx=0.50, rely=0.56, anchor=ctk.CENTER)
+    btn_remover_ultimo = ctk.CTkButton(
+        master=frame_meio,
+        width=125,
+        height=25,
+        text="Remover último produto",
+        font=(font_btn, 13),
+        command = remover_ultimo_btn_func)
+    btn_remover_ultimo.place(relx=0.50, rely=0.62, anchor=ctk.CENTER)
+    btn_limpar = ctk.CTkButton(
+        master=frame_meio,
+        width=150,
+        height=25,
+        text="Limpar",
+        font=(font_btn, 15),
+        command = limpar_prods_selecionados)
+    btn_limpar.place(relx=0.50, rely=0.68, anchor=ctk.CENTER)
+    btn_confirmar = ctk.CTkButton(
+        master=frame_meio,
+        width=150,
+        height=25,
+        text="Confirmar",
+        font=(font_btn, 15),
+        fg_color="#00993D",
+        hover_color=("#007830"),
+        command=btn_confirmar_func
+    )
+    btn_confirmar.place(relx=0.50, rely=0.80, anchor=tkinter.CENTER)
+    #!SECTION
+
+    #SECTION - Direita
+    #NOTE - Produtos Adicionados
+    label_prod_selecionados = ctk.CTkLabel(
+        master=frame_meio,
+        text="Produtos Adicionados",
+        font=("Arial", 15, "bold")
+        )
+    label_prod_selecionados.place(relx=0.85, rely=0.05, anchor=tkinter.CENTER)
+    text_prod_ceasa = ctk.CTkTextbox(
+        master=frame_meio,
+        width=200,
+        height=400,
+        font=("Arial", 12)
+        )
+    text_prod_ceasa.place(relx=0.85, rely=0.48, anchor=tkinter.CENTER)
+    text_prod_ceasa.configure(state="disabled")
+    #!SECTION
+    sub_janela_ceasa.mainloop()
 #!SECTION
 
 dimensao = "20x20"
@@ -736,7 +921,10 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produ
     text_prod_ceasa.configure(state="disabled")
 
     #NOTE - text_quant_produtos_ceasa
-    text_quant_produtos_ceasa = ctk.CTkTextbox(master=frame_1)
+    text_quant_produtos_ceasa = ctk.CTkTextbox(
+        master=frame_1,
+        width=200,
+        height=25)
     text_quant_produtos_ceasa.place(relx=0.5, rely=0.75, anchor=ctk.CENTER)
     text_quant_produtos_ceasa.configure(state="disabled")
 

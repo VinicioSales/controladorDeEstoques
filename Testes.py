@@ -1,156 +1,240 @@
 import tkinter
 import tkinter.messagebox
-import customtkinter
+import customtkinter as ctk
+from PIL import Image
+from unidecode import unidecode
 
-customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+lista_produtos = ["a", "b"]
+ctk.set_appearance_mode("dark")  # Modes: "System" (standard), "Dark", "Light"
+ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
+def sub_janela_ceasa_func(janela_mov_estoque, tipo):
+    #NOTE - sub_janela_ceasa_func
+    """Cria a janela inicial"""
+    sub_janela_ceasa = ctk.CTk()
+    sub_janela_ceasa.title("CustomTkinter simple_example.py")
+    sub_janela_ceasa.state("zoomed")
+    
+    font_texto = "arial"
+    font_btn = "arial"
+    cor_frame_meio = "#3b3b3b"
 
-class App(customtkinter.CTk):
-    def __init__(self):
-        super().__init__()
+    #SECTION - Funções
+    def adicionar_prod_btn_func():
+        #NOTE - adicionar_prod_btn_func
+        prod_selecionado = combo_pesquisar_prod.get()
+        quantidade = entry_quantidade.get()
+        if prod_selecionado != "" and quantidade != "":
+            text_prod_ceasa.configure(state="normal")
+            text_prod_ceasa.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
+            text_prod_ceasa.configure(state="disabled")
+            combo_pesquisar_prod.configure(state="normal")
+            entry_quantidade.delete("0", "end")
+    def adicionar_prod_func(event):
+        #NOTE - adicionar_prod_func
+        prod_selecionado = combo_pesquisar_prod.get()
+        quantidade = entry_quantidade.get()        
+        if prod_selecionado != "" and quantidade != "":
+            filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
+            for produto in lista_produtos:
+                if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
+                    text_prod_ceasa.configure(state="normal")
+                    text_prod_ceasa.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
+                    text_prod_ceasa.configure(state="disabled")
+                    combo_pesquisar_prod.configure(state="normal")
+                    entry_quantidade.delete("0", "end")
+                    break
+    def pesquisar_prod_func(event):
+        #NOTE - pesquisaar_prod
+        produto_pesquisado = combo_pesquisar_prod.get()
+        print(f"produto_pesquisado: {produto_pesquisado}")
+        #text_prod.configure(state="normal")
+        if str(produto_pesquisado) != "":            
+            filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]
+            print(f"filtered_items: {filtered_items}")
+            combo_pesquisar_prod.configure(values=filtered_items)
+        elif str(produto_pesquisado) == "":
+            combo_pesquisar_prod.configure(values=lista_produtos)
+    def remover_ultimo_btn_func():
+        #NOTE - remover_ultimo_btn_func
+        text_prod_ceasa.configure(state="normal")
+        text_prod_ceasa.delete("1.0", "1.1000")
+        prods_selecionados = text_prod_ceasa.get("1.0", "end").split("\n")
+        text_prod_ceasa.delete("1.0", "end")        
+        for index, item in enumerate(prods_selecionados):
+            if item == "":
+                del prods_selecionados[index]
+        prods_selecionados.pop()
+        for item in prods_selecionados:
+            text_prod_ceasa.insert("1.0", f"{item}\n")
+        text_prod_ceasa.configure(state="disabled")
+    def limpar_prods_selecionados():
+        #NOTE - limpar_prods_selecionados
+        text_prod_ceasa.configure(state="normal")
+        text_prod_ceasa.delete("0.0", "end")
+        text_prod_ceasa.configure(state="disabled")
+    def btn_confirmar_func():
+        #NOTE - btn_confirmar_func
+        prods_selecionados = text_prod_ceasa.get("0.0", "end").split("\n")
+        print(f"prods_selecionados: {prods_selecionados}")
+        sub_janela_ceasa.destroy()
 
-        # configure window
-        self.title("CustomTkinter complex_example.py")
-        self.geometry(f"{1100}x{580}")
+    def voltar_prod_func():
+        #NOTE - voltar_prod_func
+        sub_janela_ceasa.destroy()
+        janela_mov_estoque.deiconify()
+        janela_mov_estoque.state("zoomed")
+    def inicio_prod_func():
+        #NOTE - inicio_prod_func
+        sub_janela_ceasa.destroy()
+        janela_mov_estoque.destroy()
+    #!SECTION
 
-        # configure grid layout (4x4)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure((2, 3), weight=0)
-        self.grid_rowconfigure((0, 1, 2), weight=1)
+    #SECTION - Centro
+    #NOTE - frame_meio
+    frame_meio = ctk.CTkFrame(
+        master=sub_janela_ceasa,
+        width=750,
+        height=500,
+        fg_color="transparent"
+        )
+    frame_meio.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    #frame_meio.pack()
+    #NOTE - Cabeçalho
+    img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
+    btn_voltar = ctk.CTkButton(
+        master=frame_meio,
+        width=15,
+        height=15,
+        text="Voltar",
+        font=(font_btn, 15),
+        #image=img_voltar,
+        #fg_color="transparent",
+        command=voltar_prod_func
+    )
+    btn_voltar.place(relx=0.30, rely=0.1)
+    img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
+    btn_inicio = ctk.CTkButton(
+        master=frame_meio,
+        width=15,
+        height=15,
+        text="Início",
+        font=(font_btn, 15),
+        #image=img_home,
+        #fg_color="transparent",
+        command=inicio_prod_func
+    )
+    btn_inicio.place(relx=0.38, rely=0.1)
 
-        # create sidebar frame with widgets
-        self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
-        self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
-        self.sidebar_frame.grid_rowconfigure(4, weight=1)
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="CustomTkinter", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
-        self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
-        self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
-        self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
-        self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
-        self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
-        self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
-        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"],
-                                                                       command=self.change_appearance_mode_event)
-        self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
-        self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
-        self.scaling_label.grid(row=7, column=0, padx=20, pady=(10, 0))
-        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%"],
-                                                               command=self.change_scaling_event)
-        self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
+    #NOTE - label_titulo
+    label_titulo = ctk.CTkLabel(
+        master=frame_meio,
+        text="Estoque Box",
+        font=("arial", 18, "bold")
+    )
+    label_titulo.place(relx=0.5, rely=0.19, anchor=tkinter.CENTER)
+    #NOTE - frame_central
+    frame_central = ctk.CTkFrame(
+            master=frame_meio,
+            width=300,
+            height=326,
+            fg_color= ("#3b3b3b")
+        )
+    frame_central.place(relx=0.5, rely=0.55, anchor=tkinter.CENTER)
+    
+    label_pesquisar_prod = ctk.CTkLabel(
+        master=frame_meio,
+        text="Produtos",
+        font= (font_texto, 18),
+        fg_color=cor_frame_meio
+    )
+    label_pesquisar_prod.place(relx=0.50, rely=0.31, anchor=tkinter.CENTER)
+    combo_pesquisar_prod = ctk.CTkComboBox(
+        master=frame_meio,
+        values=lista_produtos,
+        width=150,
+        height=25,        
+        )
+    combo_pesquisar_prod.place(relx=0.50, rely=0.36, anchor=tkinter.CENTER)
+    combo_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
+    img_lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
+    btn_lupa = ctk.CTkButton(
+        master=frame_meio,
+        #image=img_lupa,
+        text="",
+        width=8,
+        height=8,
+        hover=False,
+        fg_color=cor_frame_meio
+    )
+    btn_lupa.place(relx=0.62, rely=0.36, anchor=tkinter.CENTER)
+    label_quantidade = ctk.CTkLabel(
+        master=frame_meio,
+        text="Quantidade",
+        font=(font_texto, 18),
+        fg_color=cor_frame_meio
+    )
+    label_quantidade.place(relx=0.50, rely=0.41, anchor=tkinter.CENTER)
+    entry_quantidade = ctk.CTkEntry(
+        master=frame_meio,
+        width=150,
+        height=25,)
+    entry_quantidade.place(relx=0.50, rely=0.46, anchor=tkinter.CENTER)
+    entry_quantidade.bind("<Return>", adicionar_prod_func)
+    btn_adicionar_produto = ctk.CTkButton(
+        master=frame_meio,
+        width=150,
+        height=25,
+        text="Adicionar Produto",
+        font=(font_btn, 15),
+        border_width=0,
+        command = adicionar_prod_btn_func)
+    btn_adicionar_produto.place(relx=0.50, rely=0.56, anchor=ctk.CENTER)
+    btn_remover_ultimo = ctk.CTkButton(
+        master=frame_meio,
+        width=125,
+        height=25,
+        text="Remover último produto",
+        font=(font_btn, 13),
+        command = remover_ultimo_btn_func)
+    btn_remover_ultimo.place(relx=0.50, rely=0.62, anchor=ctk.CENTER)
+    btn_limpar = ctk.CTkButton(
+        master=frame_meio,
+        width=150,
+        height=25,
+        text="Limpar",
+        font=(font_btn, 15),
+        command = limpar_prods_selecionados)
+    btn_limpar.place(relx=0.50, rely=0.68, anchor=ctk.CENTER)
+    btn_confirmar = ctk.CTkButton(
+        master=frame_meio,
+        width=150,
+        height=25,
+        text="Confirmar",
+        font=(font_btn, 15),
+        fg_color="#00993D",
+        hover_color=("#007830"),
+        command=btn_confirmar_func
+    )
+    btn_confirmar.place(relx=0.50, rely=0.80, anchor=tkinter.CENTER)
+    #!SECTION
 
-        # create main entry and button
-        self.entry = customtkinter.CTkEntry(self, placeholder_text="CTkEntry")
-        self.entry.grid(row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
-
-        self.main_button_1 = customtkinter.CTkButton(master=self, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
-        self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
-
-        # create textbox
-        self.textbox = customtkinter.CTkTextbox(self, width=250)
-        self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
-
-        # create tabview
-        self.tabview = customtkinter.CTkTabview(self, width=250)
-        self.tabview.grid(row=0, column=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
-        self.tabview.add("CTkTabview")
-        self.tabview.add("Tab 2")
-        self.tabview.add("Tab 3")
-        self.tabview.tab("CTkTabview").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
-        self.tabview.tab("Tab 2").grid_columnconfigure(0, weight=1)
-
-        self.optionmenu_1 = customtkinter.CTkOptionMenu(self.tabview.tab("CTkTabview"), dynamic_resizing=False,
-                                                        values=["Value 1", "Value 2", "Value Long Long Long"])
-        self.optionmenu_1.grid(row=0, column=0, padx=20, pady=(20, 10))
-        self.combobox_1 = customtkinter.CTkComboBox(self.tabview.tab("CTkTabview"),
-                                                    values=["Value 1", "Value 2", "Value Long....."])
-        self.combobox_1.grid(row=1, column=0, padx=20, pady=(10, 10))
-        self.string_input_button = customtkinter.CTkButton(self.tabview.tab("CTkTabview"), text="Open CTkInputDialog",
-                                                           command=self.open_input_dialog_event)
-        self.string_input_button.grid(row=2, column=0, padx=20, pady=(10, 10))
-        self.label_tab_2 = customtkinter.CTkLabel(self.tabview.tab("Tab 2"), text="CTkLabel on Tab 2")
-        self.label_tab_2.grid(row=0, column=0, padx=20, pady=20)
-
-        # create radiobutton frame
-        self.radiobutton_frame = customtkinter.CTkFrame(self)
-        self.radiobutton_frame.grid(row=0, column=3, padx=(20, 20), pady=(20, 0), sticky="nsew")
-        self.radio_var = tkinter.IntVar(value=0)
-        self.label_radio_group = customtkinter.CTkLabel(master=self.radiobutton_frame, text="CTkRadioButton Group:")
-        self.label_radio_group.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
-        self.radio_button_1 = customtkinter.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var, value=0)
-        self.radio_button_1.grid(row=1, column=2, pady=10, padx=20, sticky="n")
-        self.radio_button_2 = customtkinter.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var, value=1)
-        self.radio_button_2.grid(row=2, column=2, pady=10, padx=20, sticky="n")
-        self.radio_button_3 = customtkinter.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var, value=2)
-        self.radio_button_3.grid(row=3, column=2, pady=10, padx=20, sticky="n")
-
-        # create checkbox and switch frame
-        self.checkbox_slider_frame = customtkinter.CTkFrame(self)
-        self.checkbox_slider_frame.grid(row=1, column=3, padx=(20, 20), pady=(20, 0), sticky="nsew")
-        self.checkbox_1 = customtkinter.CTkCheckBox(master=self.checkbox_slider_frame)
-        self.checkbox_1.grid(row=1, column=0, pady=(20, 10), padx=20, sticky="n")
-        self.checkbox_2 = customtkinter.CTkCheckBox(master=self.checkbox_slider_frame)
-        self.checkbox_2.grid(row=2, column=0, pady=10, padx=20, sticky="n")
-        self.switch_1 = customtkinter.CTkSwitch(master=self.checkbox_slider_frame, command=lambda: print("switch 1 toggle"))
-        self.switch_1.grid(row=3, column=0, pady=10, padx=20, sticky="n")
-        self.switch_2 = customtkinter.CTkSwitch(master=self.checkbox_slider_frame)
-        self.switch_2.grid(row=4, column=0, pady=(10, 20), padx=20, sticky="n")
-
-        # create slider and progressbar frame
-        self.slider_progressbar_frame = customtkinter.CTkFrame(self, fg_color="transparent")
-        self.slider_progressbar_frame.grid(row=1, column=1, columnspan=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
-        self.slider_progressbar_frame.grid_columnconfigure(0, weight=1)
-        self.slider_progressbar_frame.grid_rowconfigure(4, weight=1)
-        self.seg_button_1 = customtkinter.CTkSegmentedButton(self.slider_progressbar_frame)
-        self.seg_button_1.grid(row=0, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
-        self.progressbar_1 = customtkinter.CTkProgressBar(self.slider_progressbar_frame)
-        self.progressbar_1.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
-        self.progressbar_2 = customtkinter.CTkProgressBar(self.slider_progressbar_frame)
-        self.progressbar_2.grid(row=2, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
-        self.slider_1 = customtkinter.CTkSlider(self.slider_progressbar_frame, from_=0, to=1, number_of_steps=4)
-        self.slider_1.grid(row=3, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
-        self.slider_2 = customtkinter.CTkSlider(self.slider_progressbar_frame, orientation="vertical")
-        self.slider_2.grid(row=0, column=1, rowspan=5, padx=(10, 10), pady=(10, 10), sticky="ns")
-        self.progressbar_3 = customtkinter.CTkProgressBar(self.slider_progressbar_frame, orientation="vertical")
-        self.progressbar_3.grid(row=0, column=2, rowspan=5, padx=(10, 20), pady=(10, 10), sticky="ns")
-
-        # set default values
-        self.sidebar_button_3.configure(state="disabled", text="Disabled CTkButton")
-        self.checkbox_2.configure(state="disabled")
-        self.switch_2.configure(state="disabled")
-        self.checkbox_1.select()
-        self.switch_1.select()
-        self.radio_button_3.configure(state="disabled")
-        self.appearance_mode_optionemenu.set("Dark")
-        self.scaling_optionemenu.set("100%")
-        self.optionmenu_1.set("CTkOptionmenu")
-        self.combobox_1.set("CTkComboBox")
-        self.slider_1.configure(command=self.progressbar_2.set)
-        self.slider_2.configure(command=self.progressbar_3.set)
-        self.progressbar_1.configure(mode="indeterminnate")
-        self.progressbar_1.start()
-        self.textbox.insert("0.0", "CTkTextbox\n\n" + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\n" * 20)
-        self.seg_button_1.configure(values=["CTkSegmentedButton", "Value 2", "Value 3"])
-        self.seg_button_1.set("Value 2")
-
-    def open_input_dialog_event(self):
-        dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
-        print("CTkInputDialog:", dialog.get_input())
-
-    def change_appearance_mode_event(self, new_appearance_mode: str):
-        customtkinter.set_appearance_mode(new_appearance_mode)
-
-    def change_scaling_event(self, new_scaling: str):
-        new_scaling_float = int(new_scaling.replace("%", "")) / 100
-        customtkinter.set_widget_scaling(new_scaling_float)
-
-    def sidebar_button_event(self):
-        print("sidebar_button click")
-
-
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+    #SECTION - Direita
+    #NOTE - Produtos Selecionados
+    label_prod_selecionados = ctk.CTkLabel(
+        master=frame_meio,
+        text="Produtos Selecionados",
+        font=("Arial", 15, "bold")
+        )
+    label_prod_selecionados.place(relx=0.85, rely=0.05, anchor=tkinter.CENTER)
+    text_prod_ceasa = ctk.CTkTextbox(
+        master=frame_meio,
+        width=200,
+        height=400,
+        font=("Arial", 12)
+        )
+    text_prod_ceasa.place(relx=0.85, rely=0.48, anchor=tkinter.CENTER)
+    text_prod_ceasa.configure(state="disabled")
+    #!SECTION
+    sub_janela_ceasa.mainloop()
+sub_janela_ceasa_func("a", "b")
