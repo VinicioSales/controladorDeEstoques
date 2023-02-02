@@ -10,7 +10,7 @@ from config.instancias.janelas.janela_produtos import janela_produtos_func
 from config.instancias.janelas.janela_inicial import janela_inicial_func
 
 #SECTION - sub_janela_confirmar_ceasa_func
-def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo, janela_mov_estoque):
+def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo, janela_mov_estoque, prods_selecionados):
     """Cria uma subjanela "sub_janela_confirmar_ceasa", centraliza a janela na tela,
     e apresenta uma pergunta "Há algum produto na Ceasa?" com uma entrada para a
     quantidade e dois botões "Ok" e "Cancelar".
@@ -27,19 +27,20 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
     def btn_confimar_ceasa_1_func():
         sub_janela_confirmar_ceasa.destroy()
         janela_produtos.destroy()
-        sub_janela_ceasa = sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos)
+        print(f"prods_selecionados 6: {prods_selecionados}")
+        sub_janela_ceasa = sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selecionados)
     def btn_confimar_ceasa_1_event_func(event):
         janela_produtos.destroy()
         sub_janela_confirmar_ceasa.destroy()
-        sub_janela_ceasa = sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos)
+        print(f"prods_selecionados 7: {prods_selecionados}")
+        sub_janela_ceasa = sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selecionados)
     def btn_confimar_ceasa_2_func():
         """
         Esta função fecha a sub-janela "sub_janela_confirmar_ceasa".
         """
         sub_janela_confirmar_ceasa.destroy()
         janela_produtos.destroy()
-        quant_produtos_ceasa = ""
-        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
+        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo)
     #!SECTION
 
 
@@ -177,6 +178,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("1.0", "1.1000")
         prods_selecionados = text_prod_selecionados.get("1.0", "end").split("\n")
+        print(f"prods_selecionados 1: {prods_selecionados}")
         text_prod_selecionados.delete("1.0", "end")        
         for index, item in enumerate(prods_selecionados):
             if item == "":
@@ -193,10 +195,11 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     def confirmar_btn_func():
         #NOTE - confirmar_btn_func
         prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
+        print(f"prods_selecionados 2: {prods_selecionados}")
         if len(prods_selecionados) <= 2:
             sub_janela_confirmar_produtos_func()
         else:
-            sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo, janela_mov_estoque)
+            sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo, janela_mov_estoque, prods_selecionados)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_produtos.destroy()
@@ -362,7 +365,8 @@ def janela_produtos_func(janela_mov_estoque, tipo):
 
 
 #SECTION - sub_janela_ceasa_func
-def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos):
+def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selecionados):
+    print(f"prods_selecionados 5: {prods_selecionados}")
     #NOTE - sub_janela_ceasa_func
     """Cria a janela inicial"""
     sub_janela_ceasa = ctk.CTk()
@@ -413,13 +417,13 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos):
         #NOTE - remover_ultimo_btn_func
         text_prod_ceasa.configure(state="normal")
         text_prod_ceasa.delete("1.0", "1.1000")
-        prods_selecionados = text_prod_ceasa.get("1.0", "end").split("\n")
+        prods_ceasa = text_prod_ceasa.get("1.0", "end").split("\n")
         text_prod_ceasa.delete("1.0", "end")        
-        for index, item in enumerate(prods_selecionados):
+        for index, item in enumerate(prods_ceasa):
             if item == "":
-                del prods_selecionados[index]
-        prods_selecionados.pop()
-        for item in prods_selecionados:
+                del prods_ceasa[index]
+        prods_ceasa.pop()
+        for item in prods_ceasa:
             text_prod_ceasa.insert("1.0", f"{item}\n")
         text_prod_ceasa.configure(state="disabled")
     def limpar_prods_selecionados():
@@ -429,13 +433,10 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos):
         text_prod_ceasa.configure(state="disabled")
     def btn_confirmar_func():
         #NOTE - btn_confirmar_func
-        prods_selecionados = text_prod_ceasa.get("0.0", "end").split("\n")
-        print(f"OK")
+        prods_ceasa = text_prod_ceasa.get("0.0", "end").split("\n")
+        print(f"prods_selecionados 4: {prods_selecionados}")
         sub_janela_ceasa.destroy()
-        #sub_janela_confirmar_ceasa.destroy()
-        #janela_produtos.destroy()
-        quant_produtos_ceasa = ""
-        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, quant_produtos_ceasa)
+        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo)
 
     def voltar_prod_func():
         #NOTE - voltar_prod_func
@@ -644,7 +645,7 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
 
 #SECTION - janela_mov_estoque_func
 #NOTE - Instancia Janela
-def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produtos_ceasa):
+def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
     """Instancia a janela de saida de caminhões
     params:
         - ctk: janela_inicio
@@ -858,6 +859,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, quant_produ
     )
     #NOTE - text_produtos
     text_produtos.place(relx=0.68, rely=0.45, anchor=tkinter.CENTER)
+    print(f"prods_selecionados 3: {prods_selecionados}")
     for item in prods_selecionados:
         text_produtos.insert("0.0", f"{item}\n")
     text_produtos.configure(state="disabled")

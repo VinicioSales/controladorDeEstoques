@@ -83,7 +83,7 @@ def btn_mov_estoque_func():
         - None
     """
     #janela_inicio.withdraw()
-    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, "SAI", quant_produtos_ceasa)
+    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, "SAI")
 def btn_entrada_caminhao_func():
     #//NOTE - btn_entrada_caminhao_func
     """Abre a janela de movimento de estoque
@@ -94,7 +94,7 @@ def btn_entrada_caminhao_func():
         - None
     """
     janela_inicio.withdraw()    
-    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, "ENT", quant_produtos_ceasa)
+    janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, "ENT")
 def btn_relatorio_func():
     #//NOTE - btn_relatorio_func
     """Abre a janela de relatorio de diferença de quantidade
