@@ -200,6 +200,47 @@ def sub_janela_alerta_estoque_não_encontrado():
     btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 #!SECTION
 
+#SECTION - sub_janela_alerta_digite_numeros
+def sub_janela_alerta_digite_numeros():
+    #NOTE - sub_janela_alerta_digite_numeros
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")
+    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text="Digite Apenas Números!",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
 #SECTION - sub_janela_alerta_prod_nao_encontrado
 def sub_janela_alerta_prod_nao_encontrado():
     #NOTE - sub_janela_alerta_prod_nao_encontrado
@@ -259,19 +300,21 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         quantidade = entry_quantidade.get()
         if prod_selecionado == "" or quantidade == "":
             sub_janela_alerta_preencher_dados()
-        if prod_selecionado != "" and quantidade != "":
+        elif prod_selecionado != "" and quantidade != "" and quantidade.isnumeric():
             text_prod_selecionados.configure(state="normal")
             text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
             text_prod_selecionados.configure(state="disabled")
             combo_pesquisar_prod.configure(state="normal")
             entry_quantidade.delete("0", "end")
+        elif not quantidade.isnumeric():
+            sub_janela_alerta_digite_numeros()
     def adicionar_prod_func(event):
         #NOTE - adicionar_prod_func
         prod_selecionado = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
         if prod_selecionado == "" or quantidade == "":
             sub_janela_alerta_preencher_dados()
-        if prod_selecionado != "" and quantidade != "":
+        if prod_selecionado != "" and quantidade != "" and quantidade.isnumeric():
             #filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
             for produto in lista_produtos:
                 if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
@@ -281,6 +324,8 @@ def janela_produtos_func(janela_mov_estoque, tipo):
                     combo_pesquisar_prod.configure(state="normal")
                     entry_quantidade.delete("0", "end")
                     break
+        elif not quantidade.isnumeric():
+            sub_janela_alerta_digite_numeros()
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
         produto_pesquisado = combo_pesquisar_prod.get()
@@ -495,21 +540,24 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         #NOTE - adicionar_prod_btn_func
         prod_selecionado = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
+
         if prod_selecionado == "" or quantidade == "":
             sub_janela_alerta_preencher_dados()
-        elif prod_selecionado != "" and quantidade != "":
+        elif prod_selecionado != "" and quantidade != "" and quantidade.isnumeric():
             text_prod_ceasa.configure(state="normal")
             text_prod_ceasa.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
             text_prod_ceasa.configure(state="disabled")
             combo_pesquisar_prod.configure(state="normal")
             entry_quantidade.delete("0", "end")
+        elif not quantidade.isnumeric():
+            sub_janela_alerta_digite_numeros()
     def adicionar_prod_func(event):
         #NOTE - adicionar_prod_func
         prod_selecionado = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
         if prod_selecionado == "" or quantidade == "":
             sub_janela_alerta_preencher_dados()      
-        if prod_selecionado != "" and quantidade != "":
+        if prod_selecionado != "" and quantidade != "" and quantidade.isnumeric():
             #filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
             for produto in lista_produtos:
                 if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
@@ -519,6 +567,8 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
                     combo_pesquisar_prod.configure(state="normal")
                     entry_quantidade.delete("0", "end")
                     break
+        elif not quantidade.isnumeric():
+            sub_janela_alerta_digite_numeros()
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
         produto_pesquisado = combo_pesquisar_prod.get()
