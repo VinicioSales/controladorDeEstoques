@@ -1,2 +1,2 @@
- Milho | 120
- Coentro | 180
+ Milho | 10
+ Coentro | 20

@@ -1025,7 +1025,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
     nota_entry = ctk.CTkEntry(master=frame_1)
     nota_entry.place(relx=0.5, rely=0.68, anchor=ctk.CENTER)
 
-    #NOTE - text_prod_ceasa
+    '''#NOTE - text_prod_ceasa
     text_prod_ceasa = ctk.CTkTextbox(
         master=frame_1,
         width=200,
@@ -1041,7 +1041,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         width=200,
         height=25)
     text_quant_produtos_ceasa.place(relx=0.5, rely=0.75, anchor=ctk.CENTER)
-    text_quant_produtos_ceasa.configure(state="disabled")
+    text_quant_produtos_ceasa.configure(state="disabled")'''
 
     #NOTE - btn_mov_estoque
     btn_mov_estoque = ctk.CTkButton(
