@@ -9,7 +9,7 @@ app_key = database_infos["app_key"]
 app_secret = database_infos["app_secret"]
 codigo_conta_corrente = database_infos["codigo_conta_corrente"]
 
-def incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao, ncm, unidade, valor_produto, quantidade_diferenca):
+def incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao, ncm, unidade, valor_produto, quantidade_diferenca, codigo_projeto):
     """
     Função para incluir um pedido através da API Omie.
     
@@ -24,6 +24,7 @@ def incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, de
         valor_produto (float): Valor do produto
         quantidade_diferenca (int): Quantidade de diferença
         codigo_conta_corrente (str): Código da conta corrente
+        codigo_projeto (str): Código do projeto
         
     Returns:
         Tuple: (descricao_status (str), codigo_pedido (str), numero_pedido (str))
@@ -69,7 +70,8 @@ def incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, de
                                                 "codigo_categoria": "1.01.01",
                                                 "codigo_conta_corrente": codigo_conta_corrente,
                                                 "consumidor_final": "",
-                                                "enviar_email": "N"
+                                                "enviar_email": "N",
+                                                "codProj": codigo_projeto
                                             }
                                         }
                                     ]

@@ -5,6 +5,7 @@ from PIL import Image
 from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_produto
 from config.instancias.apis.apis_vendas import incluir_pedido_venda
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
+from config.instancias.apis.apis_projetos import get_cod_projeto
 from config.styles import estilo_janelas_func
 from config.credenciais.database import database_infos_func
 
@@ -55,18 +56,8 @@ def janela_relatorio_diferenca_func(janela_inicio):
             #NOTE - criar_pedido_venda_btn_func
             """
             Função que cria um pedido de venda a partir de uma lista de produtos e quantidades.
-            """
-            
-            
+            """            
             sub_janela_data_vencimento = sub_janela_data_vencimento_func(quant_diferenca_estoque)
-        def inicio_sub_func():
-            #NOTE - inicio_sub_func
-            """
-            Função que fecha a sub-janela de relatório e reabre a janela principal de relatório de diferença de estoque.
-            """
-            #NOTE - inicio_sub_func
-            sub_janela_relatorio.withdraw()
-            janela_inicio.deiconify()
         def estoques_sub_tbn_func():
             #NOTE - estoques_sub_tbn_func
             sub_janela_relatorio.withdraw()
@@ -84,7 +75,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
         #NOTE - Texto
         label = ctk.CTkLabel(
             master=frame_principal,
-            text="Quantidade de produtos não retornados:",
+            text="Quantidade de produtos retirados:",
             font=("arial", 16, "bold")
             )
         label.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
@@ -133,7 +124,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
     #SECTION - sub_janela_data_vencimento_func
     def sub_janela_data_vencimento_func(quant_diferenca_estoque):
         #NOTE - sub_janela_data_vencimento_func
-        #=========== Instanciando Janea ================#
         sub_janela_data_vencimento = ctk.CTkToplevel()
         sub_janela_data_vencimento.title("")
         sub_janela_data_vencimento.update_idletasks()
@@ -187,7 +177,8 @@ def janela_relatorio_diferenca_func(janela_inicio):
                 quantidade_prod = quantidade_prod.replace(" ", "")
                 quantidade_prod = quantidade_prod.replace("\n", "")                
                 cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
-                incluir_pedido_venda(codigo_produto, codigo_cliente, data_vencimento, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod)
+                codigo_projeto = get_cod_projeto(nome_produto)
+                incluir_pedido_venda(codigo_produto, codigo_cliente, data_vencimento, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod, codigo_projeto)
             sub_janela_data_vencimento.destroy()
 
         #NOTE - Frame
@@ -256,19 +247,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
                     codigo_local_estoque = estoque[1]
                     codigo_local_estoque = codigo_local_estoque.replace(" ", "")
                     break
-        return codigo_local_estoque
-    def procurar_estoque():
-        #NOTE - procurar_estoque
-        """Procura o estoque na lista de estoques
-
-        param:
-            - None
-        
-        return:
-            - None"""
-        search_text = pesquisar_estoque.get()
-        filtered_items = [item for item in lista_estoques if search_text in item]
-        combo_estoque.configure(values=filtered_items)
     def selecionar_estoque_func():
         #NOTE - selecionar_estoque_func
         """Cofirma o estoque escolhido
@@ -359,12 +337,5 @@ def janela_relatorio_diferenca_func(janela_inicio):
         text="Início",
         command=inicio_rel_func)
     inicio_rel_btn.place(relx=0.5, rely=0.48, anchor=ctk.CENTER)
-    
-    
-
-    #SECTION - Funções
-    def inicio():
-        janela_relatorio_diferenca.withdraw()
 
     janela_relatorio_diferenca.mainloop()
-#janela_relatorio_diferenca_func("ok")

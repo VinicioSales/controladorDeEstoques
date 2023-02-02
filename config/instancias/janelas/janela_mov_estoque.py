@@ -4,10 +4,6 @@ from PIL import Image
 from unidecode import unidecode
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
-from config.instancias.apis.apis_projetos import get_cod_projeto
-from config.styles import estilo_janelas_func
-from config.instancias.janelas.janela_produtos import janela_produtos_func
-from config.instancias.janelas.janela_inicial import janela_inicial_func
 
 #SECTION - sub_janela_confirmar_ceasa_func
 def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo, janela_mov_estoque, prods_selecionados):
@@ -26,13 +22,7 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
     #SECTION - Funções confirmar Ceasa
     def btn_confimar_ceasa_1_func():
         sub_janela_confirmar_ceasa.destroy()
-        janela_produtos.destroy()
-        print(f"prods_selecionados 6: {prods_selecionados}")
-        sub_janela_ceasa = sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selecionados)
-    def btn_confimar_ceasa_1_event_func(event):
-        janela_produtos.destroy()
-        sub_janela_confirmar_ceasa.destroy()
-        print(f"prods_selecionados 7: {prods_selecionados}")
+        janela_produtos.destroy()        
         sub_janela_ceasa = sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selecionados)
     def btn_confimar_ceasa_2_func():
         """
@@ -43,7 +33,6 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
         prods_ceasa = ""
         janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, prods_ceasa)
     #!SECTION
-
 
     #NOTE - frame_confirmar_ceasa
     frame_confirmar_ceasa = ctk.CTkFrame(
@@ -166,11 +155,11 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
         produto_pesquisado = combo_pesquisar_prod.get()
-        print(f"produto_pesquisado: {produto_pesquisado}")
+        
         #text_prod.configure(state="normal")
         if str(produto_pesquisado) != "":            
             filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]
-            print(f"filtered_items: {filtered_items}")
+            
             combo_pesquisar_prod.configure(values=filtered_items)
         elif str(produto_pesquisado) == "":
             combo_pesquisar_prod.configure(values=lista_produtos)
@@ -178,8 +167,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         #NOTE - remover_ultimo_btn_func
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("1.0", "1.1000")
-        prods_selecionados = text_prod_selecionados.get("1.0", "end").split("\n")
-        print(f"prods_selecionados 1: {prods_selecionados}")
+        prods_selecionados = text_prod_selecionados.get("1.0", "end").split("\n")        
         text_prod_selecionados.delete("1.0", "end")        
         for index, item in enumerate(prods_selecionados):
             if item == "":
@@ -195,8 +183,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         text_prod_selecionados.configure(state="disabled")
     def confirmar_btn_func():
         #NOTE - confirmar_btn_func
-        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
-        print(f"prods_selecionados 2: {prods_selecionados}")
+        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")        
         if len(prods_selecionados) <= 2:
             sub_janela_confirmar_produtos_func()
         else:
@@ -222,7 +209,6 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         fg_color="transparent"
         )
     frame_meio.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
-    #frame_meio.pack()
     #NOTE - Cabeçalho
     img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
     btn_voltar = ctk.CTkButton(
@@ -371,12 +357,10 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     """Cria a janela inicial"""
     sub_janela_ceasa = ctk.CTk()
     sub_janela_ceasa.title("CustomTkinter simple_example.py")
-    sub_janela_ceasa.state("zoomed")
-    
+    sub_janela_ceasa.state("zoomed")    
     font_texto = "arial"
     font_btn = "arial"
-    cor_frame_meio = "#3b3b3b"
-    print(f"prods_selecionados 5: {prods_selecionados}")
+    cor_frame_meio = "#3b3b3b"    
 
     #SECTION - Funções
     def adicionar_prod_btn_func():
@@ -406,11 +390,8 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
         produto_pesquisado = combo_pesquisar_prod.get()
-        print(f"produto_pesquisado: {produto_pesquisado}")
-        #text_prod.configure(state="normal")
         if str(produto_pesquisado) != "":            
             filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]
-            print(f"filtered_items: {filtered_items}")
             combo_pesquisar_prod.configure(values=filtered_items)
         elif str(produto_pesquisado) == "":
             combo_pesquisar_prod.configure(values=lista_produtos)
@@ -495,19 +476,6 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
             cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
             incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, "", codigo_estoque_origem)
             incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, "", codigo_estoque_destino)
-        print(f"prods_selecionados 8: {prods_selecionados}")
-        """lista_quant_resultado = []
-        for produto in prods_selecionados:
-            nome, quant_selecionado = produto.split(" | ")
-            quant_selecionado = int(quant_selecionado.strip())
-            for produto_ceasa in prods_ceasa:
-                nome_ceasa, quant_ceasa = produto_ceasa.split(" | ")
-                quant_ceasa = int(quant_ceasa.strip())
-                if nome == nome_ceasa:
-                    resultado = quant_selecionado - quant_ceasa
-                    lista_quant_resultado.append(f"{nome} | {resultado}")
-                    break
-        prods_selecionados = lista_quant_resultado"""
         sub_janela_ceasa.destroy()
         janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, prods_ceasa)
     def voltar_prod_func():
@@ -817,18 +785,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                     codigo_projeto = codigo_projeto.replace(" ", "")
                     break
         return codigo_projeto
-    '''def procurar_produto():
-        #NOTE - procurar_produto
-        """Procura o produto na lista de produtos
-
-        param:
-            - None
-        
-        return:
-            - None"""
-        search_text = pesquisar_produto.get()
-        filtered_items = [item for item in lista_produtos if search_text in item]
-        combo_produtos.configure(values=filtered_items)'''
     def procurar_estoque_interno():
         #NOTE - procurar_estoque_interno
         """Procura o estoque na lista de estoques
@@ -957,9 +913,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         prods_selecionados.pop()
     except:
         pass
-    print(f"prods_ceasa 3: {prods_ceasa}")
-    print(f"prods_selecionados 3: {prods_selecionados}")
-    print(len(prods_ceasa))
     if len(prods_ceasa) > 0:
         for produto in prods_selecionados:
             nome, quant_selecionado = produto.split(" | ")
@@ -972,7 +925,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                     lista_quant_resultado.append(f"{nome} | {resultado}")
                     break
         prods_selecionados = lista_quant_resultado
-    print(f"prods_selecionados 9: {prods_selecionados}")
     for item in prods_selecionados:
         text_produtos.insert("0.0", f"{item}\n")
     text_produtos.configure(state="disabled")
@@ -1025,24 +977,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
     nota_entry = ctk.CTkEntry(master=frame_1)
     nota_entry.place(relx=0.5, rely=0.68, anchor=ctk.CENTER)
 
-    '''#NOTE - text_prod_ceasa
-    text_prod_ceasa = ctk.CTkTextbox(
-        master=frame_1,
-        width=200,
-        height=25
-        )
-    text_prod_ceasa.place(relx=0.35, rely=0.75, anchor=tkinter.CENTER)
-    text_prod_ceasa.insert("0.0", "Produtos na Ceasa:")
-    text_prod_ceasa.configure(state="disabled")
-
-    #NOTE - text_quant_produtos_ceasa
-    text_quant_produtos_ceasa = ctk.CTkTextbox(
-        master=frame_1,
-        width=200,
-        height=25)
-    text_quant_produtos_ceasa.place(relx=0.5, rely=0.75, anchor=ctk.CENTER)
-    text_quant_produtos_ceasa.configure(state="disabled")'''
-
     #NOTE - btn_mov_estoque
     btn_mov_estoque = ctk.CTkButton(
         master=frame_1,
@@ -1057,6 +991,3 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
 
     janela_saida_caminhao.mainloop()
 #!SECTION
-
-prods_selecionados = ""
-#janela_mov_estoque_func("janela_inicio", prods_selecionados, "SAI")
