@@ -673,6 +673,34 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         #NOTE - inicio_prod_func
         sub_janela_ceasa.destroy()
         janela_mov_estoque.destroy()
+    def procurar_estoque_interno(event):
+        #NOTE - procurar_estoque_interno
+        """Procura o estoque na lista de estoques
+
+        param:
+            - None
+        
+        return:
+            - None"""
+        search_text = combo_estoque_ceasa_origem.get()
+        filtered_items = [item for item in lista_estoques if search_text in item]
+        if len(filtered_items) <= 0:
+            sub_janela_alerta_estoque_não_encontrado()
+        combo_estoque_ceasa_origem.configure(values=filtered_items)
+    def procurar_estoque_caminhao(event):
+        #NOTE - procurar_estoque_caminhao
+        """Procura o estoque na lista de estoques
+
+        param:
+            - None
+        
+        return:
+            - None"""
+        search_text = combo_estoque_ceasa_destino.get()
+        filtered_items = [item for item in lista_estoques if search_text in item]
+        if len(filtered_items) <= 0:
+            sub_janela_alerta_estoque_não_encontrado()
+        combo_estoque_ceasa_destino.configure(values=filtered_items)
     #!SECTION
 
     #SECTION - Centro
@@ -796,7 +824,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         text="Origem:",
         font=("arial", 12, "bold"),
         bg_color="#3b3b3b",
-    )
+    ) 
     label_estoque_origem.place(relx=0.35, rely=0.71, anchor=tkinter.CENTER)
     combo_estoque_ceasa_origem = ctk.CTkComboBox(
         master=frame_meio,
@@ -804,6 +832,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         width=150,
         height=25,
     )
+    combo_estoque_ceasa_origem.bind("<Return>", procurar_estoque_interno)
     combo_estoque_ceasa_origem.place(relx=0.5, rely=0.71, anchor=tkinter.CENTER)
     label_estoque_destino = ctk.CTkLabel(
         master=frame_meio,
@@ -818,6 +847,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         width=150,
         height=25,
     )
+    combo_estoque_ceasa_destino.bind("<Return>", procurar_estoque_caminhao)
     combo_estoque_ceasa_destino.place(relx=0.5, rely=0.77, anchor=tkinter.CENTER)
     btn_confirmar = ctk.CTkButton(
         master=frame_meio,
