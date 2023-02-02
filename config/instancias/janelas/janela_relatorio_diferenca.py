@@ -247,6 +247,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
                     codigo_local_estoque = estoque[1]
                     codigo_local_estoque = codigo_local_estoque.replace(" ", "")
                     break
+        return codigo_local_estoque
     def selecionar_estoque_func():
         #NOTE - selecionar_estoque_func
         """Cofirma o estoque escolhido
@@ -258,6 +259,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             - None"""
         nome_estoque = combo_estoque.get()
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
+        print(f"nome_estoque: {nome_estoque} - codigo_local_estoque: {codigo_local_estoque}")
         produtos_nao_retornados = diferenca_quantidade_estoque_produto(codigo_local_estoque)
         produtos_nao_retornados_text = f"Total não retornados: {produtos_nao_retornados}"
         sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados_text)

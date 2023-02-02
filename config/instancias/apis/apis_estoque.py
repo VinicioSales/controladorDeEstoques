@@ -170,6 +170,7 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
     return:
         - int: total_estoque
     """
+    print(f"codigo_local_estoque: {codigo_local_estoque}")
     with open(f"config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
         arquivo.write("")
     data_atual = date.today()
@@ -203,10 +204,12 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
         for cadastro in cadastros:
             cCodigo = cadastro["cCodigo"]
             movimentos = cadastro["movimentos"]            
-            for movimento in movimentos:                
+            for movimento in movimentos:
+                print(f"movimento: {movimento}")
                 entradas = int(movimento["nQtdeEntradas"])
                 saidas = int(movimento["nQtdeSaidas"])
-                quant_nao_retornados = entradas - saidas                
+                quant_nao_retornados = entradas - saidas
+                print(f"entrada: {entradas} - saidas: {saidas} - quant_nao_retornados: {quant_nao_retornados}")
                 with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
                     lista_produtos = arquivo.readlines()
                 for linha_lista_produtos in lista_produtos:
@@ -218,7 +221,7 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                         pass
                     if cCodigo == cod_produto:
                         nome_produto = linha_lista_produtos[1]
-                        nome_produto_aux = nome_produto.replace(" ", "")
+                        """nome_produto_aux = nome_produto.replace(" ", "")
                         nome_produto_aux = nome_produto_aux.replace("\n", "")
                         with open(f"config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
                             lista_produtos_ceasa = arquivo.readlines()
@@ -230,7 +233,8 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                                 quant_ceasa = linha_lista_ceasa[2]
                                 quant_ceasa = quant_ceasa.replace(" ", "")
                                 quant_ceasa = int(quant_ceasa.replace("\n", ""))
-                                quant_nao_retornados = quant_nao_retornados - quant_ceasa
+                                quant_nao_retornados = quant_nao_retornados - quant_ceasa"""
+                        
                         with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
                             quant_diferenca_estoque = arquivo.readlines()
                             nome_produto = nome_produto.replace("\n", "")
