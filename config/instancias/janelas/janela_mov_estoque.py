@@ -638,9 +638,11 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         return codigo_local_estoque
     def btn_confirmar_func():
         #NOTE - btn_confirmar_func
-        prods_ceasa = text_prod_ceasa.get("0.0", "end").split("\n")        
+        prods_ceasa = text_prod_ceasa.get("0.0", "end").split("\n")
+        print(f"prods_ceasa: {prods_ceasa}")        
         prods_ceasa.pop()
         prods_ceasa.pop()
+        print(f"prods_ceasa: {prods_ceasa}") 
         estoque_origem = combo_estoque_ceasa_origem.get()
         estoque_destino = combo_estoque_ceasa_destino.get()
         codigo_estoque_origem = get_codigo_local_estoque(nome_estoque=estoque_origem)
@@ -656,6 +658,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
             lista_nome_produto.append(nome_produto)
             lista_cod_produto.append(codigo)
             lista_quantidade_produto.append(quantidade_produto)
+        print(f"lista_quantidade_produto: {lista_quantidade_produto}")
         for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
             cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
             incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, "", codigo_estoque_origem)
@@ -1159,7 +1162,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         prods_selecionados.pop()
     except:
         pass
-    if len(prods_ceasa) > 0:
+    """if len(prods_ceasa) > 0:
         for produto in prods_selecionados:
             nome, quant_selecionado = produto.split(" | ")
             quant_selecionado = int(quant_selecionado.strip())
@@ -1170,7 +1173,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                     resultado = quant_selecionado - quant_ceasa
                     lista_quant_resultado.append(f"{nome} | {resultado}")
                     break
-        prods_selecionados = lista_quant_resultado
+        prods_selecionados = lista_quant_resultado"""
     for item in prods_selecionados:
         text_produtos.insert("0.0", f"{item}\n")
     text_produtos.configure(state="disabled")

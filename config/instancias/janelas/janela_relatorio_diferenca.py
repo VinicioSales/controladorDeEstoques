@@ -75,12 +75,12 @@ def janela_relatorio_diferenca_func(janela_inicio):
         #NOTE - Texto
         label = ctk.CTkLabel(
             master=frame_principal,
-            text="Quantidade de produtos retirados:",
+            text="Quantidade de produtos no estoque:",
             font=("arial", 16, "bold")
             )
         label.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
         #NOTE - produtos_nao_retornados
-        textbox = ctk.CTkTextbox(
+        '''textbox = ctk.CTkTextbox(
         master=frame_principal,
         width=600,
         height=5,
@@ -90,10 +90,47 @@ def janela_relatorio_diferenca_func(janela_inicio):
         )
         textbox.insert("0.0", produtos_nao_retornados_text)
         textbox.configure(state="disabled")
-        textbox.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)
+        textbox.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)'''
         #NOTE - quant_diferenca_estoque
         with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
             quant_diferenca_estoque = arquivo.readlines()
+        with open(f"config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
+            lista_produtos_ceasa = arquivo.readlines()
+        
+        lista_relatorio = []
+        for produto_ceasa in lista_produtos_ceasa:
+            codigo_local_estoque, nome_produto_ceasa, quant_ceasa = produto_ceasa.split(" | ")
+            nome_produto_ceasa = nome_produto_ceasa.strip()
+            quant_ceasa = int(quant_ceasa.strip())
+            for diferenca_estoque in quant_diferenca_estoque:
+                nome_difenca, quant_diferenca = diferenca_estoque.split(" | ")
+                quant_diferenca = int(quant_diferenca.strip())
+                nome_difenca = nome_difenca.strip()
+                print(f"nome_produto_ceasa: {nome_produto_ceasa} - nome_difenca: {nome_difenca}")
+                if nome_produto_ceasa == nome_difenca:
+                    resultado = quant_diferenca - quant_ceasa
+                    lista_relatorio.append(f"{nome_difenca} | {resultado}\n")
+        with open(f"config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
+            arquivo.writelines(quant_diferenca_estoque)
+            #quant_diferenca_estoque = arquivo.readlines()
+                
+        '''Cebola | 585
+        6873272006 | Milho | 2
+
+        for produto in prods_selecionados:
+        nome, quant_selecionado = produto.split(" | ")
+        quant_selecionado = int(quant_selecionado.strip())
+        for produto_ceasa in prods_ceasa:
+            nome_ceasa, quant_ceasa = produto_ceasa.split(" | ")
+            quant_ceasa = int(quant_ceasa.strip())
+            if nome == nome_ceasa:
+                resultado = quant_selecionado - quant_ceasa
+                lista_quant_resultado.append(f"{nome} | {resultado}")
+                break'''
+            
+            
+
+
         textbox_relatorio = ctk.CTkTextbox(
         master=frame_principal,
         width=500,
@@ -259,7 +296,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
             - None"""
         nome_estoque = combo_estoque.get()
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
-        print(f"nome_estoque: {nome_estoque} - codigo_local_estoque: {codigo_local_estoque}")
         produtos_nao_retornados = diferenca_quantidade_estoque_produto(codigo_local_estoque)
         produtos_nao_retornados_text = f"Total não retornados: {produtos_nao_retornados}"
         sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados_text)
