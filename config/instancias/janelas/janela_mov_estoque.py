@@ -113,6 +113,91 @@ def sub_janela_confirmar_produtos_func():
     btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 #!SECTION
 
+#SECTION - sub_janela_alerta_preencher_dados
+def sub_janela_alerta_preencher_dados():
+    #NOTE - sub_janela_alerta_preencher_dados
+    """
+    Cria uma sub-janela para confirmar a adição de um produto.
+    Esta sub-janela é centralizada na tela e tem um label e um botão "Ok".
+    Ao clicar no botão "Ok", a sub-janela é fechada.
+    """
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")
+    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text="Preencha todos os dados",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
+#SECTION - sub_janela_alerta_prod_nao_encontrado
+def sub_janela_alerta_prod_nao_encontrado():
+    #NOTE - sub_janela_alerta_prod_nao_encontrado
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text="Produto Não Encontrado!",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
 
 #SECTION - janela_produtos
 def janela_produtos_func(janela_mov_estoque, tipo):
@@ -131,6 +216,8 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         #NOTE - adicionar_prod_btn_func
         prod_selecionado = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
+        if prod_selecionado == "" or quantidade == "":
+            sub_janela_alerta_preencher_dados()
         if prod_selecionado != "" and quantidade != "":
             text_prod_selecionados.configure(state="normal")
             text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
@@ -140,9 +227,11 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     def adicionar_prod_func(event):
         #NOTE - adicionar_prod_func
         prod_selecionado = combo_pesquisar_prod.get()
-        quantidade = entry_quantidade.get()        
+        quantidade = entry_quantidade.get()
+        if prod_selecionado == "" or quantidade == "":
+            sub_janela_alerta_preencher_dados()
         if prod_selecionado != "" and quantidade != "":
-            filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
+            #filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
             for produto in lista_produtos:
                 if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
                     text_prod_selecionados.configure(state="normal")
@@ -154,11 +243,12 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
         produto_pesquisado = combo_pesquisar_prod.get()
-        
-        #text_prod.configure(state="normal")
         if str(produto_pesquisado) != "":            
             filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]
-            
+            print(f"filtered_items: {filtered_items}")
+            print(len(filtered_items))
+            if len(filtered_items) <= 0:
+                sub_janela_alerta_prod_nao_encontrado()
             combo_pesquisar_prod.configure(values=filtered_items)
         elif str(produto_pesquisado) == "":
             combo_pesquisar_prod.configure(values=lista_produtos)
@@ -366,7 +456,10 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         #NOTE - adicionar_prod_btn_func
         prod_selecionado = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
-        if prod_selecionado != "" and quantidade != "":
+        if prod_selecionado == "" or quantidade == "":
+            print("ok")
+            sub_janela_alerta_preencher_dados()
+        elif prod_selecionado != "" and quantidade != "":
             text_prod_ceasa.configure(state="normal")
             text_prod_ceasa.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
             text_prod_ceasa.configure(state="disabled")
@@ -375,9 +468,12 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     def adicionar_prod_func(event):
         #NOTE - adicionar_prod_func
         prod_selecionado = combo_pesquisar_prod.get()
-        quantidade = entry_quantidade.get()        
+        quantidade = entry_quantidade.get()
+        if prod_selecionado == "" or quantidade == "":
+            print("ok")
+            sub_janela_alerta_preencher_dados()      
         if prod_selecionado != "" and quantidade != "":
-            filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
+            #filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
             for produto in lista_produtos:
                 if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
                     text_prod_ceasa.configure(state="normal")
@@ -391,6 +487,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         produto_pesquisado = combo_pesquisar_prod.get()
         if str(produto_pesquisado) != "":            
             filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]
+            sub_janela_alerta_prod_nao_encontrado()
             combo_pesquisar_prod.configure(values=filtered_items)
         elif str(produto_pesquisado) == "":
             combo_pesquisar_prod.configure(values=lista_produtos)
