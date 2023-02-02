@@ -120,7 +120,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     #NOTE - janela_produtos_func
     """Cria a janela inicial"""
     janela_produtos = ctk.CTk()
-    janela_produtos.title("CustomTkinter simple_example.py")
+    janela_produtos.title("Produtos")
     janela_produtos.state("zoomed")
     
     font_texto = "arial"
@@ -356,7 +356,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     #NOTE - sub_janela_ceasa_func
     """Cria a janela inicial"""
     sub_janela_ceasa = ctk.CTk()
-    sub_janela_ceasa.title("CustomTkinter simple_example.py")
+    sub_janela_ceasa.title("Produtos Ceasa")
     sub_janela_ceasa.state("zoomed")    
     font_texto = "arial"
     font_btn = "arial"
@@ -723,7 +723,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         - None"""
     janela_saida_caminhao = ctk.CTkToplevel()
     janela_saida_caminhao.geometry(dimensao)
-    janela_saida_caminhao.title("Saida de caminhões")
+    janela_saida_caminhao.title("Movimento de estoques")
     janela_saida_caminhao.state("zoomed")
     ctk.set_appearance_mode("dark")
 

@@ -1,2 +1,2 @@
- Milho | 10
- Coentro | 40
+ Milho | -10
+ Coentro | -40
