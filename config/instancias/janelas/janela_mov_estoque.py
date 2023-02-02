@@ -159,6 +159,47 @@ def sub_janela_alerta_preencher_dados():
     btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 #!SECTION
 
+#SECTION - sub_janela_alerta_estoque_não_encontrado
+def sub_janela_alerta_estoque_não_encontrado():
+    #NOTE - sub_janela_alerta_estoque_não_encontrado
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")
+    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text="Estoque não encontrado!",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
 #SECTION - sub_janela_alerta_prod_nao_encontrado
 def sub_janela_alerta_prod_nao_encontrado():
     #NOTE - sub_janela_alerta_prod_nao_encontrado
@@ -245,8 +286,6 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         produto_pesquisado = combo_pesquisar_prod.get()
         if str(produto_pesquisado) != "":            
             filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]
-            print(f"filtered_items: {filtered_items}")
-            print(len(filtered_items))
             if len(filtered_items) <= 0:
                 sub_janela_alerta_prod_nao_encontrado()
             combo_pesquisar_prod.configure(values=filtered_items)
@@ -457,7 +496,6 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         prod_selecionado = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
         if prod_selecionado == "" or quantidade == "":
-            print("ok")
             sub_janela_alerta_preencher_dados()
         elif prod_selecionado != "" and quantidade != "":
             text_prod_ceasa.configure(state="normal")
@@ -470,7 +508,6 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         prod_selecionado = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
         if prod_selecionado == "" or quantidade == "":
-            print("ok")
             sub_janela_alerta_preencher_dados()      
         if prod_selecionado != "" and quantidade != "":
             #filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
@@ -541,12 +578,15 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
             - string: codigo_local_estoque"""        
         with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
             lista_estoques = arquivo.readlines()
-            for estoque in lista_estoques:
-                if nome_estoque in estoque:
-                    estoque = estoque.split("|")
-                    codigo_local_estoque = estoque[1]
-                    codigo_local_estoque = codigo_local_estoque.replace(" ", "")
-                    break
+            try:
+                for estoque in lista_estoques:
+                    if nome_estoque in estoque:
+                        estoque = estoque.split("|")
+                        codigo_local_estoque = estoque[1]
+                        codigo_local_estoque = codigo_local_estoque.replace(" ", "")
+                        break
+            except:
+                codigo_local_estoque = ""
         return codigo_local_estoque
     def btn_confirmar_func():
         #NOTE - btn_confirmar_func
@@ -856,12 +896,15 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
             - string: codigo_local_estoque"""        
         with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
             lista_estoques = arquivo.readlines()
+        try:
             for estoque in lista_estoques:
                 if nome_estoque in estoque:
                     estoque = estoque.split("|")
                     codigo_local_estoque = estoque[1]
                     codigo_local_estoque = codigo_local_estoque.replace(" ", "")
                     break
+        except:
+            codigo_local_estoque = ""
         return codigo_local_estoque
     def get_codigo_projeto(nome_projeto):
         #NOTE - get_codigo_projeto
@@ -892,6 +935,8 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
             - None"""
         search_text = pesquisar_estoque_interno.get()
         filtered_items = [item for item in lista_estoques if search_text in item]
+        if len(filtered_items) <= 0:
+            sub_janela_alerta_estoque_não_encontrado()
         combo_estoque_interno.configure(values=filtered_items)
     def procurar_estoque_caminhao():
         #NOTE - procurar_estoque_caminhao
@@ -904,6 +949,8 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
             - None"""
         search_text = pesquisar_estoque_caminhao.get()
         filtered_items = [item for item in lista_estoques if search_text in item]
+        if len(filtered_items) <= 0:
+            sub_janela_alerta_estoque_não_encontrado()
         combo_estoque_caminhao.configure(values=filtered_items) 
     def ajustar_estoque_func():
         #NOTE - ajustar_estoque_func
@@ -917,8 +964,10 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         lista_nome_produto = []
         lista_cod_produto = []
         lista_quantidade_produto = []
-        print(f"prods_selecionados: {prods_selecionados}")
-        if prods_selecionados != "":
+        nome_estoque_interno = combo_estoque_interno.get()
+        nome_estoque_caminhao = combo_estoque_caminhao.get()
+        nota = nota_entry.get()
+        if prods_selecionados != "" and nome_estoque_interno != "" and nome_estoque_caminhao != "":
             for item in prods_selecionados:
                 item = item.split("|")
                 nome_produto = item[0]
@@ -926,22 +975,22 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                 quantidade_produto = item[1]
                 lista_nome_produto.append(nome_produto)
                 lista_cod_produto.append(codigo)
-                lista_quantidade_produto.append(quantidade_produto)            
-
-            nome_estoque_interno = combo_estoque_interno.get()
-            nome_estoque_caminhao = combo_estoque_caminhao.get()
-            #nome_projeto = combo_projeto.get()
-            nota = nota_entry.get()
+                lista_quantidade_produto.append(quantidade_produto)
             obs_ent = f"{nota},\n\nentrada"
             obs_sai = f"{nota},\n\nsaida"        
             codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
-            codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
-            for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
-                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
-                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_ent, codigo_local_estoque)
-                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_sai, codigo_estoque_caminhao)
-        else:
+            if codigo_local_estoque != "":
+                codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
+                for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
+                    cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
+                    incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_ent, codigo_local_estoque)
+                    incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_sai, codigo_estoque_caminhao)
+            else:
+                sub_janela_alerta_estoque_não_encontrado()
+        elif prods_selecionados == "":
             sub_janela_confirmar_produtos_func()
+        elif nome_estoque_interno == "" or nome_estoque_caminhao == "":
+            sub_janela_alerta_preencher_dados()
     def inicio_func():
         #NOTE - inicio_func 
         janela_saida_caminhao.destroy()
@@ -951,6 +1000,8 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         if estoque_interno != "":
             filtered_items = [item for item in lista_estoques if unidecode(estoque_interno).upper() in unidecode(item).upper()]
             combo_estoque_interno.configure(values=filtered_items)
+            if len(filtered_items) <= 0:
+                sub_janela_alerta_estoque_não_encontrado()
         elif estoque_interno == "":
             combo_estoque_interno.configure(values=lista_estoques)
     def procurar_estoque_caminhao(event):
@@ -959,6 +1010,8 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         if estoque_caminhao != "":
             filtered_items = [item for item in lista_estoques if unidecode(estoque_caminhao).upper() in unidecode(item).upper()]
             combo_estoque_caminhao.configure(values=filtered_items)
+            if len(filtered_items) <= 0:
+                sub_janela_alerta_estoque_não_encontrado()
         elif estoque_caminhao == "":
             combo_estoque_caminhao.configure(values=lista_estoques)
     def selecionar_prod_btn_func():
