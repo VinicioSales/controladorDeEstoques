@@ -67,7 +67,6 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
     btn_confimar_ceasa_2.place(relx=0.65, rely=0.60, anchor=tkinter.CENTER)
 #!SECTION
 
-
 #SECTION - sub_janela_confirmar_produtos
 def sub_janela_confirmar_produtos_func():
     #NOTE - sub_janela_confirmar_produtos_func
@@ -821,27 +820,31 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         lista_nome_produto = []
         lista_cod_produto = []
         lista_quantidade_produto = []
-        for item in prods_selecionados:
-            item = item.split("|")
-            nome_produto = item[0]
-            codigo = get_codigo(nome_produto)
-            quantidade_produto = item[1]
-            lista_nome_produto.append(nome_produto)
-            lista_cod_produto.append(codigo)
-            lista_quantidade_produto.append(quantidade_produto)            
+        print(f"prods_selecionados: {prods_selecionados}")
+        if prods_selecionados != "":
+            for item in prods_selecionados:
+                item = item.split("|")
+                nome_produto = item[0]
+                codigo = get_codigo(nome_produto)
+                quantidade_produto = item[1]
+                lista_nome_produto.append(nome_produto)
+                lista_cod_produto.append(codigo)
+                lista_quantidade_produto.append(quantidade_produto)            
 
-        nome_estoque_interno = combo_estoque_interno.get()
-        nome_estoque_caminhao = combo_estoque_caminhao.get()
-        #nome_projeto = combo_projeto.get()
-        nota = nota_entry.get()
-        obs_ent = f"{nota},\n\nentrada"
-        obs_sai = f"{nota},\n\nsaida"        
-        codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
-        codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
-        for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
-            cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
-            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_ent, codigo_local_estoque)
-            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_sai, codigo_estoque_caminhao)
+            nome_estoque_interno = combo_estoque_interno.get()
+            nome_estoque_caminhao = combo_estoque_caminhao.get()
+            #nome_projeto = combo_projeto.get()
+            nota = nota_entry.get()
+            obs_ent = f"{nota},\n\nentrada"
+            obs_sai = f"{nota},\n\nsaida"        
+            codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
+            codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
+            for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
+                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
+                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_ent, codigo_local_estoque)
+                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_sai, codigo_estoque_caminhao)
+        else:
+            sub_janela_confirmar_produtos_func()
     def inicio_func():
         #NOTE - inicio_func 
         janela_saida_caminhao.destroy()
