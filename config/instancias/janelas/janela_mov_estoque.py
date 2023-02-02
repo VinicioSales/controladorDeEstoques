@@ -40,7 +40,8 @@ def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tip
         """
         sub_janela_confirmar_ceasa.destroy()
         janela_produtos.destroy()
-        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo)
+        prods_ceasa = ""
+        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, prods_ceasa)
     #!SECTION
 
 
@@ -365,8 +366,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
 
 
 #SECTION - sub_janela_ceasa_func
-def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selecionados):
-    print(f"prods_selecionados 5: {prods_selecionados}")
+def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selecionados):    
     #NOTE - sub_janela_ceasa_func
     """Cria a janela inicial"""
     sub_janela_ceasa = ctk.CTk()
@@ -376,6 +376,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     font_texto = "arial"
     font_btn = "arial"
     cor_frame_meio = "#3b3b3b"
+    print(f"prods_selecionados 5: {prods_selecionados}")
 
     #SECTION - Funções
     def adicionar_prod_btn_func():
@@ -431,13 +432,84 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         text_prod_ceasa.configure(state="normal")
         text_prod_ceasa.delete("0.0", "end")
         text_prod_ceasa.configure(state="disabled")
+    def get_codigo(nome_produto):
+        #NOTE - get_codigo
+        """Pega o codigo do produto na lista de produtos
+        
+        param:
+            - string: nome_produto
+            
+        return:
+            - string: codigo"""
+        with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
+            lista_produtos = arquivo.readlines()
+        nome_produto_aux= nome_produto.replace(" ", "")
+        for produto in lista_produtos:                
+            produto = produto.split("|")
+            nome = produto[1]
+            nome_aux = nome.replace(" ", "")
+            if str(nome_produto_aux) in str(nome_aux):
+                codigo = produto[0]
+                codigo = codigo.replace(" ", "")
+                break
+        return codigo
+    def get_codigo_local_estoque(nome_estoque):
+        #NOTE - get_codigo_local_estoque
+        """Pega o codigo do estoque na lista de estoques
+        
+        param:
+            - string: nome_estoque
+            
+        return:
+            - string: codigo_local_estoque"""        
+        with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
+            lista_estoques = arquivo.readlines()
+            for estoque in lista_estoques:
+                if nome_estoque in estoque:
+                    estoque = estoque.split("|")
+                    codigo_local_estoque = estoque[1]
+                    codigo_local_estoque = codigo_local_estoque.replace(" ", "")
+                    break
+        return codigo_local_estoque
     def btn_confirmar_func():
         #NOTE - btn_confirmar_func
         prods_ceasa = text_prod_ceasa.get("0.0", "end").split("\n")
-        print(f"prods_selecionados 4: {prods_selecionados}")
+        prods_ceasa.pop()
+        prods_ceasa.pop()
+        estoque_origem = combo_estoque_ceasa_origem.get()
+        estoque_destino = combo_estoque_ceasa_destino.get()
+        lista_nome_produto = []
+        lista_cod_produto = []
+        lista_quantidade_produto = []
+        for item in prods_ceasa:
+            item = item.split("|")
+            nome_produto = item[0]
+            codigo = get_codigo(nome_produto)
+            quantidade_produto = item[1]
+            lista_nome_produto.append(nome_produto)
+            lista_cod_produto.append(codigo)
+            lista_quantidade_produto.append(quantidade_produto)     
+        codigo_estoque_origem = get_codigo_local_estoque(nome_estoque=estoque_origem)
+        codigo_estoque_destino = get_codigo_local_estoque(nome_estoque=estoque_destino)        
+        for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
+            cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
+            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, "", codigo_estoque_origem)
+            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, "", codigo_estoque_destino)
+        print(f"prods_selecionados 8: {prods_selecionados}")
+        """lista_quant_resultado = []
+        for produto in prods_selecionados:
+            nome, quant_selecionado = produto.split(" | ")
+            quant_selecionado = int(quant_selecionado.strip())
+            for produto_ceasa in prods_ceasa:
+                nome_ceasa, quant_ceasa = produto_ceasa.split(" | ")
+                quant_ceasa = int(quant_ceasa.strip())
+                if nome == nome_ceasa:
+                    resultado = quant_selecionado - quant_ceasa
+                    lista_quant_resultado.append(f"{nome} | {resultado}")
+                    break
+        prods_selecionados = lista_quant_resultado"""
         sub_janela_ceasa.destroy()
-        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo)
-
+        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, prods_ceasa)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         sub_janela_ceasa.destroy()
@@ -548,7 +620,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         font=(font_btn, 15),
         border_width=0,
         command = adicionar_prod_btn_func)
-    btn_adicionar_produto.place(relx=0.50, rely=0.56, anchor=ctk.CENTER)
+    btn_adicionar_produto.place(relx=0.50, rely=0.53, anchor=ctk.CENTER)
     btn_remover_ultimo = ctk.CTkButton(
         master=frame_meio,
         width=125,
@@ -556,7 +628,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         text="Remover último produto",
         font=(font_btn, 13),
         command = remover_ultimo_btn_func)
-    btn_remover_ultimo.place(relx=0.50, rely=0.62, anchor=ctk.CENTER)
+    btn_remover_ultimo.place(relx=0.50, rely=0.59, anchor=ctk.CENTER)
     btn_limpar = ctk.CTkButton(
         master=frame_meio,
         width=150,
@@ -564,18 +636,46 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         text="Limpar",
         font=(font_btn, 15),
         command = limpar_prods_selecionados)
-    btn_limpar.place(relx=0.50, rely=0.68, anchor=ctk.CENTER)
+    btn_limpar.place(relx=0.50, rely=0.65, anchor=ctk.CENTER)
+    label_estoque_origem = ctk.CTkLabel(
+        master=frame_meio,
+        text="Origem:",
+        font=("arial", 12, "bold"),
+        bg_color="#3b3b3b",
+    )
+    label_estoque_origem.place(relx=0.35, rely=0.71, anchor=tkinter.CENTER)
+    combo_estoque_ceasa_origem = ctk.CTkComboBox(
+        master=frame_meio,
+        values=lista_estoques,
+        width=150,
+        height=25,
+    )
+    combo_estoque_ceasa_origem.place(relx=0.5, rely=0.71, anchor=tkinter.CENTER)
+    label_estoque_destino = ctk.CTkLabel(
+        master=frame_meio,
+        text="Destino:",
+        font=("arial", 12, "bold"),
+        bg_color="#3b3b3b",
+    )
+    label_estoque_destino.place(relx=0.35, rely=0.77, anchor=tkinter.CENTER)
+    combo_estoque_ceasa_destino = ctk.CTkComboBox(
+        master=frame_meio,
+        values=lista_estoques,
+        width=150,
+        height=25,
+    )
+    combo_estoque_ceasa_destino.place(relx=0.5, rely=0.77, anchor=tkinter.CENTER)
     btn_confirmar = ctk.CTkButton(
         master=frame_meio,
         width=150,
         height=25,
-        text="Confirmar",
+        text="Movimentar Estoque",
         font=(font_btn, 15),
         fg_color="#00993D",
         hover_color=("#007830"),
         command=btn_confirmar_func
     )
-    btn_confirmar.place(relx=0.50, rely=0.80, anchor=tkinter.CENTER)
+    btn_confirmar.place(relx=0.50, rely=0.84, anchor=tkinter.CENTER)
     #!SECTION
 
     #SECTION - Direita
@@ -645,7 +745,7 @@ with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
 
 #SECTION - janela_mov_estoque_func
 #NOTE - Instancia Janela
-def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
+def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa):
     """Instancia a janela de saida de caminhões
     params:
         - ctk: janela_inicio
@@ -762,14 +862,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
         
         return:
             - None"""
-        # Pegando variaveis
-        #barra_proresso = ctk.CTkProgressBar(master=frame_1)
-        #barra_proresso.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
-        #barra_proresso.place(relx=0.5, rely=0.8)
-        #barra_proresso.configure(mode="indeterminnate")
-        #barra_proresso.start()
-        
-
         lista_nome_produto = []
         lista_cod_produto = []
         lista_quantidade_produto = []
@@ -859,7 +951,28 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo):
     )
     #NOTE - text_produtos
     text_produtos.place(relx=0.68, rely=0.45, anchor=tkinter.CENTER)
+    lista_quant_resultado = []
+    try:
+        prods_selecionados.pop()
+        prods_selecionados.pop()
+    except:
+        pass
+    print(f"prods_ceasa 3: {prods_ceasa}")
     print(f"prods_selecionados 3: {prods_selecionados}")
+    print(len(prods_ceasa))
+    if len(prods_ceasa) > 0:
+        for produto in prods_selecionados:
+            nome, quant_selecionado = produto.split(" | ")
+            quant_selecionado = int(quant_selecionado.strip())
+            for produto_ceasa in prods_ceasa:
+                nome_ceasa, quant_ceasa = produto_ceasa.split(" | ")
+                quant_ceasa = int(quant_ceasa.strip())
+                if nome == nome_ceasa:
+                    resultado = quant_selecionado - quant_ceasa
+                    lista_quant_resultado.append(f"{nome} | {resultado}")
+                    break
+        prods_selecionados = lista_quant_resultado
+    print(f"prods_selecionados 9: {prods_selecionados}")
     for item in prods_selecionados:
         text_produtos.insert("0.0", f"{item}\n")
     text_produtos.configure(state="disabled")
