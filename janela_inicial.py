@@ -10,7 +10,6 @@ from config.instancias.apis import listar_local_estoque
 from config.instancias.apis import listar_projetos
 from config.instancias.apis import listar_produtos
 
-
 #SECTION - Puxando listas
 #NOTE - listar_local_estoque
 data_atual = date.today()
@@ -73,7 +72,7 @@ prods_selecionados = ""
 #=============== FUNCAO BOTAO ==================#
 quant_produtos_ceasa = ""
 prods_ceasa = ""
-def btn_mov_estoque_func():
+def btn_saida_caminhao_func():
     #//NOTE - btn_mov_estoque_func
     """Abre a janela de movimento de estoque
     params:
@@ -93,7 +92,6 @@ def btn_entrada_caminhao_func():
     return:
         - None
     """
-    janela_inicio.withdraw()    
     janela_sai_caminhoes = janela_mov_estoque_func(janela_inicio, prods_selecionados, "ENT", prods_ceasa)
 def btn_relatorio_func():
     #//NOTE - btn_relatorio_func
@@ -109,16 +107,27 @@ def btn_relatorio_func():
 
 #==================== PAGINA INICIAL ================#
 #========= BOTOES ===========#
-btn_mov_estoque = ctk.CTkButton(
+btn_sai_estoque = ctk.CTkButton(
     master=frame_1_inicio,
-    text="Movimento de estoque",
+    text="Saída de estoque",
     hover_color = "#AA0",
     width=200,
     height=50,
     font=("Arial", 20, "bold"),
-    command=btn_mov_estoque_func
+    command=btn_saida_caminhao_func
 )
-btn_mov_estoque.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+btn_sai_estoque.place(relx=0.5, rely=0.39, anchor=tkinter.CENTER)
+
+btn_ent_estoque = ctk.CTkButton(
+    master=frame_1_inicio,
+    text="Entrada de estoque",
+    hover_color = "#AA0",
+    width=200,
+    height=50,
+    font=("Arial", 20, "bold"),
+    command=btn_entrada_caminhao_func
+)
+btn_ent_estoque.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
 btn_relatorio = ctk.CTkButton(
     master=frame_1_inicio,

@@ -356,11 +356,15 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         text_prod_selecionados.configure(state="disabled")
     def confirmar_btn_func():
         #NOTE - confirmar_btn_func
-        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")        
+        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")  
         if len(prods_selecionados) <= 2:
             sub_janela_confirmar_produtos_func()
-        else:
+        elif len(prods_selecionados) > 2 and tipo == "ENT":
             sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo, janela_mov_estoque, prods_selecionados)
+        elif len(prods_selecionados) > 2 and tipo == "SAI":
+            janela_produtos.destroy()
+            prods_ceasa = ""
+            janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, prods_ceasa)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_produtos.destroy()
@@ -1072,8 +1076,8 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                 lista_nome_produto.append(nome_produto)
                 lista_cod_produto.append(codigo)
                 lista_quantidade_produto.append(quantidade_produto)
-            obs_ent = f"{nota},\n\nentrada"
-            obs_sai = f"{nota},\n\nsaida"        
+            obs_ent = f"{nota}\n\nentrada"
+            obs_sai = f"{nota}\n\nsaida"        
             codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
             if codigo_local_estoque != "":
                 codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
