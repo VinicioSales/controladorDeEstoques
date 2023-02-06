@@ -106,30 +106,12 @@ def janela_relatorio_diferenca_func(janela_inicio):
                 nome_difenca, quant_diferenca = diferenca_estoque.split(" | ")
                 quant_diferenca = int(quant_diferenca.strip())
                 nome_difenca = nome_difenca.strip()
-                print(f"nome_produto_ceasa: {nome_produto_ceasa} - nome_difenca: {nome_difenca}")
                 if nome_produto_ceasa == nome_difenca:
                     resultado = quant_diferenca - quant_ceasa
                     lista_relatorio.append(f"{nome_difenca} | {resultado}\n")
         with open(f"config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
             arquivo.writelines(quant_diferenca_estoque)
             #quant_diferenca_estoque = arquivo.readlines()
-                
-        '''Cebola | 585
-        6873272006 | Milho | 2
-
-        for produto in prods_selecionados:
-        nome, quant_selecionado = produto.split(" | ")
-        quant_selecionado = int(quant_selecionado.strip())
-        for produto_ceasa in prods_ceasa:
-            nome_ceasa, quant_ceasa = produto_ceasa.split(" | ")
-            quant_ceasa = int(quant_ceasa.strip())
-            if nome == nome_ceasa:
-                resultado = quant_selecionado - quant_ceasa
-                lista_quant_resultado.append(f"{nome} | {resultado}")
-                break'''
-            
-            
-
 
         textbox_relatorio = ctk.CTkTextbox(
         master=frame_principal,
@@ -138,7 +120,10 @@ def janela_relatorio_diferenca_func(janela_inicio):
         border_width=2,
         corner_radius=10,
         )
-        textbox_relatorio.insert("0.0", quant_diferenca_estoque)
+        linha = 0
+        for prod_estoque in quant_diferenca_estoque:
+            textbox_relatorio.insert(f"{linha}.0", prod_estoque)
+            linha += 1
         textbox_relatorio.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
         textbox_relatorio.configure(state="disabled")
 
