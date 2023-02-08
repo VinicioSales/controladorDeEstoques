@@ -54,6 +54,168 @@ def sub_janela_alerta_preencher_dados():
     btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 #!SECTION
 
+#SECTION - sub_janela_alerta_prod_nao_encontrado
+def sub_janela_alerta_prod_nao_encontrado():
+    #NOTE - sub_janela_alerta_prod_nao_encontrado
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text="Produto Não Encontrado!",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
+#SECTION - sub_janela_alerta_cliente_nao_encontrado
+def sub_janela_alerta_cliente_nao_encontrado():
+    #NOTE - sub_janela_alerta_cliente_nao_encontrado
+    sub_janela_confirmar_cliente = ctk.CTkToplevel()
+    sub_janela_confirmar_cliente.geometry("300x300")
+    sub_janela_confirmar_cliente.update_idletasks()
+    x = (sub_janela_confirmar_cliente.winfo_screenwidth() // 2) - (sub_janela_confirmar_cliente.winfo_width() // 2)
+    y = (sub_janela_confirmar_cliente.winfo_screenheight() // 2) - (sub_janela_confirmar_cliente.winfo_height() // 2)
+    sub_janela_confirmar_cliente.geometry(f"+{x}+{y}")    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_cliente.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_cliente,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_cliente,
+        text="Cliente Não Encontrado!",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
+#SECTION - sub_janela_alerta_digite_numeros
+def sub_janela_alerta_digite_numeros():
+    #NOTE - sub_janela_alerta_digite_numeros
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")
+    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text="Digite Apenas Números!",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
+#SECTION - sub_janela_alerta_data_invalida
+def sub_janela_alerta_data_invalida():
+    #NOTE - sub_janela_alerta_data_invalida
+    sub_janela_confirmar_data = ctk.CTkToplevel()
+    sub_janela_confirmar_data.geometry("300x300")
+    sub_janela_confirmar_data.update_idletasks()
+    x = (sub_janela_confirmar_data.winfo_screenwidth() // 2) - (sub_janela_confirmar_data.winfo_width() // 2)
+    y = (sub_janela_confirmar_data.winfo_screenheight() // 2) - (sub_janela_confirmar_data.winfo_height() // 2)
+    sub_janela_confirmar_data.geometry(f"+{x}+{y}")
+    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_data.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_data,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_data,
+        text="Data Inválida!",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
 #SECTION - janela_pedido_venda_func
 def janela_pedido_venda_func(janela_mov_estoque, tipo):
     #NOTE - janela_pedido_venda_func
@@ -66,6 +228,12 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
     cor_frame_meio = "#3b3b3b"
 
     #SECTION - Funções
+    def verificar_data_func(date_string):
+        try:
+            datetime.datetime.strptime(date_string, '%d-%m-%Y')
+            return True
+        except ValueError:
+            return False
     def adicionar_prod_btn_func():
         #NOTE - adicionar_prod_btn_func
         cliente = combo_cliente.get()
@@ -80,30 +248,14 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         elif cliente != "" and produto != "" and quantidade != "" and valor != "" and data != "" and prazo != "":
             if quantidade.isnumeric() and valor.isnumeric():
                 text_prod_selecionados.configure(state="normal")
-                text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
+                text_prod_selecionados.insert("0.0", f"{produto} | {quantidade}\n")
                 text_prod_selecionados.configure(state="disabled")
                 combo_pesquisar_prod.configure(state="normal")
                 entry_quantidade.delete("0", "end")
-            elif not quantidade.isnumeric() and valor.isnumeric():
+                entry_valor.delete("0", "end")
+                entry_data.delete("0", "end")
+            elif not quantidade.isnumeric() or not valor.isnumeric():
                 sub_janela_alerta_digite_numeros()
-    def adicionar_prod_func(event):
-        #NOTE - adicionar_prod_func
-        prod_selecionado = combo_pesquisar_prod.get()
-        quantidade = entry_quantidade.get()
-        if prod_selecionado == "" or quantidade == "":
-            sub_janela_alerta_preencher_dados()
-        if prod_selecionado != "" and quantidade != "" and quantidade.isnumeric():
-            #filtered_items = [item for item in lista_produtos if unidecode(prod_selecionado).upper() in unidecode(item).upper()]
-            for produto in lista_produtos:
-                if unidecode(prod_selecionado).upper() == unidecode(produto).upper():                  
-                    text_prod_selecionados.configure(state="normal")
-                    text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
-                    text_prod_selecionados.configure(state="disabled")
-                    combo_pesquisar_prod.configure(state="normal")
-                    entry_quantidade.delete("0", "end")
-                    break
-        elif not quantidade.isnumeric():
-            sub_janela_alerta_digite_numeros()
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
         produto_pesquisado = combo_pesquisar_prod.get()
@@ -114,6 +266,16 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
             combo_pesquisar_prod.configure(values=filtered_items)
         elif str(produto_pesquisado) == "":
             combo_pesquisar_prod.configure(values=lista_produtos)
+    def pesquisar_cliente_func(event):
+        #NOTE - pesquisar_cliente_func
+        cliente_pesquisado = combo_cliente.get()
+        if str(cliente_pesquisado) != "":            
+            filtered_items = [item for item in lista_clientes if unidecode(cliente_pesquisado).upper() in unidecode(item).upper()]
+            if len(filtered_items) <= 0:
+                sub_janela_alerta_cliente_nao_encontrado()
+            combo_cliente.configure(values=filtered_items)
+        elif str(cliente_pesquisado) == "":
+            combo_cliente.configure(values=lista_clientes)
     def remover_ultimo_btn_func():
         #NOTE - remover_ultimo_btn_func
         text_prod_selecionados.configure(state="normal")
@@ -230,6 +392,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         height=25,
     )
     combo_cliente.place(relx=0.55, rely=0.30, anchor=tkinter.CENTER)
+    combo_cliente.bind("<Return>", pesquisar_cliente_func)
 
     #NOTE - label_pesquisar_prod
     label_pesquisar_prod = ctk.CTkLabel(
