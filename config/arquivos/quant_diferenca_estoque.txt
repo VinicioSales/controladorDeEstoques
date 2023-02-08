@@ -1,4 +1,1 @@
- Milho | 100
- Coentro | 200
- Tomate | 300
- Pimentão | 400
+ Milho | 200

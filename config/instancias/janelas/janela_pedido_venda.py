@@ -6,9 +6,12 @@ from PIL import Image
 import json
 import requests
 import random
-#from config.credenciais.database import database_infos_func
+from config.instancias.apis.apis_vendas import incluir_pedido_venda
+from config.instancias.apis.apis_cliente import get_cod_cliente
+from config.instancias.apis.apis_projetos import get_cod_projeto
+from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 
-app_key = "2999342667321"
+'''app_key = "2999342667321"
 app_secret = "337f2cb08516d060a37c47243b91d20f"
 codigo_conta_corrente: "6873271998"
 def incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao, ncm, unidade, valor_produto, quantidade_diferenca, codigo_projeto):
@@ -240,9 +243,11 @@ def get_cod_cliente(nome_cliente):
         pagina += 1
     
     return codigo_cliente_omie
+'''
 
-with open(f"config/arquivos/lista_produtos.txt", "r") as arquivo:
+with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
     lista_produtos = arquivo.readlines()
+lista_pedidos_venda = []
 
 #SECTION - sub_janela_alerta_preencher_dados
 def sub_janela_alerta_preencher_dados():
@@ -453,7 +458,7 @@ def sub_janela_alerta_data_invalida():
 #!SECTION
 
 #SECTION - janela_pedido_venda_func
-def janela_pedido_venda_func(janela_mov_estoque, tipo):
+def janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque):
     #NOTE - janela_pedido_venda_func
     janela_pedido_venda = ctk.CTk()
     janela_pedido_venda.title("Pedido de venda")
@@ -510,16 +515,34 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
                 entry_valor.delete("0", "end")
             elif not quantidade.isnumeric() or not valor.isnumeric():
                 sub_janela_alerta_digite_numeros()
+    def adicionar_prod_btn_event_func(event):
+        #NOTE - adicionar_prod_btn_event_func
+        produto = combo_pesquisar_prod.get()
+        quantidade = entry_quantidade.get()
+        valor = entry_valor.get()
+
+        if produto == "" or quantidade == "" or valor == "":
+            sub_janela_alerta_preencher_dados()
+        elif produto != "" and quantidade != "" and valor != "": 
+            if quantidade.isnumeric() and valor.isnumeric():
+                text_prod_selecionados.configure(state="normal")
+                text_prod_selecionados.insert("0.0", f"{produto} | {quantidade}\n")
+                text_prod_selecionados.configure(state="disabled")
+                combo_pesquisar_prod.configure(state="normal")
+                entry_quantidade.delete("0", "end")
+                entry_valor.delete("0", "end")
+            elif not quantidade.isnumeric() or not valor.isnumeric():
+                sub_janela_alerta_digite_numeros()
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
         produto_pesquisado = combo_pesquisar_prod.get()
         if str(produto_pesquisado) != "":            
-            filtered_items = [item for item in lista_produtos if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]
+            filtered_items = [item for item in produtos_estoque if unidecode(produto_pesquisado).upper() in unidecode(item).upper()]
             if len(filtered_items) <= 0:
                 sub_janela_alerta_prod_nao_encontrado()
             combo_pesquisar_prod.configure(values=filtered_items)
         elif str(produto_pesquisado) == "":
-            combo_pesquisar_prod.configure(values=lista_produtos)
+            combo_pesquisar_prod.configure(values=produtos_estoque)
     def pesquisar_cliente_func(event):
         #NOTE - pesquisar_cliente_func
         cliente_pesquisado = combo_cliente.get()
@@ -568,8 +591,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
                 else:
                     prazo = prazo.split(" ")[0]
                     data_vencimento = somar_dias_uteis(data, prazo)
-                codigo_cliente_omie = get_cod_cliente(nome_cliente)
-                
+                codigo_cliente_omie = get_cod_cliente(nome_cliente)                
                 for linha in prods_selecionados:            
                     linha = linha.split(" | ")
                     nome_produto = linha[0]
@@ -577,16 +599,29 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
                     quantidade_prod = quantidade_prod.replace("\n", "")                
                     cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
                     codigo_projeto = get_cod_projeto(nome_produto)
-                    incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod, codigo_projeto)
+                    dict_pedido_venda = {
+                        "codigo_produto": codigo_produto,
+                        "codigo_cliente_omie": codigo_cliente_omie,
+                        "data_vencimento": data_vencimento,
+                        "cfop": cfop,
+                        "descricao": descricao,
+                        "ncm": ncm,
+                        "unidade": unidade,
+                        "valor_unitario": valor_unitario,
+                        "quantidade_prod": quantidade_prod,
+                        "codigo_projeto": codigo_projeto
+                    }
+                    lista_pedidos_venda.append(dict_pedido_venda)
+                    #incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod, codigo_projeto)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_pedido_venda.destroy()
-        janela_mov_estoque.deiconify()
-        janela_mov_estoque.state("zoomed")
+        janela_relatorio_diferenca.deiconify()
+        janela_relatorio_diferenca.state("zoomed")
     def inicio_prod_func():
         #NOTE - inicio_prod_func
         janela_pedido_venda.destroy()
-        janela_mov_estoque.destroy()
+        janela_relatorio_diferenca.destroy()
     #!SECTION
 
     
@@ -640,14 +675,10 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
     #NOTE - label_titulo
     label_titulo = ctk.CTkLabel(
         master=frame_meio,
-        text="Selecionar Produtos",
+        text="Criar Pedido de Venda",
         font=("arial", 18, "bold")
     )
     label_titulo.place(relx=0.5, rely=0.16, anchor=tkinter.CENTER)
-
-    
-    
-    
 
     #NOTE - label_pesquisar_prod
     label_pesquisar_prod = ctk.CTkLabel(
@@ -701,6 +732,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         width=150,
         height=25,)
     entry_valor.place(relx=0.55, rely=0.42, anchor=tkinter.CENTER)
+    entry_valor.bind("<Return>", adicionar_prod_btn_event_func)
 
     #NOTE - btn_adicionar_produto
     btn_adicionar_produto = ctk.CTkButton(
@@ -797,7 +829,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         master=frame_meio,
         width=150,
         height=25,
-        text="Gerar Venda",
+        text="Concluir",
         font=(font_btn, 15),
         fg_color="#00993D",
         hover_color=("#007830"),
@@ -828,4 +860,3 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
     janela_pedido_venda.mainloop()
 #!SECTION
 
-janela_pedido_venda_func("janela_mov_estoque", "tipo")

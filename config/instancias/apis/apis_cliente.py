@@ -2,16 +2,12 @@ import json
 import requests
 from datetime import datetime
 from datetime import date
-#from config.credenciais import database_infos_func
+from config.credenciais import database_infos_func
 from unidecode import unidecode
 
-app_key = "2999342667321"
-app_secret = "337f2cb08516d060a37c47243b91d20f"
-
-"""database_infos = database_infos_func()
+database_infos = database_infos_func()
 app_key = database_infos["app_key"]
-app_secret = database_infos["app_secret"]"""
-
+app_secret = database_infos["app_secret"]
 
 def get_cod_cliente(nome_cliente):
     #NOTE - get_cod_cliente
@@ -60,5 +56,3 @@ def get_cod_cliente(nome_cliente):
     
     return codigo_cliente_omie
 
-codigo_cliente_omie = get_cod_cliente("Papelaria e Livraria Rápida Ltda")
-print(f"codigo_cliente_omie: {codigo_cliente_omie}")

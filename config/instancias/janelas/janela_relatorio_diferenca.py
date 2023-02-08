@@ -8,9 +8,8 @@ from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 from config.instancias.apis.apis_projetos import get_cod_projeto
 from config.styles import estilo_janelas_func
 from config.credenciais.database import database_infos_func
+from config.instancias.janelas.janela_pedido_venda import janela_pedido_venda_func
 
-database_infos = database_infos_func()
-codigo_cliente = database_infos["codigo_cliente"]
 
 #estilo_janelas = estilo_janelas_func()
 #dimensao = estilo_janelas["dimensao"]
@@ -56,8 +55,10 @@ def janela_relatorio_diferenca_func(janela_inicio):
             #NOTE - criar_pedido_venda_btn_func
             """
             Função que cria um pedido de venda a partir de uma lista de produtos e quantidades.
-            """            
-            sub_janela_data_vencimento = sub_janela_data_vencimento_func(quant_diferenca_estoque)
+            """
+            produtos_estoque = textbox_relatorio.get("0.0", "end").split("\n")
+            janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque)
+            #sub_janela_data_vencimento = sub_janela_data_vencimento_func(quant_diferenca_estoque)
         def estoques_sub_tbn_func():
             #NOTE - estoques_sub_tbn_func
             sub_janela_relatorio.withdraw()
@@ -79,18 +80,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             font=("arial", 16, "bold")
             )
         label.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
-        #NOTE - produtos_nao_retornados
-        '''textbox = ctk.CTkTextbox(
-        master=frame_principal,
-        width=600,
-        height=5,
-        border_width=2,
-        corner_radius=10,
-        font=("arial", 14, "bold")
-        )
-        textbox.insert("0.0", produtos_nao_retornados_text)
-        textbox.configure(state="disabled")
-        textbox.place(relx=0.5, rely=0.3, anchor=ctk.CENTER)'''
+
         #NOTE - quant_diferenca_estoque
         with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
             quant_diferenca_estoque = arquivo.readlines()

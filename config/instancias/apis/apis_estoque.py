@@ -170,7 +170,6 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
     return:
         - int: total_estoque
     """
-    print(f"codigo_local_estoque: {codigo_local_estoque}")
     with open(f"config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
         arquivo.write("")
     data_atual = date.today()

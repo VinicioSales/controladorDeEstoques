@@ -9,4 +9,5 @@ from .apis_produtos import listar_produtos
 from .apis_produtos import listar_produtos_codigo_produto
 from .apis_produtos import relatorio_quant_diferenca_func
 from .apis_vendas import incluir_pedido_venda
+from .apis_cliente import get_cod_cliente
 
