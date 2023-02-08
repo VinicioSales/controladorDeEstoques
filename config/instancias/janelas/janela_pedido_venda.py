@@ -569,6 +569,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
                     prazo = prazo.split(" ")[0]
                     data_vencimento = somar_dias_uteis(data, prazo)
                 codigo_cliente_omie = get_cod_cliente(nome_cliente)
+                
                 for linha in prods_selecionados:            
                     linha = linha.split(" | ")
                     nome_produto = linha[0]
@@ -646,25 +647,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
 
     
     
-    #NOTE - label_clientes
-    label_clientes = ctk.CTkLabel(
-        master=frame_meio,
-        text="Cliente",
-        fg_color=cor_frame_meio,
-        font= (font_texto, 13, "bold"),
-    )
-    label_clientes.place(relx=0.37, rely=0.30, anchor=tkinter.CENTER)
-
-    #NOTE - combo_cliente
-    lista_clientes = ["vinicio", "Victor", "Amanda", "Papelaria e Livraria Rápida Ltda"]
-    combo_cliente = ctk.CTkComboBox(
-        master=frame_meio,
-        values=lista_clientes,
-        width=150,
-        height=25,
-    )
-    combo_cliente.place(relx=0.55, rely=0.30, anchor=tkinter.CENTER)
-    combo_cliente.bind("<Return>", pesquisar_cliente_func)
+    
 
     #NOTE - label_pesquisar_prod
     label_pesquisar_prod = ctk.CTkLabel(
@@ -673,7 +656,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         font= (font_texto, 13, "bold"),
         fg_color=cor_frame_meio
     )
-    label_pesquisar_prod.place(relx=0.37, rely=0.36, anchor=tkinter.CENTER)    
+    label_pesquisar_prod.place(relx=0.37, rely=0.30, anchor=tkinter.CENTER)    
     
     #NOTE - combo_pesquisar_prod
     for i, produto in enumerate(lista_produtos):
@@ -684,7 +667,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         width=150,
         height=25,        
         )
-    combo_pesquisar_prod.place(relx=0.55, rely=0.36, anchor=tkinter.CENTER)
+    combo_pesquisar_prod.place(relx=0.55, rely=0.30, anchor=tkinter.CENTER)
     combo_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
 
     #NOTE - label_quantidade 
@@ -694,14 +677,14 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         font=(font_texto, 13, "bold"),
         fg_color=cor_frame_meio
     )
-    label_quantidade.place(relx=0.37, rely=0.42, anchor=tkinter.CENTER)    
+    label_quantidade.place(relx=0.37, rely=0.36, anchor=tkinter.CENTER)    
 
     #NOTE - entry_quantidade
     entry_quantidade = ctk.CTkEntry(
         master=frame_meio,
         width=150,
         height=25,)
-    entry_quantidade.place(relx=0.55, rely=0.42, anchor=tkinter.CENTER)
+    entry_quantidade.place(relx=0.55, rely=0.36, anchor=tkinter.CENTER)
 
     #NOTE - label_valor 
     label_valor = ctk.CTkLabel(
@@ -710,14 +693,14 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         font=(font_texto, 13, "bold"),
         fg_color=cor_frame_meio
     )
-    label_valor.place(relx=0.37, rely=0.48, anchor=tkinter.CENTER)    
+    label_valor.place(relx=0.37, rely=0.42, anchor=tkinter.CENTER)    
 
     #NOTE - entry_valor
     entry_valor = ctk.CTkEntry(
         master=frame_meio,
         width=150,
         height=25,)
-    entry_valor.place(relx=0.55, rely=0.48, anchor=tkinter.CENTER)
+    entry_valor.place(relx=0.55, rely=0.42, anchor=tkinter.CENTER)
 
     #NOTE - btn_adicionar_produto
     btn_adicionar_produto = ctk.CTkButton(
@@ -728,7 +711,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         font=(font_btn, 15),
         border_width=0,
         command = adicionar_prod_btn_func)
-    btn_adicionar_produto.place(relx=0.55, rely=0.56, anchor=ctk.CENTER)
+    btn_adicionar_produto.place(relx=0.55, rely=0.50, anchor=ctk.CENTER)
     #NOTE - btn_remover_ultimo
     btn_remover_ultimo = ctk.CTkButton(
         master=frame_meio,
@@ -737,7 +720,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         text="Remover último produto",
         font=(font_btn, 13),
         command = remover_ultimo_btn_func)
-    btn_remover_ultimo.place(relx=0.55, rely=0.62, anchor=ctk.CENTER)
+    btn_remover_ultimo.place(relx=0.55, rely=0.56, anchor=ctk.CENTER)
     #NOTE - btn_limpar 
     btn_limpar = ctk.CTkButton(
         master=frame_meio,
@@ -746,8 +729,27 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         text="Limpar",
         font=(font_btn, 15),
         command = limpar_prods_selecionados)
-    btn_limpar.place(relx=0.55, rely=0.68, anchor=ctk.CENTER)
+    btn_limpar.place(relx=0.55, rely=0.62, anchor=ctk.CENTER)
     
+    #NOTE - label_clientes
+    label_clientes = ctk.CTkLabel(
+        master=frame_meio,
+        text="Cliente",
+        fg_color=cor_frame_meio,
+        font= (font_texto, 13, "bold"),
+    )
+    label_clientes.place(relx=0.37, rely=0.68, anchor=tkinter.CENTER)
+
+    #NOTE - combo_cliente
+    lista_clientes = ["vinicio", "Victor", "Amanda", "Papelaria e Livraria Rápida Ltda"]
+    combo_cliente = ctk.CTkComboBox(
+        master=frame_meio,
+        values=lista_clientes,
+        width=150,
+        height=25,
+    )
+    combo_cliente.place(relx=0.55, rely=0.68, anchor=tkinter.CENTER)
+    combo_cliente.bind("<Return>", pesquisar_cliente_func)
 
     #NOTE - label_data 
     label_data = ctk.CTkLabel(
@@ -756,14 +758,16 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         font=(font_texto, 13, "bold"),
         fg_color=cor_frame_meio
     )
-    label_data.place(relx=0.37, rely=0.75, anchor=tkinter.CENTER)    
+    label_data.place(relx=0.37, rely=0.74, anchor=tkinter.CENTER)    
 
     #NOTE - entry_data
     entry_data = ctk.CTkEntry(
         master=frame_meio,
         width=150,
         height=25,)
-    entry_data.place(relx=0.55, rely=0.75, anchor=tkinter.CENTER)
+    entry_data.place(relx=0.55, rely=0.74, anchor=tkinter.CENTER)
+
+    
 
     #NOTE - label_prazo 
     label_prazo = ctk.CTkLabel(
