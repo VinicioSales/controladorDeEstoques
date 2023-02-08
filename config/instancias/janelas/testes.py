@@ -1,12 +1,5 @@
 import datetime
 
-def verificar_data_func(date_string):
-    try:
-        datetime.datetime.strptime(date_string, '%d-%m-%Y')
-        return True
-    except ValueError:
-        return False
-
-# exemplo de uso:
-print(is_valid_date("01-01-2023")) # True
-print(is_valid_date("2022-13-01")) # False
+data_atual = datetime.date.today()
+data_atual = data_atual.strftime("%d/%m/%Y")
+print(data_atual)
