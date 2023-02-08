@@ -8,6 +8,52 @@ from PIL import Image
 with open(f"config/arquivos/lista_produtos.txt", "r") as arquivo:
     lista_produtos = arquivo.readlines()
 
+#SECTION - sub_janela_alerta_preencher_dados
+def sub_janela_alerta_preencher_dados():
+    #NOTE - sub_janela_alerta_preencher_dados
+    """
+    Cria uma sub-janela para confirmar a adição de um produto.
+    Esta sub-janela é centralizada na tela e tem um label e um botão "Ok".
+    Ao clicar no botão "Ok", a sub-janela é fechada.
+    """
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")
+    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text="Preencha todos os dados",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
 #SECTION - janela_pedido_venda_func
 def janela_pedido_venda_func(janela_mov_estoque, tipo):
     #NOTE - janela_pedido_venda_func
@@ -22,18 +68,24 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
     #SECTION - Funções
     def adicionar_prod_btn_func():
         #NOTE - adicionar_prod_btn_func
-        prod_selecionado = combo_pesquisar_prod.get()
+        cliente = combo_cliente.get()
+        produto = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
-        if prod_selecionado == "" or quantidade == "":
+        valor = entry_valor.get()
+        data = entry_data.get()
+        prazo = combo_prazo.get()
+
+        if cliente == "" or produto == "" or quantidade == "" or valor == "" or data == "" or prazo == "":
             sub_janela_alerta_preencher_dados()
-        elif prod_selecionado != "" and quantidade != "" and quantidade.isnumeric():
-            text_prod_selecionados.configure(state="normal")
-            text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
-            text_prod_selecionados.configure(state="disabled")
-            combo_pesquisar_prod.configure(state="normal")
-            entry_quantidade.delete("0", "end")
-        elif not quantidade.isnumeric():
-            sub_janela_alerta_digite_numeros()
+        elif cliente != "" and produto != "" and quantidade != "" and valor != "" and data != "" and prazo != "":
+            if quantidade.isnumeric() and valor.isnumeric():
+                text_prod_selecionados.configure(state="normal")
+                text_prod_selecionados.insert("0.0", f"{prod_selecionado} | {quantidade}\n")
+                text_prod_selecionados.configure(state="disabled")
+                combo_pesquisar_prod.configure(state="normal")
+                entry_quantidade.delete("0", "end")
+            elif not quantidade.isnumeric() and valor.isnumeric():
+                sub_janela_alerta_digite_numeros()
     def adicionar_prod_func(event):
         #NOTE - adicionar_prod_func
         prod_selecionado = combo_pesquisar_prod.get()
@@ -187,8 +239,10 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         fg_color=cor_frame_meio
     )
     label_pesquisar_prod.place(relx=0.37, rely=0.36, anchor=tkinter.CENTER)    
-
+    
     #NOTE - combo_pesquisar_prod
+    for i, produto in enumerate(lista_produtos):
+        lista_produtos[i] = str((produto.split(" | "))[1]).replace("\n","")
     combo_pesquisar_prod = ctk.CTkComboBox(
         master=frame_meio,
         values=lista_produtos,
@@ -255,25 +309,19 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
     )
     label_prazo.place(relx=0.37, rely=0.60, anchor=tkinter.CENTER)    
 
-    lista_data_vencimento = ["A vista",
+    #NOTE - entry_prazo
+    lista_prazo = ["A vista",
                                 "7 dias",
                                 "14 Dias",
                                 "21 Dias",
                                 "30 Dias",
                                 "45 Dias",
                                 "60 Dias"]
-    data_vencimento_combo = ctk.CTkComboBox(master=frame_meio,
-    values=lista_data_vencimento,
+    combo_prazo = ctk.CTkComboBox(master=frame_meio,
+    values=lista_prazo,
     width=150,
     height=25)
-    data_vencimento_combo.place(relx=0.55, rely=0.60, anchor=tkinter.CENTER)
-    #NOTE - entry_prazo
-    """entry_prazo = ctk.CTkEntry(
-        master=frame_meio,
-        width=150,
-        height=25,)
-    entry_prazo.place(relx=0.55, rely=0.60, anchor=tkinter.CENTER)"""
-
+    combo_prazo.place(relx=0.55, rely=0.60, anchor=tkinter.CENTER)
     
     """#NOTE - btn_lupa
     img_lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
