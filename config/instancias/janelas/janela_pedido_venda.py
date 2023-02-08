@@ -292,17 +292,17 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("0.0", "end")
         text_prod_selecionados.configure(state="disabled")
-    def confirmar_btn_func():
-        #NOTE - confirmar_btn_func
+    def gerar_venda_btn_func():
+        #NOTE - gerar_venda_btn_func
         data = entry_data.get()
         verificar_data = verificar_data_func(data)
-        print(f"verificar_data: {verificar_data}")
         if verificar_data == False:
             sub_janela_alerta_data_invalida()
         else:
-            prazo = combo_prazo.get()            
             prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
-            print(f"prods_selecionados: {prods_selecionados}")        
+            if len(prods_selecionados) > 0:
+                prazo = combo_prazo.get()
+                print(f"prods_selecionados: {prods_selecionados}")        
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_pedido_venda.destroy()
@@ -445,6 +445,36 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         height=25,)
     entry_valor.place(relx=0.55, rely=0.48, anchor=tkinter.CENTER)
 
+    #NOTE - btn_adicionar_produto
+    btn_adicionar_produto = ctk.CTkButton(
+        master=frame_meio,
+        width=150,
+        height=25,
+        text="Adicionar Produto",
+        font=(font_btn, 15),
+        border_width=0,
+        command = adicionar_prod_btn_func)
+    btn_adicionar_produto.place(relx=0.55, rely=0.56, anchor=ctk.CENTER)
+    #NOTE - btn_remover_ultimo
+    btn_remover_ultimo = ctk.CTkButton(
+        master=frame_meio,
+        width=125,
+        height=25,
+        text="Remover último produto",
+        font=(font_btn, 13),
+        command = remover_ultimo_btn_func)
+    btn_remover_ultimo.place(relx=0.55, rely=0.62, anchor=ctk.CENTER)
+    #NOTE - btn_limpar 
+    btn_limpar = ctk.CTkButton(
+        master=frame_meio,
+        width=150,
+        height=25,
+        text="Limpar",
+        font=(font_btn, 15),
+        command = limpar_prods_selecionados)
+    btn_limpar.place(relx=0.55, rely=0.68, anchor=ctk.CENTER)
+    
+
     #NOTE - label_data 
     label_data = ctk.CTkLabel(
         master=frame_meio,
@@ -483,61 +513,19 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
     width=150,
     height=25)
     combo_prazo.place(relx=0.55, rely=0.80, anchor=tkinter.CENTER)
-    
-    """#NOTE - btn_lupa
-    img_lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
-    btn_lupa = ctk.CTkButton(
-        master=frame_meio,
-        #image=img_lupa,
-        text="",
-        width=8,
-        height=8,
-        hover=False,
-        fg_color=cor_frame_meio
-    )
-    btn_lupa.place(relx=0.62, rely=0.36, anchor=tkinter.CENTER)"""
-    
-    
-    #NOTE - btn_adicionar_produto
-    btn_adicionar_produto = ctk.CTkButton(
+
+    #NOTE - btn_gerar_pedido_venda
+    btn_gerar_pedido_venda = ctk.CTkButton(
         master=frame_meio,
         width=150,
         height=25,
-        text="Adicionar Produto",
-        font=(font_btn, 15),
-        border_width=0,
-        command = adicionar_prod_btn_func)
-    btn_adicionar_produto.place(relx=0.55, rely=0.56, anchor=ctk.CENTER)
-    #NOTE - btn_remover_ultimo
-    btn_remover_ultimo = ctk.CTkButton(
-        master=frame_meio,
-        width=125,
-        height=25,
-        text="Remover último produto",
-        font=(font_btn, 13),
-        command = remover_ultimo_btn_func)
-    btn_remover_ultimo.place(relx=0.55, rely=0.62, anchor=ctk.CENTER)
-    #NOTE - btn_limpar 
-    btn_limpar = ctk.CTkButton(
-        master=frame_meio,
-        width=150,
-        height=25,
-        text="Limpar",
-        font=(font_btn, 15),
-        command = limpar_prods_selecionados)
-    btn_limpar.place(relx=0.55, rely=0.68, anchor=ctk.CENTER)
-    #NOTE - btn_confirmar
-    btn_confirmar = ctk.CTkButton(
-        master=frame_meio,
-        width=150,
-        height=25,
-        text="Confirmar",
+        text="Gerar Venda",
         font=(font_btn, 15),
         fg_color="#00993D",
         hover_color=("#007830"),
-        command=confirmar_btn_func
+        command=gerar_venda_btn_func
     )
-    btn_confirmar.place(relx=0.55, rely=0.87, anchor=tkinter.CENTER)
+    btn_gerar_pedido_venda.place(relx=0.55, rely=0.87, anchor=tkinter.CENTER)
     #!SECTION
 
     #SECTION - Direita
