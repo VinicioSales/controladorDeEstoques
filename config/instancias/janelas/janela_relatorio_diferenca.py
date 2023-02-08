@@ -57,7 +57,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             Função que cria um pedido de venda a partir de uma lista de produtos e quantidades.
             """
             produtos_estoque = textbox_relatorio.get("0.0", "end").split("\n")
-            janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque)
+            janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque)
             #sub_janela_data_vencimento = sub_janela_data_vencimento_func(quant_diferenca_estoque)
         def estoques_sub_tbn_func():
             #NOTE - estoques_sub_tbn_func

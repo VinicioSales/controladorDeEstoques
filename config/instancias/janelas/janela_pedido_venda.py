@@ -458,7 +458,7 @@ def sub_janela_alerta_data_invalida():
 #!SECTION
 
 #SECTION - janela_pedido_venda_func
-def janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque):
+def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
     #NOTE - janela_pedido_venda_func
     janela_pedido_venda = ctk.CTk()
     janela_pedido_venda.title("Pedido de venda")
@@ -508,7 +508,7 @@ def janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque):
         elif produto != "" and quantidade != "" and valor != "": 
             if quantidade.isnumeric() and valor.isnumeric():
                 text_prod_selecionados.configure(state="normal")
-                text_prod_selecionados.insert("0.0", f"{produto} | {quantidade}\n")
+                text_prod_selecionados.insert("0.0", f"{produto} | {quantidade} | {valor}\n")
                 text_prod_selecionados.configure(state="disabled")
                 combo_pesquisar_prod.configure(state="normal")
                 entry_quantidade.delete("0", "end")
@@ -526,7 +526,7 @@ def janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque):
         elif produto != "" and quantidade != "" and valor != "": 
             if quantidade.isnumeric() and valor.isnumeric():
                 text_prod_selecionados.configure(state="normal")
-                text_prod_selecionados.insert("0.0", f"{produto} | {quantidade}\n")
+                text_prod_selecionados.insert("0.0", f"{produto} | {quantidade} | {valor}\n")
                 text_prod_selecionados.configure(state="disabled")
                 combo_pesquisar_prod.configure(state="normal")
                 entry_quantidade.delete("0", "end")
@@ -571,8 +571,8 @@ def janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque):
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("0.0", "end")
         text_prod_selecionados.configure(state="disabled")
-    def gerar_venda_btn_func():
-        #NOTE - gerar_venda_btn_func
+    def concluit_func():
+        #NOTE - concluit_func
         data = entry_data.get()
         verificar_data = verificar_data_func(data)
         if verificar_data == False:
@@ -595,8 +595,9 @@ def janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque):
                 for linha in prods_selecionados:            
                     linha = linha.split(" | ")
                     nome_produto = linha[0]
-                    quantidade_prod = linha[1]
-                    quantidade_prod = quantidade_prod.replace("\n", "")                
+                    quantidade_prod = linha[1].strip()
+                    valor = linha[2].strip()
+                    valor = valor.replace("\n", "")
                     cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
                     codigo_projeto = get_cod_projeto(nome_produto)
                     dict_pedido_venda = {
@@ -607,26 +608,25 @@ def janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque):
                         "descricao": descricao,
                         "ncm": ncm,
                         "unidade": unidade,
-                        "valor_unitario": valor_unitario,
+                        "valor": valor,
                         "quantidade_prod": quantidade_prod,
                         "codigo_projeto": codigo_projeto
                     }
                     lista_pedidos_venda.append(dict_pedido_venda)
-                    #incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod, codigo_projeto)
+                    #incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_pedido_venda.destroy()
-        janela_relatorio_diferenca.deiconify()
-        janela_relatorio_diferenca.state("zoomed")
+        sub_janela_relatorio.deiconify()
+        sub_janela_relatorio.state("zoomed")
     def inicio_prod_func():
         #NOTE - inicio_prod_func
         janela_pedido_venda.destroy()
-        janela_relatorio_diferenca.destroy()
+        sub_janela_relatorio.destroy()
     #!SECTION
 
-    
-    #SECTION - Centro
 
+    #SECTION - Centro
     #NOTE - frame_meio
     frame_meio = ctk.CTkFrame(
         master=janela_pedido_venda,
@@ -833,7 +833,7 @@ def janela_pedido_venda_func(janela_relatorio_diferenca, produtos_estoque):
         font=(font_btn, 15),
         fg_color="#00993D",
         hover_color=("#007830"),
-        command=gerar_venda_btn_func
+        command=concluit_func
     )
     btn_gerar_pedido_venda.place(relx=0.55, rely=0.87, anchor=tkinter.CENTER)
     #!SECTION

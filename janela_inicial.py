@@ -102,7 +102,7 @@ def btn_relatorio_func():
     return:
         - None
     """
-    janela_inicio.withdraw()
+    #janela_inicio.withdraw()
     janela_relatorio_diferenca = janela_relatorio_diferenca_func(janela_inicio)
 
 #==================== PAGINA INICIAL ================#
