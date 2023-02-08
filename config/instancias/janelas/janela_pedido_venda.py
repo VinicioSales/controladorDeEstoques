@@ -160,7 +160,7 @@ def sub_janela_alerta_digite_numeros():
     frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
     label_confirmar = ctk.CTkLabel(
         master=sub_janela_confirmar_produtos,
-        text="Digite Apenas Números!",
+        text="Dados Inválidos!",
         text_color = "#F04A29",
         bg_color="#2b2b2b",
         font=("arial", 18, "bold")
@@ -229,8 +229,9 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
 
     #SECTION - Funções
     def verificar_data_func(date_string):
+        #NOTE - verificar_data_func
         try:
-            datetime.datetime.strptime(date_string, '%d-%m-%Y')
+            datetime.datetime.strptime(date_string, '%d/%m/%Y')
             return True
         except ValueError:
             return False
@@ -240,12 +241,10 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         produto = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
         valor = entry_valor.get()
-        data = entry_data.get()
-        prazo = combo_prazo.get()
 
-        if cliente == "" or produto == "" or quantidade == "" or valor == "" or data == "" or prazo == "":
+        if cliente == "" or produto == "" or quantidade == "" or valor == "":
             sub_janela_alerta_preencher_dados()
-        elif cliente != "" and produto != "" and quantidade != "" and valor != "" and data != "" and prazo != "":
+        elif cliente != "" and produto != "" and quantidade != "" and valor != "": 
             if quantidade.isnumeric() and valor.isnumeric():
                 text_prod_selecionados.configure(state="normal")
                 text_prod_selecionados.insert("0.0", f"{produto} | {quantidade}\n")
@@ -253,7 +252,6 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
                 combo_pesquisar_prod.configure(state="normal")
                 entry_quantidade.delete("0", "end")
                 entry_valor.delete("0", "end")
-                entry_data.delete("0", "end")
             elif not quantidade.isnumeric() or not valor.isnumeric():
                 sub_janela_alerta_digite_numeros()
     def pesquisar_prod_func(event):
@@ -296,15 +294,15 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         text_prod_selecionados.configure(state="disabled")
     def confirmar_btn_func():
         #NOTE - confirmar_btn_func
-        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")  
-        if len(prods_selecionados) <= 2:
-            sub_janela_confirmar_produtos_func()
-        elif len(prods_selecionados) > 2 and tipo == "ENT":
-            sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_pedido_venda, tipo, janela_mov_estoque, prods_selecionados)
-        elif len(prods_selecionados) > 2 and tipo == "SAI":
-            janela_pedido_venda.destroy()
-            prods_ceasa = ""
-            janela_mov_estoque_func(janela_pedido_venda, prods_selecionados, tipo, prods_ceasa)
+        data = entry_data.get()
+        verificar_data = verificar_data_func(data)
+        print(f"verificar_data: {verificar_data}")
+        if verificar_data == False:
+            sub_janela_alerta_data_invalida()
+        else:
+            prazo = combo_prazo.get()            
+            prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
+            print(f"prods_selecionados: {prods_selecionados}")        
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_pedido_venda.destroy()
@@ -454,14 +452,14 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         font=(font_texto, 13, "bold"),
         fg_color=cor_frame_meio
     )
-    label_data.place(relx=0.37, rely=0.54, anchor=tkinter.CENTER)    
+    label_data.place(relx=0.37, rely=0.75, anchor=tkinter.CENTER)    
 
     #NOTE - entry_data
     entry_data = ctk.CTkEntry(
         master=frame_meio,
         width=150,
         height=25,)
-    entry_data.place(relx=0.55, rely=0.54, anchor=tkinter.CENTER)
+    entry_data.place(relx=0.55, rely=0.75, anchor=tkinter.CENTER)
 
     #NOTE - label_prazo 
     label_prazo = ctk.CTkLabel(
@@ -470,7 +468,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         font=(font_texto, 13, "bold"),
         fg_color=cor_frame_meio
     )
-    label_prazo.place(relx=0.37, rely=0.60, anchor=tkinter.CENTER)    
+    label_prazo.place(relx=0.37, rely=0.80, anchor=tkinter.CENTER)    
 
     #NOTE - entry_prazo
     lista_prazo = ["A vista",
@@ -484,7 +482,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
     values=lista_prazo,
     width=150,
     height=25)
-    combo_prazo.place(relx=0.55, rely=0.60, anchor=tkinter.CENTER)
+    combo_prazo.place(relx=0.55, rely=0.80, anchor=tkinter.CENTER)
     
     """#NOTE - btn_lupa
     img_lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
@@ -509,7 +507,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         font=(font_btn, 15),
         border_width=0,
         command = adicionar_prod_btn_func)
-    btn_adicionar_produto.place(relx=0.55, rely=0.66, anchor=ctk.CENTER)
+    btn_adicionar_produto.place(relx=0.55, rely=0.56, anchor=ctk.CENTER)
     #NOTE - btn_remover_ultimo
     btn_remover_ultimo = ctk.CTkButton(
         master=frame_meio,
@@ -518,8 +516,8 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         text="Remover último produto",
         font=(font_btn, 13),
         command = remover_ultimo_btn_func)
-    btn_remover_ultimo.place(relx=0.55, rely=0.72, anchor=ctk.CENTER)
-    #NOTE -btn_limpar 
+    btn_remover_ultimo.place(relx=0.55, rely=0.62, anchor=ctk.CENTER)
+    #NOTE - btn_limpar 
     btn_limpar = ctk.CTkButton(
         master=frame_meio,
         width=150,
@@ -527,7 +525,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         text="Limpar",
         font=(font_btn, 15),
         command = limpar_prods_selecionados)
-    btn_limpar.place(relx=0.55, rely=0.78, anchor=ctk.CENTER)
+    btn_limpar.place(relx=0.55, rely=0.68, anchor=ctk.CENTER)
     #NOTE - btn_confirmar
     btn_confirmar = ctk.CTkButton(
         master=frame_meio,
@@ -539,7 +537,7 @@ def janela_pedido_venda_func(janela_mov_estoque, tipo):
         hover_color=("#007830"),
         command=confirmar_btn_func
     )
-    btn_confirmar.place(relx=0.55, rely=0.85, anchor=tkinter.CENTER)
+    btn_confirmar.place(relx=0.55, rely=0.87, anchor=tkinter.CENTER)
     #!SECTION
 
     #SECTION - Direita
