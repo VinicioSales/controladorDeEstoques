@@ -19,6 +19,8 @@ with open("config/arquivos/data_anterior.txt", "r") as arquivo:
 if str(data_atual) != str(data_anterior):
     with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
         arquivo.write("")
+    with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
+        arquivo.write("")
 with open("config/arquivos/data_anterior.txt", "w") as arquivo:
     arquivo.write(data_atual)
 

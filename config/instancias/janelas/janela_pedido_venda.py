@@ -224,7 +224,6 @@ def sub_janela_alerta_data_invalida():
 
 #SECTION - janela_pedido_venda_func
 def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relatorio):
-    
     #NOTE - janela_pedido_venda_func
     janela_pedido_venda = ctk.CTk()
     janela_pedido_venda.title("Pedido de venda")
@@ -233,31 +232,37 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     font_texto = "arial"
     font_btn = "arial"
     cor_frame_meio = "#3b3b3b"
-    
 
     #SECTION - Funções
     def atualizar_func():
-            #NOTE - atualizar_func
-            with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
-                produtos_venda = arquivo.readlines()
-            with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
-                quant_diferenca_estoque = arquivo.readlines()
-            for prods_venda in produtos_venda:
-                nome_produto_venda = prods_venda.split(" | ")[0].strip()
-                quant_venda = float(prods_venda.split(" | ")[1].strip())
-                for i, prods_dif in enumerate(quant_diferenca_estoque):
-                    nome_produto_diferenca = prods_dif.split(" | ")[0].strip()
-                    quant_diferenca = float(prods_dif.split(" | ")[1].strip())
+        #NOTE - atualizar_func
+        with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
+            codigo_local_estoque_aux = arquivo.read()
+        codigo_local_estoque_aux = codigo_local_estoque_aux.strip()
+        with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
+            produtos_venda = arquivo.readlines()
+        with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
+            quant_diferenca_estoque = arquivo.readlines()
+        for prods_venda in produtos_venda:
+            nome_produto_venda = prods_venda.split(" | ")[1].strip()
+            quant_venda = float(prods_venda.split(" | ")[2].strip())
+            for i, prods_dif in enumerate(quant_diferenca_estoque):
+                nome_produto_diferenca = prods_dif.split(" | ")[1].strip()
+                quant_diferenca = float(prods_dif.split(" | ")[2].strip())
+                codigo_local_estoque = (prods_dif.split(" | ")[0].strip())
+                if codigo_local_estoque == codigo_local_estoque_aux:
                     if nome_produto_venda in nome_produto_diferenca:
                         quant_sub = quant_diferenca - quant_venda
-                        quant_diferenca_estoque[i] = f"{nome_produto_diferenca} | {quant_sub}\n"
-            text_relatorio.configure(state="normal")
-            text_relatorio.delete("0.0", "end")
-            linha = 0
-            for prod_estoque in quant_diferenca_estoque:                
-                text_relatorio.insert(f"{linha}.0", prod_estoque)
-                linha += 1
-            text_relatorio.configure(state="disabled")
+                        quant_diferenca_estoque[i] = f"{codigo_local_estoque} | {nome_produto_diferenca} | {quant_sub}\n"
+        text_relatorio.configure(state="normal")
+        text_relatorio.delete("0.0", "end")
+        linha = 0
+        for prod_estoque in quant_diferenca_estoque:
+            prod_estoque = prod_estoque.split(" | ")
+            prod_estoque.pop(0)
+            text_relatorio.insert(f"{linha}.0", f"{prod_estoque[0]} | {prod_estoque[1]}")
+            linha += 1
+        text_relatorio.configure(state="disabled")
     def somar_dias_uteis(dias_a_somar):
         #NOTE - somar_dias_uteis
         """
@@ -276,7 +281,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
             data_atual += datetime.timedelta(days=1)
             if data_atual.weekday() not in (5, 6):
                 dias_uteis += 1
-
         data_vencimento = data_atual
         return data_vencimento
     def verificar_data_func(date_string):
@@ -433,7 +437,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                         linha_venda += 1
                 text_venda.configure(state="disabled")
                 limpar_prods_selecionados()
-
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_pedido_venda.destroy()
@@ -443,8 +446,11 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         #NOTE - inicio_prod_func
         janela_pedido_venda.destroy()
         sub_janela_relatorio.destroy()
+    
     def btn_pedido_venda_func():
         #NOTE - btn_pedido_venda_func
+        with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
+            codigo_local_estoque = arquivo.read()
         produtos_venda = []
         for dict_pedido_venda in lista_pedidos_venda:
             codigo_cliente_omie = dict_pedido_venda["codigo_cliente_omie"]
@@ -460,7 +466,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
             for codigo_produto, cfop, unidade, ncm, quantidade_prod, valor, codigo_projeto, descricao in zip(lista_codigo_produtos_selecionados, lista_cfop_selecionados, lista_unidade_selecionados,\
                 lista_ncm_selecionados, lista_quantidade_selecionados, lista_valor_selecionados, lista_projeto_selecionados, lista_nome_produtos_selecionados):
                 incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
-                produtos_venda.append(f"{descricao} | {quantidade_prod}\n")
+                codigo_local_estoque = codigo_local_estoque.strip()
+                produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade_prod}\n")
         with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
             arquivo.writelines(produtos_venda)
         janela_pedido_venda.destroy()
@@ -536,7 +543,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     #NOTE - combo_pesquisar_prod
     with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
         lista_produtos = arquivo.readlines()
-    print(f"lista_produtos: {lista_produtos}")
     for i, produto in enumerate(lista_produtos):
         lista_produtos[i] = str((produto.split(" | "))[1]).replace("\n","")
     combo_pesquisar_prod = ctk.CTkComboBox(

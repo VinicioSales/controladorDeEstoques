@@ -221,8 +221,8 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                         with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
                             quant_diferenca_estoque = arquivo.readlines()
                             nome_produto = nome_produto.replace("\n", "")
-                            print(f"nome_produto: {nome_produto} - quant_nao_retornados: {quant_nao_retornados}")
-                        quant_diferenca_estoque.append(f"{nome_produto} | {quant_nao_retornados}\n")
+                        codigo_local_estoque = codigo_local_estoque.strip()
+                        quant_diferenca_estoque.append(f"{codigo_local_estoque} | {nome_produto} | {quant_nao_retornados}\n")
                         with open("config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
                             arquivo.writelines(quant_diferenca_estoque)         
         pagina += 1
@@ -232,7 +232,7 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
         quant_diferenca_estoque = arquivo.readlines()
     for linha_dif_estoque in quant_diferenca_estoque:
         linha_dif_estoque = linha_dif_estoque.split("|")
-        quant_dif_estoque = int(linha_dif_estoque[1])
+        quant_dif_estoque = int(linha_dif_estoque[2])
         total_estoque += quant_dif_estoque
     return total_estoque
 

@@ -29,7 +29,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
     master = janela_relatorio_diferenca
 
     #SECTION - sub_janela_relatorio_func
-    def sub_janela_relatorio_func(produtos_nao_retornados_text):
+    def sub_janela_relatorio_func(produtos_nao_retornados_text, codigo_local_estoque):
         #NOTE - sub_janela_relatorio_func
         """Mostra o relatório de produtos não retornados
         
@@ -66,10 +66,35 @@ def janela_relatorio_diferenca_func(janela_inicio):
             sub_janela_relatorio.withdraw()
             janela_relatorio_diferenca.deiconify()
             janela_relatorio_diferenca.state("zoomed")
-        #!SECTION
-
-        
-        
+        def atualizar_func():
+            #NOTE - atualizar_func
+            with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
+                codigo_local_estoque_aux = arquivo.read()
+            codigo_local_estoque_aux = codigo_local_estoque_aux.strip()
+            with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
+                produtos_venda = arquivo.readlines()
+            with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
+                quant_diferenca_estoque = arquivo.readlines()
+            for prods_venda in produtos_venda:
+                nome_produto_venda = prods_venda.split(" | ")[1].strip()
+                quant_venda = float(prods_venda.split(" | ")[2].strip())
+                for i, prods_dif in enumerate(quant_diferenca_estoque):
+                    nome_produto_diferenca = prods_dif.split(" | ")[1].strip()
+                    quant_diferenca = float(prods_dif.split(" | ")[2].strip())
+                    codigo_local_estoque = (prods_dif.split(" | ")[0].strip())
+                    if codigo_local_estoque == codigo_local_estoque_aux:
+                        if nome_produto_venda in nome_produto_diferenca:
+                            quant_sub = quant_diferenca - quant_venda
+                            quant_diferenca_estoque[i] = f"{codigo_local_estoque} | {nome_produto_diferenca} | {quant_sub}\n"
+            text_relatorio.configure(state="normal")
+            text_relatorio.delete("0.0", "end")
+            linha = 0
+            for prod_estoque in quant_diferenca_estoque:
+                prod_estoque = prod_estoque.split(" | ")
+                prod_estoque.pop(0)
+                text_relatorio.insert(f"{linha}.0", f"{prod_estoque[0]} | {prod_estoque[1]}")
+                linha += 1
+            text_relatorio.configure(state="disabled")
             
         #NOTE - Frame
         frame_principal = ctk.CTkFrame(
@@ -117,10 +142,16 @@ def janela_relatorio_diferenca_func(janela_inicio):
         )
         linha = 0
         for prod_estoque in quant_diferenca_estoque:
-            text_relatorio.insert(f"{linha}.0", prod_estoque)
+            prod_estoque = prod_estoque.split(" | ")
+            prod_estoque.pop(0)
+            text_relatorio.insert(f"{linha}.0", f"{prod_estoque[0]} | {prod_estoque[1]}")
             linha += 1
         text_relatorio.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
         text_relatorio.configure(state="disabled")
+        try:
+            atualizar_func()
+        except:
+            pass
 
         #NOTE - Rodapé
         criar_pedido_venda_btn = ctk.CTkButton(
@@ -176,9 +207,11 @@ def janela_relatorio_diferenca_func(janela_inicio):
             - None"""
         nome_estoque = combo_estoque.get()
         codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque)
+        with open("config/arquivos/codigo_local_estoque_aux.txt", "w") as arquivo:
+            arquivo.write(codigo_local_estoque)
         produtos_nao_retornados = diferenca_quantidade_estoque_produto(codigo_local_estoque)
         produtos_nao_retornados_text = f"Total não retornados: {produtos_nao_retornados}"
-        sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados_text)
+        sub_janela_relatorio = sub_janela_relatorio_func(produtos_nao_retornados_text, codigo_local_estoque)
         janela_relatorio_diferenca.withdraw()
     def inicio_rel_func():
         """
