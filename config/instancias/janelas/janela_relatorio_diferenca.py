@@ -1,3 +1,4 @@
+
 import customtkinter as ctk
 import tkinter
 import datetime
@@ -42,7 +43,30 @@ def janela_relatorio_diferenca_func(janela_inicio):
         sub_janela_relatorio.state("zoomed")
 
         #SECTION - Funcoes Sub 
-        
+        def atualizar_func():
+            #NOTE - atualizar_func
+            with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
+                produtos_venda = arquivo.readlines()
+            with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
+                quant_diferenca_estoque = arquivo.readlines()
+            print(f"quant_diferenca_estoque: {quant_diferenca_estoque}")
+            for prods_venda in produtos_venda:
+                nome_produto_venda = prods_venda.split(" | ")[0].strip()
+                quant_venda = float(prods_venda.split(" | ")[1].strip())
+                for i, prods_dif in enumerate(quant_diferenca_estoque):
+                    nome_produto_diferenca = prods_dif.split(" | ")[0].strip()
+                    quant_diferenca = float(prods_dif.split(" | ")[1].strip())
+                    if nome_produto_venda in nome_produto_diferenca:
+                        quant_sub = quant_diferenca - quant_venda
+                        quant_diferenca_estoque[i] = f"{nome_produto_diferenca} | {quant_sub}\n"
+            print(f"quant_diferenca_estoque: {quant_diferenca_estoque}")
+            text_relatorio.configure(state="normal")
+            text_relatorio.delete("0.0", "end")
+            linha = 0
+            for prod_estoque in quant_diferenca_estoque:                
+                text_relatorio.insert(f"{linha}.0", prod_estoque)
+                linha += 1
+            text_relatorio.configure(state="disabled")
         def inicio_func():
             #NOTE - inicio_func
             """
@@ -56,7 +80,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             """
             Função que cria um pedido de venda a partir de uma lista de produtos e quantidades.
             """
-            produtos_estoque = textbox_relatorio.get("0.0", "end").split("\n")
+            produtos_estoque = text_relatorio.get("0.0", "end").split("\n")
             sub_janela_relatorio.withdraw()
             janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque)
             
@@ -105,7 +129,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             arquivo.writelines(quant_diferenca_estoque)
             #quant_diferenca_estoque = arquivo.readlines()
 
-        textbox_relatorio = ctk.CTkTextbox(
+        text_relatorio = ctk.CTkTextbox(
         master=frame_principal,
         width=500,
         height=200,
@@ -114,10 +138,10 @@ def janela_relatorio_diferenca_func(janela_inicio):
         )
         linha = 0
         for prod_estoque in quant_diferenca_estoque:
-            textbox_relatorio.insert(f"{linha}.0", prod_estoque)
+            text_relatorio.insert(f"{linha}.0", prod_estoque)
             linha += 1
-        textbox_relatorio.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
-        textbox_relatorio.configure(state="disabled")
+        text_relatorio.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+        text_relatorio.configure(state="disabled")
 
         #NOTE - Rodapé
         criar_pedido_venda_btn = ctk.CTkButton(
@@ -132,8 +156,20 @@ def janela_relatorio_diferenca_func(janela_inicio):
             text="Estoques",
             command=estoques_sub_tbn_func)
         estoques_btn.place(relx=0.5, rely=0.9, anchor=ctk.S)
-        inicio_sub_btn = ctk.CTkButton(master=frame_principal, text="Início", command=inicio_func)
-        inicio_sub_btn.place(relx=0.19, rely=0.9, anchor=ctk.S)
+        
+        #NOTE - inicio_sub_btn
+        inicio_sub_btn = ctk.CTkButton(
+            master=frame_principal,
+            text="Início",
+            width=50,
+            command=inicio_func)
+        inicio_sub_btn.place(relx=0.15, rely=0.1, anchor=ctk.S)
+
+        #NOTE - btn_atualizar
+        btn_atualizar = ctk.CTkButton(master=frame_principal,
+        text="Atualizar",
+        command=atualizar_func)
+        btn_atualizar.place(relx=0.19, rely=0.9, anchor=ctk.S)
     #!SECTION
     #SECTION - sub_janela_data_vencimento_func
     def sub_janela_data_vencimento_func(quant_diferenca_estoque):
@@ -243,7 +279,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
 
     #!SECTION
 
-    #SECTION - Funções
+    #SECTION - FUNÇÔES
     def get_codigo_local_estoque(nome_estoque):
         #NOTE - get_codigo_local_estoque
         """Pega o codigo do estoque na lista de estoques
@@ -291,6 +327,10 @@ def janela_relatorio_diferenca_func(janela_inicio):
         janela_relatorio_diferenca.destroy()
         janela_inicio.deiconify()
         janela_inicio.state("zoomed")
+    
+                
+                    
+
     #!SECTION
     
     #================== Puxando lista de estoques ===================#
@@ -347,6 +387,8 @@ def janela_relatorio_diferenca_func(janela_inicio):
         text="Selecionar",
         command=selecionar_estoque_func)
     btn_selecionar.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
+    
+    #NOTE - inicio_rel_btn
     inicio_rel_btn = ctk.CTkButton(
         master=frame_principal,
         text="Início",
@@ -354,3 +396,5 @@ def janela_relatorio_diferenca_func(janela_inicio):
     inicio_rel_btn.place(relx=0.5, rely=0.48, anchor=ctk.CENTER)
 
     janela_relatorio_diferenca.mainloop()
+
+
