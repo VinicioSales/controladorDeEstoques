@@ -248,6 +248,7 @@ def get_cod_cliente(nome_cliente):
 with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
     lista_produtos = arquivo.readlines()
 lista_pedidos_venda = []
+linha_venda = 1
 
 #SECTION - sub_janela_alerta_preencher_dados
 def sub_janela_alerta_preencher_dados():
@@ -459,6 +460,7 @@ def sub_janela_alerta_data_invalida():
 
 #SECTION - janela_pedido_venda_func
 def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
+    
     #NOTE - janela_pedido_venda_func
     janela_pedido_venda = ctk.CTk()
     janela_pedido_venda.title("Pedido de venda")
@@ -467,6 +469,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
     font_texto = "arial"
     font_btn = "arial"
     cor_frame_meio = "#3b3b3b"
+    
 
     #SECTION - Funções
     def somar_dias_uteis(dias_a_somar):
@@ -579,9 +582,11 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
             sub_janela_alerta_data_invalida()
         else:
             prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
-            prods_selecionados.pop()
-            prods_selecionados.pop(0)
-            prods_selecionados.pop(0)
+            for i, item in enumerate(prods_selecionados):
+                if item == "":
+                    prods_selecionados.pop(i)
+            if prods_selecionados[0] == "":
+                prods_selecionados.pop(0)
             if len(prods_selecionados) > 0:
                 nome_cliente = combo_cliente.get()
                 data = entry_data.get()
@@ -592,46 +597,55 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
                 else:
                     prazo = prazo.split(" ")[0]
                     data_vencimento = somar_dias_uteis(data, prazo)
-                codigo_cliente_omie, razao_social = get_cod_cliente(nome_cliente)                
-                for linha in prods_selecionados:
-                    for i, item in enumerate(prods_selecionados):
-                        if item == "":
-                            prods_selecionados.pop(i)        
+                codigo_cliente_omie, razao_social = get_cod_cliente(nome_cliente)                   
+                lista_nome_produtos_selecionados = []
+                lista_valor_selecionados = []
+                lista_quantidade_selecionados = []
+                lista_codigo_produtos_selecionados = []
+                lista_unidade_selecionados = []
+                lista_projeto_selecionados = []
+                lista_ncm_selecionados = []
+                lista_cfop_selecionados = []             
+                for linha in prods_selecionados:                            
                     linha = linha.split(" | ")
                     nome_produto = linha[0]
                     quantidade_prod = linha[1].strip()
                     valor = linha[2].strip()
                     valor = valor.replace("\n", "")
                     cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
-                    codigo_projeto = get_cod_projeto(nome_produto)
-                    dict_pedido_venda = {
-                        "razao_social": razao_social,
-                        "codigo_produto": codigo_produto,
-                        "codigo_cliente_omie": codigo_cliente_omie,
-                        "data_vencimento": data_vencimento,
-                        "cfop": cfop,
-                        "descricao": descricao,
-                        "ncm": ncm,
-                        "unidade": unidade,                        
-                        "quantidade_prod": quantidade_prod,
-                        "valor": valor,
-                        "codigo_projeto": codigo_projeto
-                    }
-                    lista_pedidos_venda.append(dict_pedido_venda)
+                    codigo_projeto = get_cod_projeto(nome_produto)                    
+                    lista_nome_produtos_selecionados.append(nome_produto)
+                    lista_codigo_produtos_selecionados.append(codigo_produto)
+                    lista_quantidade_selecionados.append(quantidade_prod)
+                    lista_valor_selecionados.append(valor)
+                    lista_cfop_selecionados.append(cfop)
+                    lista_ncm_selecionados.append(ncm)
+                    lista_projeto_selecionados.append(codigo_projeto)
+                    lista_unidade_selecionados.append(unidade)
+                dict_pedido_venda = {
+                    "razao_social": razao_social,
+                    "codigo_produto": lista_codigo_produtos_selecionados,
+                    "codigo_cliente_omie": codigo_cliente_omie,
+                    "data_vencimento": data_vencimento,
+                    "cfop": lista_cfop_selecionados,
+                    "descricao": lista_nome_produtos_selecionados,
+                    "ncm": lista_ncm_selecionados,
+                    "unidade": lista_unidade_selecionados,                        
+                    "quantidade_prod": lista_quantidade_selecionados,
+                    "valor": lista_valor_selecionados,
+                    "codigo_projeto": lista_projeto_selecionados
+                }
+                lista_pedidos_venda.append(dict_pedido_venda)
                 text_venda.configure(state="normal")
-                linha = 1
+                linha_venda = 1
                 for dict_pedido_venda in lista_pedidos_venda:
                     for chave, valor in dict_pedido_venda.items():
                         if chave == "razao_social":
-                            text_venda.insert(f"{linha}.0", f"CLIENTE: {valor}\n")
-                        if chave == "descricao":
-                            text_venda.insert(f"{linha}.0", f"PRODUTO: {valor}\n")
-                        if chave == "quantidade_prod":
-                            text_venda.insert(f"{linha}.0", f"QUANTIDADE: {valor}\n")
-                        if chave == "valor":
-                            text_venda.insert(f"{linha}.0", f"VALOR: {valor}\n")
-                        linha += 1
-                    text_venda.insert(f"{linha}.0", f"__________________________\n")
+                            text_venda_aux = text_venda.get("0.0", "end")
+                            if valor not in text_venda_aux:
+                                text_venda.insert(f"{linha_venda}.0", f"CLIENTE: {valor}\n")                        
+                                #text_venda.insert(f"{linha_venda}.0", f"_________________________\n")
+                        linha_venda += 1
                 text_venda.configure(state="disabled")
                 limpar_prods_selecionados()
 
@@ -646,7 +660,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
         janela_pedido_venda.destroy()
         sub_janela_relatorio.destroy()
     #!SECTION
-
+    
 
     #SECTION - Centro
     #NOTE - frame_meio
