@@ -620,22 +620,21 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
                     lista_pedidos_venda.append(dict_pedido_venda)
                 text_venda.configure(state="normal")
                 linha = 1
-                
                 for dict_pedido_venda in lista_pedidos_venda:
-                    print(f"dict_pedido_venda: {dict_pedido_venda}")
                     for chave, valor in dict_pedido_venda.items():
                         if chave == "razao_social":
-                            text_venda.insert(f"{linha}.0", f"Cliente: {valor}\n")
+                            text_venda.insert(f"{linha}.0", f"CLIENTE: {valor}\n")
                         if chave == "descricao":
-                            text_venda.insert(f"{linha}.0", f"Produto: {valor}\n")
+                            text_venda.insert(f"{linha}.0", f"PRODUTO: {valor}\n")
                         if chave == "quantidade_prod":
-                            text_venda.insert(f"{linha}.0", f"Quantidade: {valor}\n")
+                            text_venda.insert(f"{linha}.0", f"QUANTIDADE: {valor}\n")
                         if chave == "valor":
-                            text_venda.insert(f"{linha}.0", f"Valor: {valor}\n")
+                            text_venda.insert(f"{linha}.0", f"VALOR: {valor}\n")
                         linha += 1
                     text_venda.insert(f"{linha}.0", f"__________________________\n")
                 text_venda.configure(state="disabled")
-                    
+                limpar_prods_selecionados()
+
                     #incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
