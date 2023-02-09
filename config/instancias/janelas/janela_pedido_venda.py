@@ -574,8 +574,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("0.0", "end")
         text_prod_selecionados.configure(state="disabled")
-    def concluir_func():
-        #NOTE - concluir_func
+    def fechar_caminhao_func():
+        #NOTE - fechar_caminhao_func
         data = entry_data.get()
         verificar_data = verificar_data_func(data)
         if verificar_data == False:
@@ -649,7 +649,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
                 text_venda.configure(state="disabled")
                 limpar_prods_selecionados()
 
-                    #incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         janela_pedido_venda.destroy()
@@ -659,6 +658,21 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
         #NOTE - inicio_prod_func
         janela_pedido_venda.destroy()
         sub_janela_relatorio.destroy()
+    def btn_pedido_venda_func():
+        for dict_pedido_venda in lista_pedidos_venda:
+            codigo_cliente_omie = dict_pedido_venda["codigo_cliente_omie"]
+            data_vencimento = dict_pedido_venda["data_vencimento"]
+            lista_codigo_produtos_selecionados = dict_pedido_venda["codigo_produto"]
+            lista_cfop_selecionados = dict_pedido_venda["cfop"]
+            lista_ncm_selecionados = dict_pedido_venda["ncm"]
+            lista_unidade_selecionados = dict_pedido_venda["unidade"]
+            lista_quantidade_selecionados = dict_pedido_venda["quantidade_prod"]
+            lista_valor_selecionados = dict_pedido_venda["valor"]
+            lista_projeto_selecionados = dict_pedido_venda["codigo_projeto"]
+            lista_nome_produtos_selecionados = dict_pedido_venda["descricao"]
+            for codigo_produto, cfop, unidade, ncm, quantidade_prod, valor, codigo_projeto, descricao in zip(lista_codigo_produtos_selecionados, lista_cfop_selecionados, lista_unidade_selecionados,\
+                lista_ncm_selecionados, lista_quantidade_selecionados, lista_valor_selecionados, lista_projeto_selecionados, lista_nome_produtos_selecionados):
+                incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
     #!SECTION
     
 
@@ -809,7 +823,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
     label_clientes.place(relx=0.37, rely=0.68, anchor=tkinter.CENTER)
 
     #NOTE - combo_cliente
-    lista_clientes = ["vinicio", "Victor", "Amanda", "Papelaria e Livraria Rápida Ltda"]
+    lista_clientes = ["vinicio", "Victor", "Amanda", "Papelaria e Livraria Rápida Ltda", "Indústria de Malhas"]
     combo_cliente = ctk.CTkComboBox(
         master=frame_meio,
         values=lista_clientes,
@@ -860,18 +874,31 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
     height=25)
     combo_prazo.place(relx=0.55, rely=0.80, anchor=tkinter.CENTER)
 
+    #NOTE - btn_fechar_caminhao
+    btn_fechar_caminhao = ctk.CTkButton(
+        master=frame_meio,
+        width=150,
+        height=25,
+        text="Fechar Caminhão",
+        font=(font_btn, 15),
+        fg_color="#00993D",
+        hover_color=("#007830"),
+        command=fechar_caminhao_func
+    )
+    btn_fechar_caminhao.place(relx=0.55, rely=0.87, anchor=tkinter.CENTER)
+
     #NOTE - btn_gerar_pedido_venda
     btn_gerar_pedido_venda = ctk.CTkButton(
         master=frame_meio,
         width=150,
         height=25,
-        text="Concluir",
+        text="Gerar pedido de venda",
         font=(font_btn, 15),
         fg_color="#00993D",
         hover_color=("#007830"),
-        command=concluir_func
+        command=btn_pedido_venda_func
     )
-    btn_gerar_pedido_venda.place(relx=0.55, rely=0.87, anchor=tkinter.CENTER)
+    btn_gerar_pedido_venda.place(relx=0.55, rely=0.95, anchor=tkinter.CENTER)
     #!SECTION
 
     #SECTION - Direita
