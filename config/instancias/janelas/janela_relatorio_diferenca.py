@@ -12,8 +12,8 @@ from config.credenciais.database import database_infos_func
 from config.instancias.janelas.janela_pedido_venda import janela_pedido_venda_func
 
 
-#estilo_janelas = estilo_janelas_func()
-#dimensao = estilo_janelas["dimensao"]
+
+#SECTION - janela_relatorio_diferenca_func
 def janela_relatorio_diferenca_func(janela_inicio):
     """Mostra a diferença de quantidade de itens não retornados
     
@@ -49,7 +49,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
                 produtos_venda = arquivo.readlines()
             with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
                 quant_diferenca_estoque = arquivo.readlines()
-            print(f"quant_diferenca_estoque: {quant_diferenca_estoque}")
             for prods_venda in produtos_venda:
                 nome_produto_venda = prods_venda.split(" | ")[0].strip()
                 quant_venda = float(prods_venda.split(" | ")[1].strip())
@@ -59,7 +58,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
                     if nome_produto_venda in nome_produto_diferenca:
                         quant_sub = quant_diferenca - quant_venda
                         quant_diferenca_estoque[i] = f"{nome_produto_diferenca} | {quant_sub}\n"
-            print(f"quant_diferenca_estoque: {quant_diferenca_estoque}")
             text_relatorio.configure(state="normal")
             text_relatorio.delete("0.0", "end")
             linha = 0
@@ -82,7 +80,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             """
             produtos_estoque = text_relatorio.get("0.0", "end").split("\n")
             sub_janela_relatorio.withdraw()
-            janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque)
+            janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relatorio)
             
             #sub_janela_data_vencimento = sub_janela_data_vencimento_func(quant_diferenca_estoque)
         def estoques_sub_tbn_func():
@@ -92,6 +90,9 @@ def janela_relatorio_diferenca_func(janela_inicio):
             janela_relatorio_diferenca.state("zoomed")
         #!SECTION
 
+        
+        
+            
         #NOTE - Frame
         frame_principal = ctk.CTkFrame(
             master=sub_janela_relatorio,
@@ -396,5 +397,5 @@ def janela_relatorio_diferenca_func(janela_inicio):
     inicio_rel_btn.place(relx=0.5, rely=0.48, anchor=ctk.CENTER)
 
     janela_relatorio_diferenca.mainloop()
-
+#!SECTION
 

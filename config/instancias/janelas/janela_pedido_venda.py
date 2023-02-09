@@ -11,9 +11,6 @@ from config.instancias.apis.apis_cliente import get_cod_cliente
 from config.instancias.apis.apis_projetos import get_cod_projeto
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 
-
-with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
-    lista_produtos = arquivo.readlines()
 lista_pedidos_venda = []
 linha_venda = 1
 
@@ -226,7 +223,7 @@ def sub_janela_alerta_data_invalida():
 #!SECTION
 
 #SECTION - janela_pedido_venda_func
-def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
+def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relatorio):
     
     #NOTE - janela_pedido_venda_func
     janela_pedido_venda = ctk.CTk()
@@ -239,6 +236,28 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
     
 
     #SECTION - Funções
+    def atualizar_func():
+            #NOTE - atualizar_func
+            with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
+                produtos_venda = arquivo.readlines()
+            with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
+                quant_diferenca_estoque = arquivo.readlines()
+            for prods_venda in produtos_venda:
+                nome_produto_venda = prods_venda.split(" | ")[0].strip()
+                quant_venda = float(prods_venda.split(" | ")[1].strip())
+                for i, prods_dif in enumerate(quant_diferenca_estoque):
+                    nome_produto_diferenca = prods_dif.split(" | ")[0].strip()
+                    quant_diferenca = float(prods_dif.split(" | ")[1].strip())
+                    if nome_produto_venda in nome_produto_diferenca:
+                        quant_sub = quant_diferenca - quant_venda
+                        quant_diferenca_estoque[i] = f"{nome_produto_diferenca} | {quant_sub}\n"
+            text_relatorio.configure(state="normal")
+            text_relatorio.delete("0.0", "end")
+            linha = 0
+            for prod_estoque in quant_diferenca_estoque:                
+                text_relatorio.insert(f"{linha}.0", prod_estoque)
+                linha += 1
+            text_relatorio.configure(state="disabled")
     def somar_dias_uteis(dias_a_somar):
         #NOTE - somar_dias_uteis
         """
@@ -445,6 +464,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
         janela_pedido_venda.destroy()
         sub_janela_relatorio.deiconify()
         sub_janela_relatorio.state("zoomed")
+        atualizar_func()
     #!SECTION
     
 
@@ -512,6 +532,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
     label_pesquisar_prod.place(relx=0.37, rely=0.30, anchor=tkinter.CENTER)    
     
     #NOTE - combo_pesquisar_prod
+    with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
+        lista_produtos = arquivo.readlines()
+    print(f"lista_produtos: {lista_produtos}")
     for i, produto in enumerate(lista_produtos):
         lista_produtos[i] = str((produto.split(" | "))[1]).replace("\n","")
     combo_pesquisar_prod = ctk.CTkComboBox(
