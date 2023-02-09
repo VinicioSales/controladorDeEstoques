@@ -445,6 +445,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         sub_janela_relatorio.destroy()
     def btn_pedido_venda_func():
         #NOTE - btn_pedido_venda_func
+        produtos_venda = []
         for dict_pedido_venda in lista_pedidos_venda:
             codigo_cliente_omie = dict_pedido_venda["codigo_cliente_omie"]
             data_vencimento = dict_pedido_venda["data_vencimento"]
@@ -459,8 +460,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
             for codigo_produto, cfop, unidade, ncm, quantidade_prod, valor, codigo_projeto, descricao in zip(lista_codigo_produtos_selecionados, lista_cfop_selecionados, lista_unidade_selecionados,\
                 lista_ncm_selecionados, lista_quantidade_selecionados, lista_valor_selecionados, lista_projeto_selecionados, lista_nome_produtos_selecionados):
                 incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
-                with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
-                    arquivo.writelines(f"{descricao} | {quantidade_prod}\n")
+                produtos_venda.append(f"{descricao} | {quantidade_prod}\n")
+        with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
+            arquivo.writelines(produtos_venda)
         janela_pedido_venda.destroy()
         sub_janela_relatorio.deiconify()
         sub_janela_relatorio.state("zoomed")

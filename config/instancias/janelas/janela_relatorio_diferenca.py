@@ -43,28 +43,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
         sub_janela_relatorio.state("zoomed")
 
         #SECTION - Funcoes Sub 
-        def atualizar_func():
-            #NOTE - atualizar_func
-            with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
-                produtos_venda = arquivo.readlines()
-            with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
-                quant_diferenca_estoque = arquivo.readlines()
-            for prods_venda in produtos_venda:
-                nome_produto_venda = prods_venda.split(" | ")[0].strip()
-                quant_venda = float(prods_venda.split(" | ")[1].strip())
-                for i, prods_dif in enumerate(quant_diferenca_estoque):
-                    nome_produto_diferenca = prods_dif.split(" | ")[0].strip()
-                    quant_diferenca = float(prods_dif.split(" | ")[1].strip())
-                    if nome_produto_venda in nome_produto_diferenca:
-                        quant_sub = quant_diferenca - quant_venda
-                        quant_diferenca_estoque[i] = f"{nome_produto_diferenca} | {quant_sub}\n"
-            text_relatorio.configure(state="normal")
-            text_relatorio.delete("0.0", "end")
-            linha = 0
-            for prod_estoque in quant_diferenca_estoque:                
-                text_relatorio.insert(f"{linha}.0", prod_estoque)
-                linha += 1
-            text_relatorio.configure(state="disabled")
         def inicio_func():
             #NOTE - inicio_func
             """
@@ -165,119 +143,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             width=50,
             command=inicio_func)
         inicio_sub_btn.place(relx=0.15, rely=0.1, anchor=ctk.S)
-
-        #NOTE - btn_atualizar
-        btn_atualizar = ctk.CTkButton(master=frame_principal,
-        text="Atualizar",
-        command=atualizar_func)
-        btn_atualizar.place(relx=0.19, rely=0.9, anchor=ctk.S)
-    #!SECTION
-    #SECTION - sub_janela_data_vencimento_func
-    def sub_janela_data_vencimento_func(quant_diferenca_estoque):
-        #NOTE - sub_janela_data_vencimento_func
-        sub_janela_data_vencimento = ctk.CTkToplevel()
-        sub_janela_data_vencimento.title("")
-        sub_janela_data_vencimento.update_idletasks()
-        x = (sub_janela_data_vencimento.winfo_screenwidth() // 2) - (sub_janela_data_vencimento.winfo_width() // 2)
-        y = (sub_janela_data_vencimento.winfo_screenheight() // 2) - (sub_janela_data_vencimento.winfo_height() // 2)
-        sub_janela_data_vencimento.geometry(f"+{x}+{y}")
-
-        #SECTION - funções
-        def somar_dias_uteis(dias_a_somar):
-            #NOTE - somar_dias_uteis
-            """
-            Esta função soma dias úteis a partir de uma data inicial.
-
-            param:
-            - int: dias_a_somar (número de dias úteis a serem somados)
-
-            return:
-            - datetime.date: data_atual (data somada com os dias úteis)
-            """
-            dias_uteis = 0
-            data_atual = datetime.date.today()
-
-            while dias_uteis < dias_a_somar:
-                data_atual += datetime.timedelta(days=1)
-                if data_atual.weekday() not in (5, 6):
-                    dias_uteis += 1
-
-            data_vencimento = data_atual
-            return data_vencimento
-        def confirmar_venda_btn_func():
-            #NOTE - confirmar_venda_btn_func
-            dias_uteis_combo = data_vencimento_combo.get()
-            dias_uteis_entry = data_vencimento_entry.get()
-            if dias_uteis_entry == "":
-                dias_uteis = dias_uteis_combo
-                if dias_uteis == "A vista":
-                    dias_uteis = 1
-                else:
-                    dias_uteis = dias_uteis.split(" ")
-                    dias_uteis = dias_uteis[0]
-            elif dias_uteis_entry != "":
-                dias_uteis = dias_uteis_entry
-                dias_uteis = dias_uteis.replace(" ", "")
-            dias_uteis = int(dias_uteis)
-            data_vencimento = somar_dias_uteis(dias_uteis)
-            data_vencimento = data_vencimento.strftime("%d/%m/%Y")
-            for linha in quant_diferenca_estoque:                
-                linha = linha.split("|")
-                nome_produto = linha[0]
-                quantidade_prod = linha[1]
-                quantidade_prod = quantidade_prod.replace(" ", "")
-                quantidade_prod = quantidade_prod.replace("\n", "")                
-                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
-                codigo_projeto = get_cod_projeto(nome_produto)
-                incluir_pedido_venda(codigo_produto, codigo_cliente, data_vencimento, cfop, descricao, ncm ,unidade, valor_unitario, quantidade_prod, codigo_projeto)
-            sub_janela_data_vencimento.destroy()
-
-        #NOTE - Frame
-        frame_principal_data = ctk.CTkFrame(
-            master=sub_janela_data_vencimento,
-            width=350,
-            height=250
-        )
-        frame_principal_data.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
-        #NOTE - Body
-        lista_data_vencimento = ["A vista",
-                                "7 dias",
-                                "14 Dias",
-                                "21 Dias",
-                                "30 Dias",
-                                "45 Dias",
-                                "60 Dias"]
-        data_vencimento_text = ctk.CTkTextbox(
-            master=frame_principal_data,
-            width=300,
-            height=25,
-            font=("arial", 12, "bold"))
-        data_vencimento_text.insert("0.0", "                  Selecione a data de vencimento")
-        data_vencimento_text.place(relx=0.5, rely=0.15, anchor=tkinter.CENTER)
-        data_vencimento_text.configure(state="disabled")
-        data_vencimento_combo = ctk.CTkComboBox(master=frame_principal_data, values=lista_data_vencimento)
-        data_vencimento_combo.place(relx=0.5, rely=0.35, anchor=tkinter.CENTER)
-        data_vencimento_text_2 = ctk.CTkTextbox(
-            master=frame_principal_data,
-            width=210,
-            height=2,
-            font=("arial", 12, "bold")
-            )
-        data_vencimento_text_2.insert("0.0", "                Ou digite os dias")
-        data_vencimento_text_2.place(relx=0.5, rely=0.50, anchor=tkinter.CENTER)
-        data_vencimento_text_2.configure(state="disabled")
-        data_vencimento_entry = ctk.CTkEntry(master=frame_principal_data)
-        data_vencimento_entry.place(relx=0.5, rely=0.65, anchor=tkinter.CENTER)
-        confirmar_venda_btn = ctk.CTkButton(
-            master=frame_principal_data,
-            text="Confirmar e gerar venda",
-            fg_color="#00993D",
-            hover_color=("#007830"),
-            command=confirmar_venda_btn_func
-        )
-        confirmar_venda_btn.place(relx=0.5, rely=0.83, anchor=tkinter.CENTER)
         
-
     #!SECTION
 
     #SECTION - FUNÇÔES
@@ -328,10 +194,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
         janela_relatorio_diferenca.destroy()
         janela_inicio.deiconify()
         janela_inicio.state("zoomed")
-    
-                
-                    
-
     #!SECTION
     
     #================== Puxando lista de estoques ===================#
