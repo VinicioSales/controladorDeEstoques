@@ -11,239 +11,6 @@ from config.instancias.apis.apis_cliente import get_cod_cliente
 from config.instancias.apis.apis_projetos import get_cod_projeto
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 
-'''app_key = "2999342667321"
-app_secret = "337f2cb08516d060a37c47243b91d20f"
-codigo_conta_corrente: "6873271998"
-def incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, descricao, ncm, unidade, valor_produto, quantidade_diferenca, codigo_projeto):
-    """
-    Função para incluir um pedido através da API Omie.
-    
-    Args:
-        codigo_produto (str): Código do produto
-        codigo_cliente (str): Código do cliente
-        data_previsao (str): Data de previsão de entrega no formato "dd/mm/yyyy"
-        cfop (str): Código Fiscal de Operações e Prestações
-        descricao (str): Descrição do produto
-        ncm (str): Código Nacional de Mercadorias
-        unidade (str): Unidade de medida do produto
-        valor_produto (float): Valor do produto
-        quantidade_diferenca (int): Quantidade de diferença
-        codigo_conta_corrente (str): Código da conta corrente
-        codigo_projeto (str): Código do projeto
-        
-    Returns:
-        Tuple: (descricao_status (str), codigo_pedido (str), numero_pedido (str))
-    """
-    randomlist = random.sample(range(1, 12), 8)
-    randomlist = str(randomlist)
-    aleatorio = randomlist.replace(",","")
-    aleatorio = aleatorio.replace(" ","")
-    aleatorio = aleatorio.replace("[","")
-    codigo_pedido_integracao = aleatorio.replace("]","")
-    data = datetime.datetime.now()
-    data = data.strftime("%d/%m/%Y")
-    url = "https://app.omie.com.br/api/v1/produtos/pedido/"
-    payload = json.dumps({
-                            "call": "IncluirPedido",
-                            "app_key": app_key,
-                            "app_secret": app_secret,
-                            "param":[
-                                        {
-                                            "cabecalho": {
-                                                "codigo_cliente": codigo_cliente,
-                                                "codigo_pedido_integracao": codigo_pedido_integracao,
-                                                "data_previsao": data_previsao,
-                                                "etapa": "10"
-                                            },
-                                            "det": [
-                                                {
-                                                "ide": {
-                                                    "codigo_item_integracao": "4422421"
-                                                },
-                                                "produto": {
-                                                    "cfop": cfop,
-                                                    "codigo_produto": codigo_produto,
-                                                    "descricao": descricao,
-                                                    "ncm": ncm,
-                                                    "quantidade": quantidade_diferenca,
-                                                    "unidade": unidade,
-                                                    "valor_unitario": valor_produto
-                                                }
-                                                }
-                                            ],
-                                            "informacoes_adicionais": {
-                                                "codigo_categoria": "1.01.01",
-                                                "codigo_conta_corrente": "6873271998",
-                                                "consumidor_final": "",
-                                                "enviar_email": "N",
-                                                "codProj": codigo_projeto
-                                            }
-                                        }
-                                    ]
-                        })
-    headers ={
-                "Content-Type": "application/json"
-            }
-    response = requests.request("POST", url, headers=headers, data=payload)
-    response = response.json()
-    print(f"IncluirPedido: {response}")
-    #================== COLETANDO DADOS ====================#
-    if "descricao_status" in str(response):
-        descricao_status = response["descricao_status"]
-        codigo_pedido = response["codigo_pedido"]
-        numero_pedido = response["numero_pedido"]
-    if "faultstring" in str(response):
-        descricao_status = response['faultstring']
-        codigo_pedido = ''
-        numero_pedido = ''
-    return descricao_status, codigo_pedido, numero_pedido
-def pesquisar_produto_nome_func(nome_produto):
-    #NOTE - pesquisar_produto_nome_func
-    """
-    Função para pesquisar um produto em específico a partir de seu código.
-
-    Essa função faz uso de uma requisição à API do Omie, passando como parâmetro\
-    um código de pesquisa. A partir da resposta da requisição, é feito o tratamento\
-    dos dados e retornado os seguintes valores: CFOP, código do produto, descrição,\
-    NCM, unidade e valor unitário.
-
-    Parâmetros:
-    nome_produto (str): Nome do produto a ser pesquisado
-
-    Retorna:
-    Tuple (cfop: str, codigo_produto: str, descricao: str, ncm: str, unidade: str, valor_unitario: float)
-    """   
-    #=============== Listas =================#
-    nome_produto = nome_produto.replace(" ", "")
-    codigo_lista = []
-    cfop_lista = []
-    codigo_produto_lista = []
-    descricao_lista = []
-    ncm_lista = []
-    unidade_lista = []
-    valor_unitario_lista = []
-    url = "https://app.omie.com.br/api/v1/geral/produtos/"
-    payload = json.dumps({
-                            "call": "ListarProdutos",
-                            "app_key": app_key,
-                            "app_secret": app_secret,
-                            "param":[
-                                        {
-                                            "pagina": 1,
-                                            "registros_por_pagina": 500,
-                                            "apenas_importado_api": "N",
-                                            "filtrar_apenas_omiepdv": "N"
-                                        }
-                                    ]
-                        })
-    headers ={
-                "Content-Type": "application/json"
-            }
-    response = requests.request("POST", url, headers=headers, data=payload)
-    response = response.json()  
-    #==================== COLETANDO DADOS ==================#      
-    produto_servico_cadastro = response["produto_servico_cadastro"]
-    for produto in produto_servico_cadastro:
-        codigo_lista.append(produto["codigo"])            
-        cfop_lista.append(produto["cfop"])
-        codigo_produto_lista.append(produto["codigo_produto"])
-        descricao_lista.append(produto["descricao"])
-        ncm_lista.append(produto["ncm"])
-        unidade_lista.append(produto["unidade"])
-        valor_unitario_lista.append(produto["valor_unitario"])
-    for codigo, cfop, codigo_produto, descricao, ncm, unidade, valor_unitario in zip(codigo_lista,\
-        cfop_lista, codigo_produto_lista, descricao_lista, ncm_lista, unidade_lista, valor_unitario_lista):
-        if descricao == nome_produto:
-            break
-    return cfop, codigo_produto, descricao, ncm, unidade, valor_unitario
-def get_cod_projeto(nome_produto):
-    #NOTE - get_cod_projeto
-    """Busca o código do projeto
-    
-    param:
-        - str: nome_produto
-    
-    retun:
-        - str: codigo_projeto"""
-    nome_produto = nome_produto.replace(" ", "")
-    nome_produto = unidecode(nome_produto).upper()
-    total_de_paginas = 1
-    pagina = 1
-    while pagina <= total_de_paginas:
-        url = "https://app.omie.com.br/api/v1/geral/projetos/"
-        payload = json.dumps({
-                                "call": "ListarProjetos",
-                                "app_key": app_key,
-                                "app_secret": app_secret,
-                                "param":[
-                                            {
-                                                "pagina": pagina,
-                                                "registros_por_pagina": 500
-                                            }
-                                        ]
-                            })
-        headers ={
-                    "Content-Type": "application/json"
-                }
-        response = requests.request("POST", url, headers=headers, data=payload)
-        response = response.json()
-        total_de_paginas = int(response["total_de_paginas"])
-        cadastro = response["cadastro"]
-        for projeto in cadastro:
-            nome = projeto["nome"]
-            nome = nome.replace(" ", "")
-            if unidecode(nome).upper() == nome_produto:
-                codigo = projeto["codigo"]
-                break
-        pagina += 1
-        
-    return codigo
-def get_cod_cliente(nome_cliente):
-    #NOTE - get_cod_cliente
-    """
-    Retorna o código do cliente a partir do nome fornecido.
-    Parâmetros:
-    nome_cliente (str): Nome do cliente aser buscado.
-    Retorna:
-    str: Código do cliente correspondente ao nome fornecido. Se o cliente não for encontrado, retorna uma string vazia.
-    """
-
-    nome_cliente = unidecode(nome_cliente).lower()
-    pagina = 1
-    total_de_paginas = 1
-    codigo_cliente_omie = ""
-    while pagina <= total_de_paginas:
-        url = "https://app.omie.com.br/api/v1/geral/clientes/"
-        payload = json.dumps({
-                                "call": "ListarClientes",
-                                "app_key": app_key,
-                                "app_secret": app_secret,
-                                "param":[
-                                            {
-                                                "pagina": pagina,
-                                                "registros_por_pagina": 500,
-                                                "apenas_importado_api": "N"
-                                            }
-                                        ]
-                            })
-        headers ={
-                    "Content-Type": "application/json"
-                }
-        response = requests.request("POST", url, headers=headers, data=payload)
-        response = response.json()
-        total_de_paginas = response["total_de_paginas"]
-        clientes_cadastro = response["clientes_cadastro"]
-        for cliente in clientes_cadastro:
-            razao_social = unidecode(cliente["razao_social"]).lower()
-            if razao_social == nome_cliente:
-                codigo_cliente_omie = cliente["codigo_cliente_omie"]
-                break
-        if codigo_cliente_omie != "":
-            break
-        pagina += 1
-    
-    return codigo_cliente_omie
-'''
 
 with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
     lista_produtos = arquivo.readlines()
@@ -643,8 +410,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
                         if chave == "razao_social":
                             text_venda_aux = text_venda.get("0.0", "end")
                             if valor not in text_venda_aux:
-                                text_venda.insert(f"{linha_venda}.0", f"CLIENTE: {valor}\n")                        
-                                #text_venda.insert(f"{linha_venda}.0", f"_________________________\n")
+                                text_venda.insert(f"{linha_venda}.0", f"CLIENTE: {valor}\n")
                         linha_venda += 1
                 text_venda.configure(state="disabled")
                 limpar_prods_selecionados()
@@ -659,6 +425,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
         janela_pedido_venda.destroy()
         sub_janela_relatorio.destroy()
     def btn_pedido_venda_func():
+        #NOTE - btn_pedido_venda_func
         for dict_pedido_venda in lista_pedidos_venda:
             codigo_cliente_omie = dict_pedido_venda["codigo_cliente_omie"]
             data_vencimento = dict_pedido_venda["data_vencimento"]
@@ -673,6 +440,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
             for codigo_produto, cfop, unidade, ncm, quantidade_prod, valor, codigo_projeto, descricao in zip(lista_codigo_produtos_selecionados, lista_cfop_selecionados, lista_unidade_selecionados,\
                 lista_ncm_selecionados, lista_quantidade_selecionados, lista_valor_selecionados, lista_projeto_selecionados, lista_nome_produtos_selecionados):
                 incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
+        janela_pedido_venda.destroy()
+        sub_janela_relatorio.deiconify()
+        sub_janela_relatorio.state("zoomed")
     #!SECTION
     
 
