@@ -582,7 +582,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
             prods_selecionados.pop()
             prods_selecionados.pop(0)
             prods_selecionados.pop(0)
-            print(f"prods_selecionados: {prods_selecionados}")
             if len(prods_selecionados) > 0:
                 nome_cliente = combo_cliente.get()
                 data = entry_data.get()
@@ -593,8 +592,11 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
                 else:
                     prazo = prazo.split(" ")[0]
                     data_vencimento = somar_dias_uteis(data, prazo)
-                codigo_cliente_omie = get_cod_cliente(nome_cliente)                
-                for linha in prods_selecionados:            
+                codigo_cliente_omie, razao_social = get_cod_cliente(nome_cliente)                
+                for linha in prods_selecionados:
+                    for i, item in enumerate(prods_selecionados):
+                        if item == "":
+                            prods_selecionados.pop(i)        
                     linha = linha.split(" | ")
                     nome_produto = linha[0]
                     quantidade_prod = linha[1].strip()
@@ -603,26 +605,37 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque):
                     cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
                     codigo_projeto = get_cod_projeto(nome_produto)
                     dict_pedido_venda = {
+                        "razao_social": razao_social,
                         "codigo_produto": codigo_produto,
                         "codigo_cliente_omie": codigo_cliente_omie,
                         "data_vencimento": data_vencimento,
                         "cfop": cfop,
                         "descricao": descricao,
                         "ncm": ncm,
-                        "unidade": unidade,
-                        "valor": valor,
+                        "unidade": unidade,                        
                         "quantidade_prod": quantidade_prod,
+                        "valor": valor,
                         "codigo_projeto": codigo_projeto
                     }
-                    text_venda.configure(state="normal")
-                    linha = 1             
-                    for chave, valor in dict_pedido_venda.items():
-                        print(f"chave: {chave} - valor: {valor}")
-                        if chave == "descricao" or chave == "valor" or chave == "quantidade_prod":
-                            text_venda.insert(f"{linha}.0", f"{valor}\n")
-                        linha += 1
-                    text_venda.configure(state="disabled")
                     lista_pedidos_venda.append(dict_pedido_venda)
+                text_venda.configure(state="normal")
+                linha = 1
+                
+                for dict_pedido_venda in lista_pedidos_venda:
+                    print(f"dict_pedido_venda: {dict_pedido_venda}")
+                    for chave, valor in dict_pedido_venda.items():
+                        if chave == "razao_social":
+                            text_venda.insert(f"{linha}.0", f"Cliente: {valor}\n")
+                        if chave == "descricao":
+                            text_venda.insert(f"{linha}.0", f"Produto: {valor}\n")
+                        if chave == "quantidade_prod":
+                            text_venda.insert(f"{linha}.0", f"Quantidade: {valor}\n")
+                        if chave == "valor":
+                            text_venda.insert(f"{linha}.0", f"Valor: {valor}\n")
+                        linha += 1
+                    text_venda.insert(f"{linha}.0", f"__________________________\n")
+                text_venda.configure(state="disabled")
+                    
                     #incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
     def voltar_prod_func():
         #NOTE - voltar_prod_func

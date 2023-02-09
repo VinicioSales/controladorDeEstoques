@@ -1,5 +1,5 @@
-import datetime
-
-data_atual = datetime.date.today()
-data_atual = data_atual.strftime("%d/%m/%Y")
-print(data_atual)
+lista = ["a", "", "b"]
+for i, item in enumerate(lista):
+    if item == "":
+        lista.pop(i)
+print(lista)

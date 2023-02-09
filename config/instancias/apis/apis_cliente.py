@@ -16,7 +16,8 @@ def get_cod_cliente(nome_cliente):
     Parâmetros:
     nome_cliente (str): Nome do cliente aser buscado.
     Retorna:
-    str: Código do cliente correspondente ao nome fornecido. Se o cliente não for encontrado, retorna uma string vazia.
+    str: codigo_cliente_omie
+    str: razao_social
     """
 
     nome_cliente = unidecode(nome_cliente).lower()
@@ -54,5 +55,5 @@ def get_cod_cliente(nome_cliente):
             break
         pagina += 1
     
-    return codigo_cliente_omie
+    return codigo_cliente_omie, razao_social
 
