@@ -451,7 +451,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         #NOTE - btn_pedido_venda_func
         with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
             codigo_local_estoque = arquivo.read()
-        produtos_venda = []
+        with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
+            produtos_venda = arquivo.readlines()
         for dict_pedido_venda in lista_pedidos_venda:
             codigo_cliente_omie = dict_pedido_venda["codigo_cliente_omie"]
             data_vencimento = dict_pedido_venda["data_vencimento"]
@@ -682,7 +683,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         master=frame_meio,
         width=150,
         height=25,
-        text="Fechar Caminhão",
+        text="Fechar Cliente",
         font=(font_btn, 15),
         fg_color="#00993D",
         hover_color=("#007830"),
