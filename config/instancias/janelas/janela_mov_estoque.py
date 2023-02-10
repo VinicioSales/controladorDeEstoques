@@ -1061,6 +1061,10 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         
         return:
             - None"""
+        progressbar = ctk.CTkProgressBar(master=frame_1)
+        progressbar.pack(padx=20, pady=10)
+        progressbar.configure(mode="indeterminnate")
+        progressbar.start()
         lista_nome_produto = []
         lista_cod_produto = []
         lista_quantidade_produto = []
@@ -1244,3 +1248,4 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
 
     janela_saida_caminhao.mainloop()
 #!SECTION
+
