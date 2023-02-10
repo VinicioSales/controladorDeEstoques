@@ -244,13 +244,14 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
             quant_diferenca_estoque = arquivo.readlines()
         for prods_venda in produtos_venda:
+            codigo_local_estoque_venda = prods_venda.split(" | ")[0].strip()
             nome_produto_venda = prods_venda.split(" | ")[1].strip()
             quant_venda = float(prods_venda.split(" | ")[2].strip())
             for i, prods_dif in enumerate(quant_diferenca_estoque):
                 nome_produto_diferenca = prods_dif.split(" | ")[1].strip()
                 quant_diferenca = float(prods_dif.split(" | ")[2].strip())
-                codigo_local_estoque = (prods_dif.split(" | ")[0].strip())
-                if codigo_local_estoque == codigo_local_estoque_aux:
+                codigo_local_estoque = prods_dif.split(" | ")[0].strip()
+                if codigo_local_estoque == codigo_local_estoque_venda:
                     if nome_produto_venda in nome_produto_diferenca:
                         quant_sub = quant_diferenca - quant_venda
                         quant_diferenca_estoque[i] = f"{codigo_local_estoque} | {nome_produto_diferenca} | {quant_sub}\n"

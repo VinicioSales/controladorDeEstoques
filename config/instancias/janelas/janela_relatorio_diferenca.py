@@ -76,7 +76,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
                 quant_diferenca_estoque = arquivo.readlines()
             for prods_venda in produtos_venda:
-                codigo_local_estoque_venda = prods_venda.split(" | ")[1].strip()
+                codigo_local_estoque_venda = prods_venda.split(" | ")[0].strip()
                 nome_produto_venda = prods_venda.split(" | ")[1].strip()
                 quant_venda = float(prods_venda.split(" | ")[2].strip())
                 for i, prods_dif in enumerate(quant_diferenca_estoque):
