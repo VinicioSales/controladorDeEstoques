@@ -4,6 +4,10 @@ from PIL import Image
 from unidecode import unidecode
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
+from config.credenciais.database import database_infos_func
+
+database_infos = database_infos_func()
+estoque_box = database_infos["estoque_box"]
 
 #SECTION - sub_janela_alerta_sucesso
 def sub_janela_alerta_sucesso():
@@ -690,9 +694,12 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         prods_ceasa.pop()
         print(f"prods_ceasa: {prods_ceasa}") 
         estoque_origem = combo_estoque_ceasa_origem.get()
-        estoque_destino = combo_estoque_ceasa_destino.get()
+        #estoque_destino = combo_estoque_ceasa_destino.get()
+        nota = entry_nota.get()
+        obs_ent = f"{nota}\n\nentrada"
+        obs_sai = f"{nota}\n\nsaida"
         codigo_estoque_origem = get_codigo_local_estoque(nome_estoque=estoque_origem)
-        codigo_estoque_destino = get_codigo_local_estoque(nome_estoque=estoque_destino)  
+        #codigo_estoque_destino = get_codigo_local_estoque(nome_estoque=estoque_destino)  
         lista_nome_produto = []
         lista_cod_produto = []
         lista_quantidade_produto = []
@@ -707,8 +714,8 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         print(f"lista_quantidade_produto: {lista_quantidade_produto}")
         for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
             cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
-            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, "", codigo_estoque_origem)
-            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, "", codigo_estoque_destino)        
+            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_estoque_origem)
+            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, estoque_box)        
         
         # Preenchendo lista_produtos_ceasa
         with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
@@ -727,9 +734,6 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         sub_janela_ceasa.destroy()   
         sub_janela_alerta_sucesso()     
         janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, prods_ceasa)
-        
-        
-        
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         sub_janela_ceasa.destroy()
@@ -900,7 +904,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     )
     combo_estoque_ceasa_origem.bind("<Return>", procurar_estoque_interno)
     combo_estoque_ceasa_origem.place(relx=0.5, rely=0.71, anchor=tkinter.CENTER)
-    label_estoque_destino = ctk.CTkLabel(
+    """label_estoque_destino = ctk.CTkLabel(
         master=frame_meio,
         text="Destino:",
         font=("arial", 12, "bold"),
@@ -914,7 +918,24 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         height=25,
     )
     combo_estoque_ceasa_destino.bind("<Return>", procurar_estoque_caminhao)
-    combo_estoque_ceasa_destino.place(relx=0.5, rely=0.77, anchor=tkinter.CENTER)
+    combo_estoque_ceasa_destino.place(relx=0.5, rely=0.77, anchor=tkinter.CENTER)"""
+    
+    #NOTE - label_nota
+    label_nota = ctk.CTkLabel(
+        master=frame_meio,
+        text="Nota:",
+        font=("arial", 12, "bold"),
+        bg_color="#3b3b3b",
+    )
+    label_nota.place(relx=0.35, rely=0.77, anchor=tkinter.CENTER)
+
+    #NOTE - entry_nota
+    entry_nota = ctk.CTkEntry(
+        master=frame_meio,
+        width=150,
+        height=25,)
+    entry_nota.place(relx=0.5, rely=0.77, anchor=tkinter.CENTER)
+
     btn_confirmar = ctk.CTkButton(
         master=frame_meio,
         width=150,
