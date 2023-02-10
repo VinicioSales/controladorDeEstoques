@@ -683,7 +683,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         master=frame_meio,
         width=150,
         height=25,
-        text="Fechar Cliente",
+        text="Conclur Cliente",
         font=(font_btn, 15),
         fg_color="#00993D",
         hover_color=("#007830"),
