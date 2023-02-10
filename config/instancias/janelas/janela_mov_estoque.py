@@ -25,6 +25,9 @@ def sub_janela_alerta_sucesso():
     def ok_btn_func():
         #NOTE - ok_btn_func
         sub_janela_alerta_sucesso.destroy()
+    def ok_btn_event_func(event):
+        #NOTE - ok_btn_func
+        sub_janela_alerta_sucesso.destroy()
     #!SECTION
 
     #NOTE - frame_confirmar
@@ -48,6 +51,7 @@ def sub_janela_alerta_sucesso():
         text="Ok",
         command=ok_btn_func
     )
+    btn_ok.bind("<Return>", ok_btn_event_func)
     btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 #!SECTION
 
