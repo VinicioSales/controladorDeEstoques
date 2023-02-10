@@ -696,8 +696,8 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         estoque_origem = combo_estoque_ceasa_origem.get()
         #estoque_destino = combo_estoque_ceasa_destino.get()
         nota = entry_nota.get()
-        obs_ent = f"{nota}\n\nentrada"
-        obs_sai = f"{nota}\n\nsaida"
+        obs_ent = f"{nota}\n\nDe: {estoque_origem}"
+        obs_sai = f"{nota}\n\nPara: Box"
         codigo_estoque_origem = get_codigo_local_estoque(nome_estoque=estoque_origem)
         #codigo_estoque_destino = get_codigo_local_estoque(nome_estoque=estoque_destino)  
         lista_nome_produto = []
@@ -1143,8 +1143,8 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                 lista_nome_produto.append(nome_produto)
                 lista_cod_produto.append(codigo)
                 lista_quantidade_produto.append(quantidade_produto)
-            obs_ent = f"{nota}\n\nentrada"
-            obs_sai = f"{nota}\n\nsaida"        
+            obs_ent = f"{nota}\n\nDe: {nome_estoque_interno}"
+            obs_sai = f"{nota}\n\nPara: {nome_estoque_caminhao}"        
             codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
             if codigo_local_estoque != "":
                 codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
