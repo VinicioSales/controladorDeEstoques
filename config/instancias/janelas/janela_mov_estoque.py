@@ -1129,8 +1129,8 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                 codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
                 for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
                     cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
-                    incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_ent, codigo_local_estoque)
-                    incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_sai, codigo_estoque_caminhao)
+                    incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_local_estoque)
+                    incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, codigo_estoque_caminhao)
                     text_produtos.configure(state="normal")
                     text_produtos.delete("0.0", "end")
                     text_produtos.configure(state="disabled")
