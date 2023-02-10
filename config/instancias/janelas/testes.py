@@ -1,24 +1,13 @@
-import tkinter as tk
+import ast
 
-def hide_window1():
-    window1.withdraw()
-    window2.deiconify()
+# String que contém o dicionário
+string = "[{'chave1': 'valor1', 'chave2': 'valor2'}]"
 
-def hide_window2():
-    window2.withdraw()
-    window1.deiconify()
+# Transforma a string em uma lista
+lista = ast.literal_eval(string)
 
-window1 = tk.Tk()
-window1.title("Janela 1")
-
-button = tk.Button(window1, text="Esconder", command=hide_window1)
-button.pack()
-
-window2 = tk.Tk()
-window2.title("Janela 2")
-window2.withdraw()
-
-button2 = tk.Button(window2, text="Esconder", command=hide_window2)
-button2.pack()
-
-window1.mainloop()
+# Imprime a lista
+print(type(lista))
+for item in lista:
+    print(type(item))
+    print(item)

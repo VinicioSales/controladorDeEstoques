@@ -16,11 +16,15 @@ data_atual = date.today()
 data_atual = data_atual.strftime("%d/%m/%Y")
 with open("config/arquivos/data_anterior.txt", "r") as arquivo:
     data_anterior = arquivo.read()
+    
 if str(data_atual) != str(data_anterior):
     with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
         arquivo.write("")
     with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
         arquivo.write("")
+    with open("config/arquivos/lista_pedidos_venda.txt", "w") as arquivo:
+        arquivo.write("")
+
 with open("config/arquivos/data_anterior.txt", "w") as arquivo:
     arquivo.write(data_atual)
 
@@ -54,7 +58,7 @@ with open("config/arquivos/lista_produtos.txt", "w") as arquivo:
 #!SECTION
 
 #NOTE - JANELA INICIO
-janela_inicio = janela_inicial_func()
+janela_inicio = janela_inicial_func()   
 estilo_janelas = estilo_janelas_func()
 tema_janela = estilo_janelas["tema_janela"]
 janela_inicio.state("zoomed")

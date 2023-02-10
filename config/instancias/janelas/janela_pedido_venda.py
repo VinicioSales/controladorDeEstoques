@@ -3,15 +3,13 @@ import tkinter
 import datetime
 from unidecode import unidecode
 from PIL import Image
-import json
-import requests
-import random
+import ast
 from config.instancias.apis.apis_vendas import incluir_pedido_venda
 from config.instancias.apis.apis_cliente import get_cod_cliente
 from config.instancias.apis.apis_projetos import get_cod_projeto
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 
-lista_pedidos_venda = []
+
 linha_venda = 1
 
 #SECTION - sub_janela_alerta_preencher_dados
@@ -396,7 +394,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 lista_unidade_selecionados = []
                 lista_projeto_selecionados = []
                 lista_ncm_selecionados = []
-                lista_cfop_selecionados = []             
+                lista_cfop_selecionados = []
+                lista_pedidos_venda = []
+                dict_pedido_venda = {}
                 for linha in prods_selecionados:                            
                     linha = linha.split(" | ")
                     nome_produto = linha[0]
@@ -425,8 +425,10 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     "quantidade_prod": lista_quantidade_selecionados,
                     "valor": lista_valor_selecionados,
                     "codigo_projeto": lista_projeto_selecionados
-                }
+                }                
                 lista_pedidos_venda.append(dict_pedido_venda)
+                with open("config/arquivos/lista_pedidos_venda.txt", "w") as arquivo:
+                    arquivo.write(str(lista_pedidos_venda))
                 text_venda.configure(state="normal")
                 linha_venda = 1
                 for dict_pedido_venda in lista_pedidos_venda:
@@ -454,6 +456,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
             codigo_local_estoque = arquivo.read()
         with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
             produtos_venda = arquivo.readlines()
+        with open("config/arquivos/lista_pedidos_venda.txt", "r") as arquivo:
+            lista_pedidos_venda = arquivo.read()
+        lista_pedidos_venda = ast.literal_eval(lista_pedidos_venda)
         for dict_pedido_venda in lista_pedidos_venda:
             codigo_cliente_omie = dict_pedido_venda["codigo_cliente_omie"]
             data_vencimento = dict_pedido_venda["data_vencimento"]
