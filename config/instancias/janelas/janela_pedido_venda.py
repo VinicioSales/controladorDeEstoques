@@ -12,6 +12,48 @@ from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 
 linha_venda = 1
 
+#SECTION - sub_janela_alerta_sucesso
+def sub_janela_alerta_sucesso():
+    #NOTE - sub_janela_alerta_sucesso
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")
+    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text="Sucesso!",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
+
 #SECTION - sub_janela_alerta_preencher_dados
 def sub_janela_alerta_preencher_dados():
     #NOTE - sub_janela_alerta_preencher_dados
@@ -475,6 +517,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
                 codigo_local_estoque = codigo_local_estoque.strip()
                 produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade_prod}\n")
+                sub_janela_alerta_sucesso()
         with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
             arquivo.writelines(produtos_venda)
         janela_pedido_venda.destroy()

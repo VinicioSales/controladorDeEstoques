@@ -5,6 +5,47 @@ from unidecode import unidecode
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 
+#SECTION - sub_janela_alerta_sucesso
+def sub_janela_alerta_sucesso():
+    #NOTE - sub_janela_alerta_sucesso
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")
+    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text="Sucesso!",
+        text_color = "#F04A29",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
+
 #SECTION - sub_janela_confirmar_ceasa_func
 def sub_janela_confirmar_ceasa_func(text_prod_selecionados, janela_produtos, tipo, janela_mov_estoque, prods_selecionados):
     """Cria uma subjanela "sub_janela_confirmar_ceasa", centraliza a janela na tela,
@@ -1061,10 +1102,6 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         
         return:
             - None"""
-        progressbar = ctk.CTkProgressBar(master=frame_1)
-        progressbar.pack(padx=20, pady=10)
-        progressbar.configure(mode="indeterminnate")
-        progressbar.start()
         lista_nome_produto = []
         lista_cod_produto = []
         lista_quantidade_produto = []
@@ -1089,6 +1126,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                     cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
                     incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_ent, codigo_local_estoque)
                     incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_sai, codigo_estoque_caminhao)
+                    sub_janela_alerta_sucesso()
             else:
                 sub_janela_alerta_estoque_não_encontrado()
         elif prods_selecionados == "":
