@@ -8,29 +8,30 @@ from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 #SECTION - sub_janela_alerta_sucesso
 def sub_janela_alerta_sucesso():
     #NOTE - sub_janela_alerta_sucesso
-    sub_janela_confirmar_produtos = ctk.CTkToplevel()
-    sub_janela_confirmar_produtos.geometry("300x300")
-    sub_janela_confirmar_produtos.update_idletasks()
-    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
-    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
-    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")
+    sub_janela_alerta_sucesso = ctk.CTkToplevel()
+    sub_janela_alerta_sucesso.geometry("300x300")
+    sub_janela_alerta_sucesso.update_idletasks()
+    sub_janela_alerta_sucesso.attributes("-topmost", True)
+    x = (sub_janela_alerta_sucesso.winfo_screenwidth() // 2) - (sub_janela_alerta_sucesso.winfo_width() // 2)
+    y = (sub_janela_alerta_sucesso.winfo_screenheight() // 2) - (sub_janela_alerta_sucesso.winfo_height() // 2)
+    sub_janela_alerta_sucesso.geometry(f"+{x}+{y}")
     
 
     #SECTION - Funções Confirmar
     def ok_btn_func():
         #NOTE - ok_btn_func
-        sub_janela_confirmar_produtos.destroy()
+        sub_janela_alerta_sucesso.destroy()
     #!SECTION
 
     #NOTE - frame_confirmar
     frame_confirmar = ctk.CTkFrame(
-        master=sub_janela_confirmar_produtos,
+        master=sub_janela_alerta_sucesso,
         width=250,
         height=250
     )
     frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
     label_confirmar = ctk.CTkLabel(
-        master=sub_janela_confirmar_produtos,
+        master=sub_janela_alerta_sucesso,
         text="Sucesso!",
         text_color = "#F04A29",
         bg_color="#2b2b2b",
@@ -722,9 +723,13 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
             quantidade_produto = quantidade_produto.strip()
             lista_produtos_ceasa.append(f"{codigo_estoque_origem} | {nome_produto} | {quantidade_produto}\n")
         with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
-            arquivo.writelines(lista_produtos_ceasa)
-        sub_janela_ceasa.destroy()
+            arquivo.writelines(lista_produtos_ceasa)        
+        sub_janela_ceasa.destroy()   
+        sub_janela_alerta_sucesso()     
         janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, prods_ceasa)
+        
+        
+        
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         sub_janela_ceasa.destroy()
@@ -1126,6 +1131,9 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                     cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
                     incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_ent, codigo_local_estoque)
                     incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_sai, codigo_estoque_caminhao)
+                    text_produtos.configure(state="normal")
+                    text_produtos.delete("0.0", "end")
+                    text_produtos.configure(state="disabled")
                     sub_janela_alerta_sucesso()
             else:
                 sub_janela_alerta_estoque_não_encontrado()
