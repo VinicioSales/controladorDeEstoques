@@ -435,8 +435,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("0.0", "end")
         text_prod_selecionados.configure(state="disabled")
-    def fechar_caminhao_func():
-        #NOTE - fechar_caminhao_func
+    def concluir_cliente_func():
+        #NOTE - concluir_cliente_func
         data = entry_data.get()
         verificar_data = verificar_data_func(data)
         if verificar_data == False:
@@ -769,7 +769,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         height=25,
         text="Concluir Cliente",
         font=(font_btn, 15),
-        command=fechar_caminhao_func
+        command=concluir_cliente_func
     )
     btn_concluir_cliente.place(relx=0.53, rely=0.87, anchor=tkinter.CENTER)
 
@@ -819,13 +819,13 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     text_venda.configure(state="disabled")
 
     #NOTE - label_venda
-    label_venda = ctk.CTkLabel(
+    """label_venda = ctk.CTkLabel(
         master=frame_meio,
         text="Adicionados para Venda",
         font=("Arial", 15, "bold"),
         fg_color=cor_frame_meio
         )
-    label_venda.place(relx=0.85, rely=0.55, anchor=tkinter.CENTER)
+    label_venda.place(relx=0.85, rely=0.55, anchor=tkinter.CENTER)"""
     #!SECTION
 
     janela_pedido_venda.mainloop()
