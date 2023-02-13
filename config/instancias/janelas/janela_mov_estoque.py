@@ -693,51 +693,51 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     def btn_confirmar_func():
         #NOTE - btn_confirmar_func
         prods_ceasa = text_prod_ceasa.get("0.0", "end").split("\n")
-        print(f"prods_ceasa: {prods_ceasa}")        
         prods_ceasa.pop()
         prods_ceasa.pop()
-        print(f"prods_ceasa: {prods_ceasa}") 
-        estoque_origem = combo_estoque_ceasa_origem.get()
-        #estoque_destino = combo_estoque_ceasa_destino.get()
-        nota = entry_nota.get()
-        obs_ent = f"{nota}\n\nDe: {estoque_origem}"
-        obs_sai = f"{nota}\n\nPara: Box"
-        codigo_estoque_origem = get_codigo_local_estoque(nome_estoque=estoque_origem)
-        #codigo_estoque_destino = get_codigo_local_estoque(nome_estoque=estoque_destino)  
-        lista_nome_produto = []
-        lista_cod_produto = []
-        lista_quantidade_produto = []
-        for item in prods_ceasa:
-            item = item.split("|")
-            nome_produto = item[0]
-            codigo = get_codigo(nome_produto)
-            quantidade_produto = item[1]
-            lista_nome_produto.append(nome_produto)
-            lista_cod_produto.append(codigo)
-            lista_quantidade_produto.append(quantidade_produto)
-        print(f"lista_quantidade_produto: {lista_quantidade_produto}")
-        for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
-            cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
-            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_estoque_origem)
-            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, estoque_box)        
-        
-        # Preenchendo lista_produtos_ceasa
-        with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
-            lista_produtos_ceasa = arquivo.readlines()      
-        for item in prods_ceasa:
-            item = item.split("|")
-            nome_produto = item[0]
-            codigo = get_codigo(nome_produto)
-            quantidade_produto = item[1]
-            codigo_estoque_origem = codigo_estoque_origem.strip()
-            nome_produto = nome_produto.strip()
-            quantidade_produto = quantidade_produto.strip()
-            lista_produtos_ceasa.append(f"{codigo_estoque_origem} | {nome_produto} | {quantidade_produto}\n")
-        with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
-            arquivo.writelines(lista_produtos_ceasa)        
-        sub_janela_ceasa.destroy()   
-        sub_janela_alerta_sucesso()     
-        janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, prods_ceasa)
+        if len(prods_ceasa) <= 0:
+            sub_janela_alerta_prod_nao_encontrado()
+        else:            
+            estoque_origem = combo_estoque_ceasa_origem.get()
+            #estoque_destino = combo_estoque_ceasa_destino.get()
+            nota = entry_nota.get()
+            obs_ent = f"{nota}\n\nDe: {estoque_origem}"
+            obs_sai = f"{nota}\n\nPara: Box"
+            codigo_estoque_origem = get_codigo_local_estoque(nome_estoque=estoque_origem)
+            #codigo_estoque_destino = get_codigo_local_estoque(nome_estoque=estoque_destino)  
+            lista_nome_produto = []
+            lista_cod_produto = []
+            lista_quantidade_produto = []
+            for item in prods_ceasa:
+                item = item.split("|")
+                nome_produto = item[0]
+                codigo = get_codigo(nome_produto)
+                quantidade_produto = item[1]
+                lista_nome_produto.append(nome_produto)
+                lista_cod_produto.append(codigo)
+                lista_quantidade_produto.append(quantidade_produto)
+            for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
+                cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
+                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_estoque_origem)
+                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, estoque_box)        
+            
+            # Preenchendo lista_produtos_ceasa
+            with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
+                lista_produtos_ceasa = arquivo.readlines()      
+            for item in prods_ceasa:
+                item = item.split("|")
+                nome_produto = item[0]
+                codigo = get_codigo(nome_produto)
+                quantidade_produto = item[1]
+                codigo_estoque_origem = codigo_estoque_origem.strip()
+                nome_produto = nome_produto.strip()
+                quantidade_produto = quantidade_produto.strip()
+                lista_produtos_ceasa.append(f"{codigo_estoque_origem} | {nome_produto} | {quantidade_produto}\n")
+            with open("config/arquivos/lista_produtos_ceasa.txt", "w") as arquivo:
+                arquivo.writelines(lista_produtos_ceasa)        
+            sub_janela_ceasa.destroy()   
+            sub_janela_alerta_sucesso()     
+            janela_mov_estoque_func(janela_produtos, prods_selecionados, tipo, prods_ceasa)
     def voltar_prod_func():
         #NOTE - voltar_prod_func
         sub_janela_ceasa.destroy()
