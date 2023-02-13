@@ -66,6 +66,21 @@ def incluir_pedido_venda(lista_dat, codigo_cliente, data_previsao, codigo_projet
     response = response.json()
     print(f"IncluirPedido: {response}")
 
+dict_det = {
+    "ide": {
+            "codigo_item_integracao": "4422421"
+    },
+    "produto": {
+            "cfop": cfop,
+            "codigo_produto": codigo_produto,
+            "descricao": descricao,
+            "ncm": ncm,
+            "quantidade": quantidade,
+            "unidade": unidade,
+            "valor_unitario": valor_unitario
+        }
+}
+
 lista_det = [
         {
         "ide": {
@@ -79,21 +94,6 @@ lista_det = [
             "quantidade": "1",
             "unidade": "UN",
             "valor_unitario": "1"
-        }
-        },
-
-        {
-        "ide": {
-            "codigo_item_integracao": "4422421"
-        },
-        "produto": {
-            "cfop": "5.102",
-            "codigo_produto": "6873272180",
-            "descricao": "descricao",
-            "ncm": "",
-            "quantidade": "2",
-            "unidade": "UN",
-            "valor_unitario": "2"
         }
         }
 ]
