@@ -13,6 +13,7 @@ estoque_box = database_infos["estoque_box"]
 def sub_janela_alerta_sucesso():
     #NOTE - sub_janela_alerta_sucesso
     sub_janela_alerta_sucesso = ctk.CTkToplevel()
+    sub_janela_alerta_sucesso.title("Sucesso")
     sub_janela_alerta_sucesso.geometry("300x300")
     sub_janela_alerta_sucesso.update_idletasks()
     sub_janela_alerta_sucesso.attributes("-topmost", True)
@@ -51,7 +52,6 @@ def sub_janela_alerta_sucesso():
         text="Ok",
         command=ok_btn_func
     )
-    btn_ok.bind("<Return>", ok_btn_event_func)
     btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 #!SECTION
 
@@ -1138,34 +1138,39 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         nome_estoque_interno = combo_estoque_interno.get()
         nome_estoque_caminhao = combo_estoque_caminhao.get()
         nota = nota_entry.get()
-        if prods_selecionados != "" and nome_estoque_interno != "" and nome_estoque_caminhao != "":
-            for item in prods_selecionados:
-                item = item.split("|")
-                nome_produto = item[0]
-                codigo = get_codigo(nome_produto)
-                quantidade_produto = item[1]
-                lista_nome_produto.append(nome_produto)
-                lista_cod_produto.append(codigo)
-                lista_quantidade_produto.append(quantidade_produto)
-            obs_ent = f"{nota}\n\nDe: {nome_estoque_interno}"
-            obs_sai = f"{nota}\n\nPara: {nome_estoque_caminhao}"        
-            codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
-            if codigo_local_estoque != "":
-                codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
-                for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
-                    cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
-                    incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_local_estoque)
-                    incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, codigo_estoque_caminhao)
-                    text_produtos.configure(state="normal")
-                    text_produtos.delete("0.0", "end")
-                    text_produtos.configure(state="disabled")
-                    sub_janela_alerta_sucesso()
-            else:
-                sub_janela_alerta_estoque_não_encontrado()
-        elif prods_selecionados == "":
-            sub_janela_confirmar_produtos_func()
-        elif nome_estoque_interno == "" or nome_estoque_caminhao == "":
-            sub_janela_alerta_preencher_dados()
+        produtos_selecionados = text_produtos.get("0.0", "end").strip()
+        if produtos_selecionados != "":
+            if prods_selecionados != "" and nome_estoque_interno != "" and nome_estoque_caminhao != "":
+                for item in prods_selecionados:
+                    item = item.split("|")
+                    nome_produto = item[0]
+                    codigo = get_codigo(nome_produto)
+                    quantidade_produto = item[1]
+                    lista_nome_produto.append(nome_produto)
+                    lista_cod_produto.append(codigo)
+                    lista_quantidade_produto.append(quantidade_produto)
+                obs_ent = f"{nota}\n\nDe: {nome_estoque_interno}"
+                obs_sai = f"{nota}\n\nPara: {nome_estoque_caminhao}"        
+                codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
+                
+                if codigo_local_estoque != "":
+                    codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
+                    for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
+                        cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
+                        incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_local_estoque)
+                        incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, codigo_estoque_caminhao)
+                        text_produtos.configure(state="normal")
+                        text_produtos.delete("0.0", "end")
+                        text_produtos.configure(state="disabled")
+                        sub_janela_alerta_sucesso()
+                else:
+                    sub_janela_alerta_estoque_não_encontrado()
+            elif prods_selecionados == "":
+                sub_janela_confirmar_produtos_func()
+            elif nome_estoque_interno == "" or nome_estoque_caminhao == "":
+                sub_janela_alerta_preencher_dados()
+        else:
+            sub_janela_alerta_prod_nao_encontrado()
     def inicio_func():
         #NOTE - inicio_func 
         janela_saida_caminhao.destroy()
