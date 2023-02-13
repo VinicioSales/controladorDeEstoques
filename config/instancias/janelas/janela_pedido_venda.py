@@ -357,7 +357,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         produto = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
         valor = entry_valor.get()
-
         if produto == "" or quantidade == "" or valor == "":
             sub_janela_alerta_preencher_dados()
         elif produto != "" and quantidade != "" and valor != "": 
@@ -398,25 +397,20 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     def remover_ultimo_btn_func():
         #NOTE - remover_ultimo_btn_func
         text_prod_selecionados.configure(state="normal")
-        #text_prod_selecionados.delete("1.0", "1.1000")
         prods_selecionados = text_prod_selecionados.get("1.0", "end").split("\n")       
         
         for index, item in enumerate(prods_selecionados):
             if item == "":
                 del prods_selecionados[index]
         if prods_selecionados[-1] == "":
-            print("1")
             prods_selecionados.pop(-1)
-        print(f"prods_selecionados: {prods_selecionados}")
         prods_selecionados.pop(1)
-        print(f"prods_selecionados: {prods_selecionados}")
         
         text_prod_selecionados.delete("0.0", "end") 
         text_prod_selecionados.insert("0.0", "\n\n")
         prods_selecionados = list(reversed(prods_selecionados))
         for item in prods_selecionados:        
             text_prod_selecionados.insert("2.0", f"{item}\n")
-            #text_prod_selecionados.insert("0.0", f"\n\n{produto} | {quantidade} | {valor}")
         text_prod_selecionados.configure(state="disabled")
     def limpar_prods_selecionados():
         #NOTE - limpar_prods_selecionados
