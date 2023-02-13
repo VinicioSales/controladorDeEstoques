@@ -57,6 +57,51 @@ with open("config/arquivos/lista_produtos.txt", "w") as arquivo:
     arquivo.writelines(lista_produtos_arquivo)
 #!SECTION
 
+#SECTION - janela_configurações
+def janela_configurações_func():
+    janela_configurações = ctk.CTk()
+    janela_configurações = ctk.CTkToplevel()
+    janela_configurações.title("Configurações")
+    janela_configurações.geometry("300x300")
+    janela_configurações.update_idletasks()
+    janela_configurações.attributes("-topmost", True)
+    x = (janela_configurações.winfo_screenwidth() // 2) - (janela_configurações.winfo_width() // 2)
+    y = (janela_configurações.winfo_screenheight() // 2) - (janela_configurações.winfo_height() // 2)
+    janela_configurações.geometry(f"+{x}+{y}")
+
+    #SECTION - FUNÇÔES
+    #NOTE - mudar_tamnho_escala
+    def mudar_tamnho_escala(new_scaling: str):
+        #NOTE - mudar_tamnho_escala
+        new_scaling_float = int(new_scaling.replace("%", "")) / 100
+        ctk.set_widget_scaling(new_scaling_float)
+    def ok_func():
+        janela_configurações.destroy()
+    #!SECTION
+
+    #NOTE - frame_configuracao
+    frame_configuracao = ctk.CTkFrame(master=janela_configurações)
+    frame_configuracao.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+
+    #NOTE - menu_escala
+    menu_escala = ctk.CTkOptionMenu(
+        frame_configuracao,
+        values=["80%", "90%", "100%", "110%", "120%", "130%", "140%", "150%"],
+        command=mudar_tamnho_escala)
+    menu_escala.place(relx=0.5, rely=0.4, anchor=tkinter.CENTER)
+
+    #NOTE - btn_ok
+    btn_ok = ctk.CTkButton(
+        master=frame_configuracao,
+        width=100,
+        height=25,
+        text="Ok",
+        font=("Arial", 12),
+        hover_color = "#AA0",
+        command=ok_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+
 #NOTE - JANELA INICIO
 janela_inicio = janela_inicial_func()   
 estilo_janelas = estilo_janelas_func()
@@ -110,6 +155,8 @@ def btn_relatorio_func():
     """
     #janela_inicio.withdraw()
     janela_relatorio_diferenca = janela_relatorio_diferenca_func(janela_inicio)
+def btn_configuracoes_func():
+    janela_configurações_func()
 
 #==================== PAGINA INICIAL ================#
 #========= BOTOES ===========#
@@ -143,6 +190,15 @@ btn_relatorio = ctk.CTkButton(
     command=btn_relatorio_func
 )
 btn_relatorio.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+
+btn_configuracoes = ctk.CTkButton(
+    master=frame_1_inicio,
+    text="Configurações",
+    font=("Arial", 20, "bold"),
+    hover_color = "#AA0",
+    command=btn_configuracoes_func
+)
+btn_configuracoes.place(relx=0.5, rely=0.67, anchor=tkinter.CENTER)
 #!SECTION
 
 janela_inicio.mainloop()
