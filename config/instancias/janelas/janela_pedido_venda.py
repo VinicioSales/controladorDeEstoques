@@ -335,7 +335,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         produto = combo_pesquisar_prod.get()
         quantidade = entry_quantidade.get()
         valor = entry_valor.get()
-
         if produto == "" or quantidade == "" or valor == "":
             sub_janela_alerta_preencher_dados()
         elif produto != "" and quantidade != "" and valor != "": 
@@ -417,6 +416,10 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("0.0", "end")
         text_prod_selecionados.configure(state="disabled")
+    def remover_zeros(string):
+        while len(string) > 1 and string[0] == '0':
+            string = string[1:]
+        return string
     def fechar_caminhao_func():
         #NOTE - fechar_caminhao_func
         data = entry_data.get()
@@ -454,9 +457,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 for linha in prods_selecionados:                            
                     linha = linha.split(" | ")
                     nome_produto = linha[0]
-                    quantidade_prod = linha[1].strip()
+                    quantidade_prod = float(linha[1].strip())
                     valor = linha[2].strip()
-                    valor = valor.replace("\n", "")
+                    valor = float(valor.replace("\n", ""))
                     cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
                     codigo_projeto = get_cod_projeto(nome_produto)                    
                     lista_nome_produtos_selecionados.append(nome_produto)
@@ -468,6 +471,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     lista_projeto_selecionados.append(codigo_projeto)
                     lista_unidade_selecionados.append(unidade)
                 dict_pedido_venda = {
+                    "valor": lista_valor_selecionados,
                     "razao_social": razao_social,
                     "codigo_produto": lista_codigo_produtos_selecionados,
                     "codigo_cliente_omie": codigo_cliente_omie,
@@ -476,22 +480,27 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     "descricao": lista_nome_produtos_selecionados,
                     "ncm": lista_ncm_selecionados,
                     "unidade": lista_unidade_selecionados,                        
-                    "quantidade_prod": lista_quantidade_selecionados,
-                    "valor": lista_valor_selecionados,
+                    "quantidade_prod": lista_quantidade_selecionados,                    
                     "codigo_projeto": lista_projeto_selecionados
-                }                
+                }
+                lista_titulos = ["valor", "razao_social"]
                 lista_pedidos_venda.append(dict_pedido_venda)
                 with open("config/arquivos/lista_pedidos_venda.txt", "w") as arquivo:
                     arquivo.write(str(lista_pedidos_venda))
-                text_venda.configure(state="normal")
-                linha_venda = 1
+                text_venda.configure(state="normal")                
                 for dict_pedido_venda in lista_pedidos_venda:
-                    for chave, valor in dict_pedido_venda.items():
-                        if chave == "razao_social":
-                            text_venda_aux = text_venda.get("0.0", "end")
-                            if valor not in text_venda_aux:
-                                text_venda.insert(f"{linha_venda}.0", f"CLIENTE: {valor}\n")
-                        linha_venda += 1
+                    linha_venda = 0
+                    for chave, valor in dict_pedido_venda.items():                        
+                        for titulo in lista_titulos:
+                            if chave == titulo:
+                                if chave == "razao_social":                              
+                                    text_venda.insert(f"0.0", f"Cliente: {valor}\n")
+                                if chave == "valor":
+                                    total = sum(valor)
+                                    text_venda.insert(f"1.0", f"Valor: R$ {total}\n\n")
+                                linha_venda += 1
+                                break
+                                
                 text_venda.configure(state="disabled")
                 limpar_prods_selecionados()
     def voltar_prod_func():
@@ -794,14 +803,14 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     text_venda.place(relx=0.74, rely=0.75, anchor=tkinter.CENTER)
     text_venda.configure(state="disabled")
 
-    """#NOTE - label_venda
+    #NOTE - label_venda
     label_venda = ctk.CTkLabel(
         master=frame_meio,
         text="Adicionados para Venda",
         font=("Arial", 15, "bold"),
         fg_color=cor_frame_meio
         )
-    label_venda.place(relx=0.85, rely=0.55, anchor=tkinter.CENTER)"""
+    label_venda.place(relx=0.85, rely=0.55, anchor=tkinter.CENTER)
     #!SECTION
 
     janela_pedido_venda.mainloop()
