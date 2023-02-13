@@ -1143,7 +1143,8 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                         text_produtos.configure(state="normal")
                         text_produtos.delete("0.0", "end")
                         text_produtos.configure(state="disabled")
-                        sub_janela_alerta_sucesso()
+                        nota_entry.delete("0", "end")
+                    sub_janela_alerta_sucesso()
                 else:
                     sub_janela_alerta_estoque_não_encontrado()
             elif prods_selecionados == "":

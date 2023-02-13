@@ -552,7 +552,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
                 codigo_local_estoque = codigo_local_estoque.strip()
                 produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade_prod}\n")
-                sub_janela_alerta_sucesso()
+        sub_janela_alerta_sucesso()
         with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
             arquivo.writelines(produtos_venda)
         janela_pedido_venda.destroy()

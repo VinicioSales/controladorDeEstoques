@@ -122,10 +122,10 @@ def janela_relatorio_diferenca_func(janela_inicio):
         for produto_ceasa in lista_produtos_ceasa:
             codigo_local_estoque, nome_produto_ceasa, quant_ceasa = produto_ceasa.split(" | ")
             nome_produto_ceasa = nome_produto_ceasa.strip()
-            quant_ceasa = int(quant_ceasa.strip())
+            quant_ceasa = float(quant_ceasa.strip())
             for diferenca_estoque in quant_diferenca_estoque:
                 codigo_local_estoque_diferenca, nome_difenca, quant_diferenca = diferenca_estoque.split(" | ")
-                quant_diferenca = int(quant_diferenca.strip())
+                quant_diferenca = float(quant_diferenca.strip())
                 nome_difenca = nome_difenca.strip()
                 if nome_produto_ceasa == nome_difenca:
                     resultado = quant_diferenca - quant_ceasa
