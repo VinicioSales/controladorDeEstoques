@@ -569,7 +569,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         #fg_color="transparent",
         command=voltar_prod_func
     )
-    btn_voltar.place(relx=0.30, rely=0.08)
+    btn_voltar.place(relx=0.39, rely=0.08)
     img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
     #NOTE - btn_inicio
     btn_inicio = ctk.CTkButton(
@@ -582,7 +582,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         #fg_color="transparent",
         command=inicio_prod_func
     )
-    btn_inicio.place(relx=0.38, rely=0.08)
+    btn_inicio.place(relx=0.44, rely=0.08)
 
     #NOTE - label_titulo
     label_titulo = ctk.CTkLabel(
