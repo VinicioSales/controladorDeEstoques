@@ -53,7 +53,6 @@ def sub_janela_alerta_sucesso():
     btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 #!SECTION
 
-
 #SECTION - sub_janela_alerta_preencher_dados
 def sub_janela_alerta_preencher_dados():
     #NOTE - sub_janela_alerta_preencher_dados
@@ -340,9 +339,16 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         if produto == "" or quantidade == "" or valor == "":
             sub_janela_alerta_preencher_dados()
         elif produto != "" and quantidade != "" and valor != "": 
-            if quantidade.isnumeric() and valor.isnumeric():
+            if quantidade.isnumeric() and valor.isnumeric():                
                 text_prod_selecionados.configure(state="normal")
-                text_prod_selecionados.insert("0.0", f"\n\n{produto} | {quantidade} | {valor}")
+                prods_quant_selecionados = text_prod_selecionados.get("0.0", "end").strip()
+                print(f"prods_quant_selecionados: {prods_quant_selecionados}")
+                if prods_quant_selecionados == "":
+                    print("1")
+                    text_prod_selecionados.insert("0.0", f"\n\n{produto} | {quantidade} | {valor}")
+                else:
+                    print("2")
+                    text_prod_selecionados.insert("3.0", f"{produto} | {quantidade} | {valor}\n")
                 text_prod_selecionados.configure(state="disabled")
                 combo_pesquisar_prod.configure(state="normal")
                 entry_quantidade.delete("0", "end")
@@ -398,7 +404,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 del prods_selecionados[index]
         prods_selecionados.pop()
         for item in prods_selecionados:
-            text_prod_selecionados.insert("1.0", f"{item}\n")
+            text_prod_selecionados.insert("0.0", f"\n\n{item}\n")
+            #text_prod_selecionados.insert("0.0", f"\n\n{produto} | {quantidade} | {valor}")
         text_prod_selecionados.configure(state="disabled")
     def limpar_prods_selecionados():
         #NOTE - limpar_prods_selecionados
@@ -491,7 +498,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         #NOTE - inicio_prod_func
         janela_pedido_venda.destroy()
         sub_janela_relatorio.destroy()
-    
     def btn_pedido_venda_func():
         #NOTE - btn_pedido_venda_func
         with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
