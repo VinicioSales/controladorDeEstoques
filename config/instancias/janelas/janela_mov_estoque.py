@@ -431,7 +431,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
     #NOTE - frame_meio
     frame_meio = ctk.CTkFrame(
         master=janela_produtos,
-        width=750,
+        width=1300,
         height=500,
         fg_color="transparent"
         )
@@ -448,7 +448,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         #fg_color="transparent",
         command=voltar_prod_func
     )
-    btn_voltar.place(relx=0.30, rely=0.1)
+    btn_voltar.place(relx=0.39, rely=0.1)
     img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
     btn_inicio = ctk.CTkButton(
         master=frame_meio,
@@ -460,7 +460,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         #fg_color="transparent",
         command=inicio_prod_func
     )
-    btn_inicio.place(relx=0.38, rely=0.1)
+    btn_inicio.place(relx=0.44, rely=0.1)
 
     #NOTE - label_titulo
     label_titulo = ctk.CTkLabel(
@@ -563,14 +563,14 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         text="Produtos Selecionados",
         font=("Arial", 15, "bold")
         )
-    label_prod_selecionados.place(relx=0.85, rely=0.05, anchor=tkinter.CENTER)
+    label_prod_selecionados.place(relx=0.75, rely=0.05, anchor=tkinter.CENTER)
     text_prod_selecionados = ctk.CTkTextbox(
         master=frame_meio,
-        width=200,
+        width=300,
         height=400,
         font=("Arial", 12)
         )
-    text_prod_selecionados.place(relx=0.85, rely=0.48, anchor=tkinter.CENTER)
+    text_prod_selecionados.place(relx=0.75, rely=0.48, anchor=tkinter.CENTER)
     text_prod_selecionados.configure(state="disabled")
     #!SECTION
 
@@ -781,7 +781,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     #NOTE - frame_meio
     frame_meio = ctk.CTkFrame(
         master=sub_janela_ceasa,
-        width=750,
+        width=1300,
         height=500,
         fg_color="transparent"
         )
@@ -799,7 +799,8 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         #fg_color="transparent",
         command=voltar_prod_func
     )
-    btn_voltar.place(relx=0.30, rely=0.1)
+    #btn_voltar.place(relx=0.30, rely=0.1)
+    btn_voltar.place(relx=0.39, rely=0.1)
     img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
     btn_inicio = ctk.CTkButton(
         master=frame_meio,
@@ -811,7 +812,8 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         #fg_color="transparent",
         command=inicio_prod_func
     )
-    btn_inicio.place(relx=0.38, rely=0.1)
+    #btn_inicio.place(relx=0.38, rely=0.1)
+    btn_inicio.place(relx=0.44, rely=0.1)
 
     #NOTE - label_titulo
     label_titulo = ctk.CTkLabel(
@@ -899,7 +901,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         font=("arial", 12, "bold"),
         bg_color="#3b3b3b",
     ) 
-    label_estoque_origem.place(relx=0.35, rely=0.71, anchor=tkinter.CENTER)
+    label_estoque_origem.place(relx=0.42, rely=0.71, anchor=tkinter.CENTER)
     combo_estoque_ceasa_origem = ctk.CTkComboBox(
         master=frame_meio,
         values=lista_estoques,
@@ -908,21 +910,6 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     )
     combo_estoque_ceasa_origem.bind("<Return>", procurar_estoque_interno)
     combo_estoque_ceasa_origem.place(relx=0.5, rely=0.71, anchor=tkinter.CENTER)
-    """label_estoque_destino = ctk.CTkLabel(
-        master=frame_meio,
-        text="Destino:",
-        font=("arial", 12, "bold"),
-        bg_color="#3b3b3b",
-    )
-    label_estoque_destino.place(relx=0.35, rely=0.77, anchor=tkinter.CENTER)
-    combo_estoque_ceasa_destino = ctk.CTkComboBox(
-        master=frame_meio,
-        values=lista_estoques,
-        width=150,
-        height=25,
-    )
-    combo_estoque_ceasa_destino.bind("<Return>", procurar_estoque_caminhao)
-    combo_estoque_ceasa_destino.place(relx=0.5, rely=0.77, anchor=tkinter.CENTER)"""
     
     #NOTE - label_nota
     label_nota = ctk.CTkLabel(
@@ -931,7 +918,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         font=("arial", 12, "bold"),
         bg_color="#3b3b3b",
     )
-    label_nota.place(relx=0.35, rely=0.77, anchor=tkinter.CENTER)
+    label_nota.place(relx=0.42, rely=0.77, anchor=tkinter.CENTER)
 
     #NOTE - entry_nota
     entry_nota = ctk.CTkEntry(
@@ -960,14 +947,14 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         text="Produtos Adicionados",
         font=("Arial", 15, "bold")
         )
-    label_prod_selecionados.place(relx=0.85, rely=0.05, anchor=tkinter.CENTER)
+    label_prod_selecionados.place(relx=0.75, rely=0.05, anchor=tkinter.CENTER)
     text_prod_ceasa = ctk.CTkTextbox(
         master=frame_meio,
-        width=200,
+        width=300,
         height=400,
         font=("Arial", 12)
         )
-    text_prod_ceasa.place(relx=0.85, rely=0.48, anchor=tkinter.CENTER)
+    text_prod_ceasa.place(relx=0.75, rely=0.48, anchor=tkinter.CENTER)
     text_prod_ceasa.configure(state="disabled")
     #!SECTION
     sub_janela_ceasa.mainloop()
@@ -1234,7 +1221,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
     label_prods_selecionados.place(relx=0.68, rely=0.18, anchor=tkinter.CENTER)
     text_produtos = ctk.CTkTextbox(
         master=frame_1,
-        width=200,
+        width=300,
         height=350,
         font=("arial", 12)
     )
