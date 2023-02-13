@@ -494,17 +494,7 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         )
     combo_pesquisar_prod.place(relx=0.50, rely=0.36, anchor=tkinter.CENTER)
     combo_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
-    img_lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
-    btn_lupa = ctk.CTkButton(
-        master=frame_meio,
-        #image=img_lupa,
-        text="",
-        width=8,
-        height=8,
-        hover=False,
-        fg_color=cor_frame_meio
-    )
-    btn_lupa.place(relx=0.62, rely=0.36, anchor=tkinter.CENTER)
+    
     label_quantidade = ctk.CTkLabel(
         master=frame_meio,
         text="Quantidade",
@@ -846,17 +836,6 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         )
     combo_pesquisar_prod.place(relx=0.50, rely=0.36, anchor=tkinter.CENTER)
     combo_pesquisar_prod.bind("<Return>", pesquisar_prod_func)
-    img_lupa = ctk.CTkImage(light_image=Image.open("config/arquivos/img/lupa.png"))
-    btn_lupa = ctk.CTkButton(
-        master=frame_meio,
-        #image=img_lupa,
-        text="",
-        width=8,
-        height=8,
-        hover=False,
-        fg_color=cor_frame_meio
-    )
-    btn_lupa.place(relx=0.62, rely=0.36, anchor=tkinter.CENTER)
     label_quantidade = ctk.CTkLabel(
         master=frame_meio,
         text="Quantidade",
