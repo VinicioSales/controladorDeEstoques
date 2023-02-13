@@ -337,8 +337,18 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         valor = entry_valor.get()
         if produto == "" or quantidade == "" or valor == "":
             sub_janela_alerta_preencher_dados()
-        elif produto != "" and quantidade != "" and valor != "": 
-            if quantidade.isnumeric() and valor.isnumeric():                
+        elif produto != "" and quantidade != "" and valor != "":
+            try:
+                quantidade = quantidade.replace(",", ".")
+            except:
+                pass
+            try:
+                valor = valor.replace(",", ".")
+            except:
+                pass
+            try:
+                quantidade = float(quantidade)
+                valor = float(valor)
                 text_prod_selecionados.configure(state="normal")
                 prods_quant_selecionados = text_prod_selecionados.get("0.0", "end").strip()
                 if prods_quant_selecionados == "":
@@ -349,7 +359,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 combo_pesquisar_prod.configure(state="normal")
                 entry_quantidade.delete("0", "end")
                 entry_valor.delete("0", "end")
-            elif not quantidade.isnumeric() or not valor.isnumeric():
+            except ValueError:
                 sub_janela_alerta_digite_numeros()
     def adicionar_prod_btn_event_func(event):
         #NOTE - adicionar_prod_btn_event_func
@@ -358,20 +368,29 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         valor = entry_valor.get()
         if produto == "" or quantidade == "" or valor == "":
             sub_janela_alerta_preencher_dados()
-        elif produto != "" and quantidade != "" and valor != "": 
-            if quantidade.isnumeric() and valor.isnumeric():                
+        elif produto != "" and quantidade != "" and valor != "":
+            try:
+                quantidade = quantidade.replace(",", ".")
+            except:
+                pass
+            try:
+                valor = valor.replace(",", ".")
+            except:
+                pass
+            try:
+                quantidade = float(quantidade)
+                valor = float(valor)
                 text_prod_selecionados.configure(state="normal")
                 prods_quant_selecionados = text_prod_selecionados.get("0.0", "end").strip()
                 if prods_quant_selecionados == "":
                     text_prod_selecionados.insert("0.0", f"\n\n{produto} | {quantidade} | {valor}")
                 else:
-                    text_prod_selecionados.delete("0.0", "0.1000")
                     text_prod_selecionados.insert("3.0", f"{produto} | {quantidade} | {valor}\n")
                 text_prod_selecionados.configure(state="disabled")
                 combo_pesquisar_prod.configure(state="normal")
                 entry_quantidade.delete("0", "end")
                 entry_valor.delete("0", "end")
-            elif not quantidade.isnumeric() or not valor.isnumeric():
+            except ValueError:
                 sub_janela_alerta_digite_numeros()
     def pesquisar_prod_func(event):
         #NOTE - pesquisaar_prod
@@ -416,10 +435,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("0.0", "end")
         text_prod_selecionados.configure(state="disabled")
-    def remover_zeros(string):
-        while len(string) > 1 and string[0] == '0':
-            string = string[1:]
-        return string
     def fechar_caminhao_func():
         #NOTE - fechar_caminhao_func
         data = entry_data.get()
