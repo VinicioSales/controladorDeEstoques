@@ -12,7 +12,19 @@ from config.instancias.apis.apis_projetos import get_cod_projeto
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 
 
-linha_venda = 1
+with open("config/arquivos/lista_clientes.txt", "r") as arquivo:
+    lista_clientes = arquivo.readlines()
+    lista_clientes_aux = []
+    for cliente in lista_clientes:
+        cliente = cliente.split(" | ")
+        del cliente[0]
+        cliente = str(cliente)
+        cliente = cliente.replace("[", "")
+        cliente = cliente.replace("]", "")
+        cliente = cliente.replace("'", "")
+        cliente = cliente.replace("\\n", "")
+        lista_clientes_aux.append(cliente)
+    lista_clientes = lista_clientes_aux
 
 #SECTION - sub_janela_alerta_sucesso
 def sub_janela_alerta_sucesso():
@@ -529,7 +541,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     arquivo.write(f"{codigo_cliente_omie} | {data_vencimento}")
                 text_venda.configure(state="normal")                
                 for dict_pedido_venda in lista_pedidos_venda:
-                    linha_venda = 0
                     for chave, valor in dict_pedido_venda.items():                        
                         for titulo in lista_titulos:
                             if chave == titulo:
@@ -542,7 +553,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                                     for quantidade, preco in zip(lista_quantidade, lista_preco):
                                         total += quantidade * preco
                                     text_venda.insert(f"1.0", f"Valor: R$ {total}\n\n")
-                                linha_venda += 1
                                 break
                 text_venda.configure(state="disabled")
                 limpar_prods_selecionados()
@@ -742,7 +752,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     label_clientes.place(relx=0.43, rely=0.68, anchor=tkinter.CENTER)
 
     #NOTE - combo_cliente
-    lista_clientes = ["vinicio", "Victor", "Amanda", "Papelaria e Livraria Rápida Ltda", "Indústria de Malhas"]
+    #lista_clientes = ["vinicio", "Victor", "Amanda", "Papelaria e Livraria Rápida Ltda", "Indústria de Malhas"]
+
     combo_cliente = ctk.CTkComboBox(
         master=frame_meio,
         values=lista_clientes,
