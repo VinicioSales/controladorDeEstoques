@@ -207,7 +207,7 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                 dDataMovimento = datetime.strptime(dDataMovimento, '%d/%m/%Y').date()
                 today = datetime.now().date()
                 thirty_days_later = today + timedelta(days=30)          
-                if dDataMovimento < thirty_days_later:
+                if dDataMovimento <= thirty_days_later:
                     entradas = int(movimento["nQtdeEntradas"])
                     saidas = int(movimento["nQtdeSaidas"])
                     quant_nao_retornados = entradas - saidas
