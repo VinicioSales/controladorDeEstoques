@@ -8,6 +8,7 @@ from config.credenciais.database import database_infos_func
 
 database_infos = database_infos_func()
 estoque_box = database_infos["estoque_box"]
+codigo_local_estoque_galpao = database_infos["codigo_local_estoque_galpao"]
 
 #SECTION - sub_janela_alerta_sucesso
 def sub_janela_alerta_sucesso():
@@ -707,7 +708,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         else:            
             estoque_origem = combo_estoque_ceasa_origem.get()
             nota = entry_nota.get()
-            obs_ent = f"{nota}\n\nVolta do caminhão: {estoque_origem}"
+            obs_ent = f"{nota}\n\nVolta do: {estoque_origem}"
             obs_sai = f"{nota}\n\nSaida para o: Box"
             codigo_estoque_origem = get_codigo_local_estoque(nome_estoque=estoque_origem) 
             lista_nome_produto = []
@@ -723,8 +724,10 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
                 lista_quantidade_produto.append(quantidade_produto)
             for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
                 cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
+                obs_ent = f"{nota}\n\nVolta do {codigo_estoque_origem}"
+                obs_sai = f"{nota}\n\nSaida para o Box" 
                 incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_estoque_origem)
-                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, estoque_box)        
+                incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, estoque_box)
             
             # Preenchendo lista_produtos_ceasa
             with open("config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
@@ -766,7 +769,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         if len(filtered_items) <= 0:
             sub_janela_alerta_estoque_não_encontrado()
         combo_estoque_ceasa_origem.configure(values=filtered_items)
-    def procurar_estoque_caminhao(event):
+    '''def procurar_estoque_caminhao(event):
         #NOTE - procurar_estoque_caminhao
         """Procura o estoque na lista de estoques
 
@@ -779,7 +782,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         filtered_items = [item for item in lista_estoques if search_text in item]
         if len(filtered_items) <= 0:
             sub_janela_alerta_estoque_não_encontrado()
-        combo_estoque_ceasa_destino.configure(values=filtered_items)
+        combo_estoque_ceasa_destino.configure(values=filtered_items)'''
     #!SECTION
 
     #SECTION - Centro
@@ -889,11 +892,11 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
     btn_limpar.place(relx=0.50, rely=0.65, anchor=ctk.CENTER)
     label_estoque_origem = ctk.CTkLabel(
         master=frame_meio,
-        text="Origem:",
+        text="Caminhão:",
         font=("arial", 12, "bold"),
         bg_color="#3b3b3b",
     ) 
-    label_estoque_origem.place(relx=0.42, rely=0.71, anchor=tkinter.CENTER)
+    label_estoque_origem.place(relx=0.41, rely=0.71, anchor=tkinter.CENTER)
     combo_estoque_ceasa_origem = ctk.CTkComboBox(
         master=frame_meio,
         values=lista_estoques,
@@ -1074,7 +1077,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                     codigo_projeto = codigo_projeto.replace(" ", "")
                     break
         return codigo_projeto
-    def procurar_estoque_interno():
+    '''def procurar_estoque_interno():
         #NOTE - procurar_estoque_interno
         """Procura o estoque na lista de estoques
 
@@ -1087,7 +1090,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         filtered_items = [item for item in lista_estoques if search_text in item]
         if len(filtered_items) <= 0:
             sub_janela_alerta_estoque_não_encontrado()
-        combo_estoque_interno.configure(values=filtered_items)
+        combo_estoque_interno.configure(values=filtered_items)'''
     def procurar_estoque_caminhao():
         #NOTE - procurar_estoque_caminhao
         """Procura o estoque na lista de estoques
@@ -1114,12 +1117,12 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         lista_nome_produto = []
         lista_cod_produto = []
         lista_quantidade_produto = []
-        nome_estoque_interno = combo_estoque_interno.get()
+        #nome_estoque_interno = combo_estoque_interno.get()
         nome_estoque_caminhao = combo_estoque_caminhao.get()
         nota = nota_entry.get()
         produtos_selecionados = text_produtos.get("0.0", "end").strip()
         if produtos_selecionados != "":
-            if prods_selecionados != "" and nome_estoque_interno != "" and nome_estoque_caminhao != "":
+            if prods_selecionados != "" and nome_estoque_caminhao != "":
                 for item in prods_selecionados:
                     item = item.split("|")
                     nome_produto = item[0]
@@ -1128,16 +1131,22 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                     lista_nome_produto.append(nome_produto)
                     lista_cod_produto.append(codigo)
                     lista_quantidade_produto.append(quantidade_produto)
-                obs_ent = f"{nota}\n\nVolta do caminhão: {nome_estoque_interno}"
-                obs_sai = f"{nota}\n\nSaida para o caminhão: {nome_estoque_caminhao}"        
-                codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
-                
-                if codigo_local_estoque != "":
-                    codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)        
+                    
+                #codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
+                codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
+                if codigo_estoque_caminhao != "":                            
                     for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
                         cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
-                        incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_local_estoque)
-                        incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, codigo_estoque_caminhao)
+                        if tipo == "SAI":
+                            obs_ent = f"{nota}\n\nVolta do Galpão"
+                            obs_sai = f"{nota}\n\nSaida para o: {nome_estoque_caminhao}" 
+                            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_local_estoque_galpao)
+                            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, codigo_estoque_caminhao)
+                        elif tipo == "ENT":
+                            obs_ent = f"{nota}\n\nVolta do: {nome_estoque_caminhao}"
+                            obs_sai = f"{nota}\n\nSaída para o Galpão"
+                            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_estoque_caminhao)
+                            incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, codigo_local_estoque_galpao)
                         text_produtos.configure(state="normal")
                         text_produtos.delete("0.0", "end")
                         text_produtos.configure(state="disabled")
@@ -1147,14 +1156,14 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                     sub_janela_alerta_estoque_não_encontrado()
             elif prods_selecionados == "":
                 sub_janela_confirmar_produtos_func()
-            elif nome_estoque_interno == "" or nome_estoque_caminhao == "":
+            elif nome_estoque_caminhao == "":
                 sub_janela_alerta_preencher_dados()
         else:
             sub_janela_alerta_prod_nao_encontrado()
     def inicio_func():
         #NOTE - inicio_func 
         janela_saida_caminhao.destroy()
-    def procurar_estoque_interno(event):
+    """def procurar_estoque_interno(event):
         #NOTE - procurar_estoque_interno
         estoque_interno = combo_estoque_interno.get()
         if estoque_interno != "":
@@ -1163,7 +1172,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
             if len(filtered_items) <= 0:
                 sub_janela_alerta_estoque_não_encontrado()
         elif estoque_interno == "":
-            combo_estoque_interno.configure(values=lista_estoques)
+            combo_estoque_interno.configure(values=lista_estoques)"""
     def procurar_estoque_caminhao(event):
         #NOTE - procurar_estoque_caminhao
         estoque_caminhao = combo_estoque_caminhao.get()
@@ -1249,10 +1258,10 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         width=200,
         command=selecionar_prod_btn_func
     )
-    btn_produtos.place(relx=0.35, rely=0.45, anchor=tkinter.CENTER)
+    btn_produtos.place(relx=0.35, rely=0.54, anchor=tkinter.CENTER)
 
     #NOTE - estoques_interno_text
-    estoques_interno_text = ctk.CTkTextbox(
+    """estoques_interno_text = ctk.CTkTextbox(
         master=frame_1,
         width=200,
         height=25
@@ -1269,7 +1278,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         )
     label_galpao.place(relx=0.5, rely=0.54, anchor=tkinter.CENTER)
     label_galpao.insert("0.0", "Galpão")
-    label_galpao.configure(state="disabled")
+    label_galpao.configure(state="disabled")"""
     
     pesquisar_estoque_interno = ctk.StringVar()
     #NOTE - estoques_caminhao_text
@@ -1279,7 +1288,7 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         height=25
         )
     estoques_caminhao_text.place(relx=0.35, rely=0.61, anchor=tkinter.CENTER)
-    estoques_caminhao_text.insert("0.0", "Estoque Destino:")
+    estoques_caminhao_text.insert("0.0", "Caminhão:")
     estoques_caminhao_text.configure(state="disabled")
     combo_estoque_caminhao = ctk.CTkComboBox(master=frame_1, values=lista_estoques)
     combo_estoque_caminhao.place(relx=0.5, rely=0.61, anchor=ctk.CENTER)
