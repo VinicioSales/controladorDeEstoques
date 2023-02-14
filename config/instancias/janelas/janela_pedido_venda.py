@@ -602,6 +602,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     produtos = dict_det["produto"]
                     descricao = produtos["descricao"]
                     valor_unitario = produtos["valor_unitario"]
+                    nValor = produtos["valor_unitario"] * produtos["quantidade"]
+                    print(f"nValor: {nValor}")
                     for departamento in lista_departamentos:
                         nome_departamento = departamento.split(" | ")[1].strip()
                         if nome_departamento == descricao:
@@ -609,7 +611,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                             dict_departamentos = {
                                 "cCodDepto": codigo_departamento,
                                 "nPerc": nPerc,
-                                "nValor": valor_unitario,
+                                "nValor": nValor,
                                 "nValorFixo": "S"
                             }
                             departamentos.append(dict_departamentos)                            

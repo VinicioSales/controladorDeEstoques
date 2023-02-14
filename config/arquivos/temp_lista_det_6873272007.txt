@@ -1,1 +1,0 @@
-[{'ide': {'codigo_item_integracao': '4422421'}, 'produto': {'cfop': '', 'codigo_produto': 6873272162, 'descricao': 'Milho', 'ncm': '9504.10.99', 'quantidade': 1.0, 'unidade': 'UN', 'valor_unitario': 1.0}}]

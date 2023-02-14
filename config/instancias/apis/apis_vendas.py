@@ -104,29 +104,6 @@ def incluir_pedido_venda_lot(lista_det, codigo_cliente, data_vencimento, departa
     Returns:
         Tuple: (descricao_status (str), codigo_pedido (str), numero_pedido (str))
     """
-
-    '''departamentos = [
-        
-            {
-                "cCodDepto": 6873271996,
-                "nPerc": 50,
-                "nValor": 50,
-                "nValorFixo": "S"
-                
-            
-        },
-        
-            {
-                "cCodDepto": 6873271995,
-                "nPerc": 50,
-                "nValor": 50,
-                "nValorFixo": "S"
-                
-            
-        }
-
-    ]'''
-
     randomlist = random.sample(range(1, 12), 8)
     randomlist = str(randomlist)
     aleatorio = randomlist.replace(",","")
