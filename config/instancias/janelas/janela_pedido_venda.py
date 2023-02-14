@@ -589,6 +589,10 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 with open("config/arquivos/lista_departamentos.txt", "r") as arquivo:
                     lista_departamentos = arquivo.readlines()
                 departamentos = []
+                tamanho_lista = float(len(temp_det))
+                nPerc = float(100 / tamanho_lista)
+                nPerc = f"{nPerc:.7f}"
+                print(f"tamanho_lista: {tamanho_lista} - nPerc: {nPerc}")
                 for dict_det in temp_det:
                     produtos = dict_det["produto"]
                     descricao = produtos["descricao"]
@@ -598,7 +602,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                             codigo_departamento = departamento.split(" | ")[0].strip()
                             dict_departamentos = {
                                 "cCodDepto": codigo_departamento,
-                                "nPerc": 50,
+                                "nPerc": nPerc,
                                 "nValor": 1,
                                 "nValorFixo": "S"
                             }
