@@ -706,12 +706,10 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
             sub_janela_alerta_prod_nao_encontrado()
         else:            
             estoque_origem = combo_estoque_ceasa_origem.get()
-            #estoque_destino = combo_estoque_ceasa_destino.get()
             nota = entry_nota.get()
             obs_ent = f"{nota}\n\nVolta do caminhão: {estoque_origem}"
             obs_sai = f"{nota}\n\nSaida para o: Box"
-            codigo_estoque_origem = get_codigo_local_estoque(nome_estoque=estoque_origem)
-            #codigo_estoque_destino = get_codigo_local_estoque(nome_estoque=estoque_destino)  
+            codigo_estoque_origem = get_codigo_local_estoque(nome_estoque=estoque_origem) 
             lista_nome_produto = []
             lista_cod_produto = []
             lista_quantidade_produto = []
@@ -1262,9 +1260,17 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
     estoques_interno_text.place(relx=0.35, rely=0.54, anchor=tkinter.CENTER)
     estoques_interno_text.insert("0.0", "Estoque Origem:")
     estoques_interno_text.configure(state="disabled")
-    combo_estoque_interno = ctk.CTkComboBox(master=frame_1, values=lista_estoques)
-    combo_estoque_interno.place(relx=0.5, rely=0.54, anchor=ctk.CENTER)
-    combo_estoque_interno.bind("<Return>", procurar_estoque_interno)
+
+    #NOTE - label_galpao
+    label_galpao = ctk.CTkTextbox(
+        master=frame_1,
+        width=144,
+        height=25
+        )
+    label_galpao.place(relx=0.5, rely=0.54, anchor=tkinter.CENTER)
+    label_galpao.insert("0.0", "Galpão")
+    label_galpao.configure(state="disabled")
+    
     pesquisar_estoque_interno = ctk.StringVar()
     #NOTE - estoques_caminhao_text
     estoques_caminhao_text = ctk.CTkTextbox(
