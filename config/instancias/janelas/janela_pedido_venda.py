@@ -285,6 +285,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     font_texto = "arial"
     font_btn = "arial"
     cor_frame_meio = "#3b3b3b"
+    cor_fundo = "#242424"
 
     #SECTION - Funções
     def atualizar_func():
@@ -368,9 +369,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 text_prod_selecionados.configure(state="normal")
                 prods_quant_selecionados = text_prod_selecionados.get("0.0", "end").strip()
                 if prods_quant_selecionados == "":
-                    text_prod_selecionados.insert("0.0", f"\n\n{produto} | {quantidade} | {valor}")
+                    text_prod_selecionados.insert("0.0", f"{produto} | {quantidade} | {valor}\n")
                 else:
-                    text_prod_selecionados.insert("3.0", f"{produto} | {quantidade} | {valor}\n")
+                    text_prod_selecionados.insert("0.0", f"{produto} | {quantidade} | {valor}\n")
                 text_prod_selecionados.configure(state="disabled")
                 combo_pesquisar_prod.configure(state="normal")
                 entry_quantidade.delete("0", "end")
@@ -399,9 +400,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 text_prod_selecionados.configure(state="normal")
                 prods_quant_selecionados = text_prod_selecionados.get("0.0", "end").strip()
                 if prods_quant_selecionados == "":
-                    text_prod_selecionados.insert("0.0", f"\n\n{produto} | {quantidade} | {valor}")
+                    text_prod_selecionados.insert("0.0", f"{produto} | {quantidade} | {valor}\n")
                 else:
-                    text_prod_selecionados.insert("3.0", f"{produto} | {quantidade} | {valor}\n")
+                    text_prod_selecionados.insert("0.0", f"{produto} | {quantidade} | {valor}\n")
                 text_prod_selecionados.configure(state="disabled")
                 combo_pesquisar_prod.configure(state="normal")
                 entry_quantidade.delete("0", "end")
@@ -431,17 +432,14 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     def remover_ultimo_btn_func():
         #NOTE - remover_ultimo_btn_func
         text_prod_selecionados.configure(state="normal")
-        prods_selecionados = text_prod_selecionados.get("1.0", "end").split("\n")       
-        
+        prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
         for index, item in enumerate(prods_selecionados):
             if item == "":
                 del prods_selecionados[index]
         if prods_selecionados[-1] == "":
             prods_selecionados.pop(-1)
-        prods_selecionados.pop(1)
-        
-        text_prod_selecionados.delete("0.0", "end") 
-        text_prod_selecionados.insert("0.0", "\n\n")
+        prods_selecionados.pop(0)
+        text_prod_selecionados.delete("0.0", "end")
         prods_selecionados = list(reversed(prods_selecionados))
         for item in prods_selecionados:        
             text_prod_selecionados.insert("2.0", f"{item}\n")
@@ -640,7 +638,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     frame_meio = ctk.CTkFrame(
         master=janela_pedido_venda,
         width=1300,
-        height=500,
+        height=550,
         fg_color="transparent"
         )
     frame_meio.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
@@ -687,7 +685,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         text="Criar Pedido de Venda",
         font=("arial", 18, "bold")
     )
-    label_titulo.place(relx=0.5, rely=0.16, anchor=tkinter.CENTER)
+    label_titulo.place(relx=0.5, rely=0.18, anchor=tkinter.CENTER)
 
     #NOTE - label_pesquisar_prod
     label_pesquisar_prod = ctk.CTkLabel(
@@ -845,7 +843,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         font=(font_btn, 15),
         command=concluir_cliente_func
     )
-    btn_concluir_cliente.place(relx=0.53, rely=0.87, anchor=tkinter.CENTER)
+    btn_concluir_cliente.place(relx=0.53, rely=0.85, anchor=tkinter.CENTER)
 
     #NOTE - btn_gerar_pedido_venda
     btn_gerar_pedido_venda = ctk.CTkButton(
@@ -858,7 +856,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         hover_color=("#007830"),
         command=btn_pedido_venda_func
     )
-    btn_gerar_pedido_venda.place(relx=0.53, rely=0.95, anchor=tkinter.CENTER)
+    btn_gerar_pedido_venda.place(relx=0.53, rely=0.93, anchor=tkinter.CENTER)
     #!SECTION
 
     #SECTION - Direita
@@ -878,9 +876,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         master=frame_meio,
         text="Produtos Selecionados",
         font=("Arial", 15, "bold"),
-        fg_color=cor_frame_meio
+        fg_color=cor_fundo
         )
-    label_prod_selecionados.place(relx=0.74, rely=0.07, anchor=tkinter.CENTER)
+    label_prod_selecionados.place(relx=0.74, rely=0.03, anchor=tkinter.CENTER)
 
     #NOTE - text_venda
     text_venda = ctk.CTkTextbox(
@@ -892,16 +890,17 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     text_venda.place(relx=0.74, rely=0.75, anchor=tkinter.CENTER)
     text_venda.configure(state="disabled")
 
-    #NOTE - label_venda
-    """label_venda = ctk.CTkLabel(
+    #NOTE - label_clientes
+    label_clientes = ctk.CTkLabel(
         master=frame_meio,
-        text="Adicionados para Venda",
+        text="Pedidos por clientes",
         font=("Arial", 15, "bold"),
-        fg_color=cor_frame_meio
+        fg_color=cor_fundo
         )
-    label_venda.place(relx=0.85, rely=0.55, anchor=tkinter.CENTER)"""
+    label_clientes.place(relx=0.74, rely=0.51, anchor=tkinter.CENTER)
+
     #!SECTION
 
     janela_pedido_venda.mainloop()
 #!SECTION
-
+#janela_pedido_venda_func("sub_janela_relatorio", "produtos_estoque", "text_relatorio")
