@@ -1,6 +1,7 @@
 import json
 import requests
 from datetime import datetime
+from datetime import timedelta
 from datetime import date
 from config.credenciais import database_infos_func
 
@@ -188,9 +189,7 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                                                 "pagina": pagina,
                                                 "registros_por_pagina": 500,
                                                 "codigo_local_estoque": codigo_local_estoque,
-                                                "apenas_importado_api": "N",
-                                                "data_inicial": data_atual,
-                                                "data_final": data_atual,
+                                                "apenas_importado_api": "N"
                                             }
                                         ]
                             })
@@ -202,29 +201,34 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
         cadastros = response["cadastros"]
         for cadastro in cadastros:
             cCodigo = cadastro["cCodigo"]
-            movimentos = cadastro["movimentos"]            
+            movimentos = cadastro["movimentos"]
             for movimento in movimentos:
-                entradas = int(movimento["nQtdeEntradas"])
-                saidas = int(movimento["nQtdeSaidas"])
-                quant_nao_retornados = entradas - saidas
-                with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
-                    lista_produtos = arquivo.readlines()
-                for linha_lista_produtos in lista_produtos:
-                    linha_lista_produtos = linha_lista_produtos.split("|")
-                    cod_produto = linha_lista_produtos[0]
-                    try:
-                        cod_produto = cod_produto.replace(" ", "")
-                    except:
-                        pass
-                    if cCodigo == cod_produto:
-                        nome_produto = linha_lista_produtos[1]                        
-                        with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
-                            quant_diferenca_estoque = arquivo.readlines()
-                            nome_produto = nome_produto.replace("\n", "")
-                        codigo_local_estoque = codigo_local_estoque.strip()
-                        quant_diferenca_estoque.append(f"{codigo_local_estoque} | {nome_produto} | {quant_nao_retornados}\n")
-                        with open("config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
-                            arquivo.writelines(quant_diferenca_estoque)         
+                dDataMovimento = movimento["dDataMovimento"]
+                dDataMovimento = datetime.strptime(dDataMovimento, '%d/%m/%Y').date()
+                today = datetime.now().date()
+                thirty_days_later = today + timedelta(days=30)          
+                if dDataMovimento < thirty_days_later:
+                    entradas = int(movimento["nQtdeEntradas"])
+                    saidas = int(movimento["nQtdeSaidas"])
+                    quant_nao_retornados = entradas - saidas
+                    with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
+                        lista_produtos = arquivo.readlines()
+                    for linha_lista_produtos in lista_produtos:
+                        linha_lista_produtos = linha_lista_produtos.split("|")
+                        cod_produto = linha_lista_produtos[0]
+                        try:
+                            cod_produto = cod_produto.replace(" ", "")
+                        except:
+                            pass
+                        if cCodigo == cod_produto:
+                            nome_produto = linha_lista_produtos[1]                        
+                            with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
+                                quant_diferenca_estoque = arquivo.readlines()
+                                nome_produto = nome_produto.replace("\n", "")
+                            codigo_local_estoque = codigo_local_estoque.strip()
+                            quant_diferenca_estoque.append(f"{codigo_local_estoque} | {nome_produto} | {quant_nao_retornados}\n")
+                            with open("config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
+                                arquivo.writelines(quant_diferenca_estoque)         
         pagina += 1
         total_de_paginas = int(response["total_de_paginas"])
     total_estoque = 0

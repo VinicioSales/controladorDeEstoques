@@ -1,12 +1,16 @@
-import datetime
-dias_uteis = 0
-data_atual = datetime.date.today()
+from datetime import datetime, timedelta
 
-while dias_uteis < 2:
-    data_atual += datetime.timedelta(days=1)
-    if data_atual.weekday() not in (5, 6):
-        dias_uteis += 1
-data_vencimento = str(data_atual)
-date = datetime.datetime.strptime(data_vencimento, "%Y-%m-%d")
-br_date = date.strftime("%d/%m/%Y")
-print(br_date)
+def compare_dates(date_string):
+    today = datetime.now().date()
+    input_date = datetime.strptime(date_string, '%d/%m/%Y').date()
+    thirty_days_later = today + timedelta(days=30)
+    
+    if input_date < today:
+        return "Data é menor que hoje"
+    elif input_date > thirty_days_later:
+        return "Data é maior que 30 dias a partir de hoje"
+    else:
+        return "Data está dentro de 30 dias a partir de hoje"
+
+date_string = "17/03/2023"
+print(compare_dates(date_string))
