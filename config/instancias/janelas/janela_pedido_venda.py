@@ -53,7 +53,7 @@ def sub_janela_alerta_sucesso():
     label_confirmar = ctk.CTkLabel(
         master=sub_janela_confirmar_produtos,
         text="Sucesso!",
-        text_color = "#F04A29",
+        text_color = "#00993D",
         bg_color="#2b2b2b",
         font=("arial", 18, "bold")
     )
