@@ -92,18 +92,41 @@ def incluir_pedido_venda(codigo_produto, codigo_cliente, data_previsao, cfop, de
         codigo_pedido = ''
         numero_pedido = ''
     return descricao_status, codigo_pedido, numero_pedido
-def incluir_pedido_venda_lot(lista_det, codigo_cliente, data_previsao):
+def incluir_pedido_venda_lot(lista_det, codigo_cliente, data_vencimento, departamentos):
     """
     Função para incluir um pedido através da API Omie.
     
     Args:
         lista_det (list)
         codigo_cliente (str): Código do cliente
-        data_previsao (str): Data de previsão de entrega no formato "dd/mm/yyyy"
+        data_vencimento (str): Data de previsão de entrega no formato "dd/mm/yyyy"
         
     Returns:
         Tuple: (descricao_status (str), codigo_pedido (str), numero_pedido (str))
     """
+
+    '''departamentos = [
+        
+            {
+                "cCodDepto": 6873271996,
+                "nPerc": 50,
+                "nValor": 50,
+                "nValorFixo": "S"
+                
+            
+        },
+        
+            {
+                "cCodDepto": 6873271995,
+                "nPerc": 50,
+                "nValor": 50,
+                "nValorFixo": "S"
+                
+            
+        }
+
+    ]'''
+
     randomlist = random.sample(range(1, 12), 8)
     randomlist = str(randomlist)
     aleatorio = randomlist.replace(",","")
@@ -122,17 +145,18 @@ def incluir_pedido_venda_lot(lista_det, codigo_cliente, data_previsao):
                                             "cabecalho": {
                                                 "codigo_cliente": codigo_cliente,
                                                 "codigo_pedido_integracao": codigo_pedido_integracao,
-                                                "data_previsao": data_previsao,
+                                                "data_previsao": data_vencimento,
                                                 "etapa": "10"
                                             },
                                             "det": lista_det,
 
                                             "informacoes_adicionais": {
                                                 "codigo_categoria": "1.01.01",
-                                                "codigo_conta_corrente": 6873271998,
+                                                "codigo_conta_corrente": codigo_conta_corrente,
                                                 "consumidor_final": "",
                                                 "enviar_email": "N"
-                                            }
+                                            },
+                                            "departamentos": departamentos
                                         }
                                     ]
                         })

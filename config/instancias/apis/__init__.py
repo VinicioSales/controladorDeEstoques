@@ -12,4 +12,4 @@ from .apis_vendas import incluir_pedido_venda
 from .apis_vendas import incluir_pedido_venda_lot
 from .apis_cliente import get_cod_cliente
 from .apis_cliente import listar_clientes
-
+from .apis_departamentos import listar_departamentos

@@ -1,1 +1,0 @@
-[{'valor': [2.0], 'razao_social': 'padrao seguro', 'codigo_produto': [6873272162], 'codigo_cliente_omie': '', 'data_vencimento': '13/02/2023', 'cfop': [''], 'descricao': ['Milho'], 'ncm': ['9504.10.99'], 'unidade': ['UN'], 'quantidade_prod': [2.0], 'codigo_projeto': [6893791883]}]

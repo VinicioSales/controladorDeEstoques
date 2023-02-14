@@ -586,7 +586,24 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 with open(f"config/arquivos/{arquivo_dir}") as arquivo:
                     temp_det = arquivo.read()
                 temp_det = ast.literal_eval(temp_det)
-                incluir_pedido_venda_lot(temp_det, codigo_cliente_omie, data_vencimento)
+                with open("config/arquivos/lista_departamentos.txt", "r") as arquivo:
+                    lista_departamentos = arquivo.readlines()
+                departamentos = []
+                for dict_det in temp_det:
+                    produtos = dict_det["produto"]
+                    descricao = produtos["descricao"]
+                    for departamento in lista_departamentos:
+                        nome_departamento = departamento.split(" | ")[1].strip()
+                        if nome_departamento == descricao:
+                            codigo_departamento = departamento.split(" | ")[0].strip()
+                            dict_departamentos = {
+                                "cCodDepto": codigo_departamento,
+                                "nPerc": 50,
+                                "nValor": 1,
+                                "nValorFixo": "S"
+                            }
+                            departamentos.append(dict_departamentos)                            
+                incluir_pedido_venda_lot(temp_det, codigo_cliente_omie, data_vencimento, departamentos)
                 os.remove(f"config/arquivos/{arquivo_dir}")        
                 for dict_det in temp_det:
                     produtos = dict_det["produto"]
