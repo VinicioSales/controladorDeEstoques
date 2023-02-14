@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import pyautogui
 import os
 import tkinter
 import datetime
@@ -25,6 +26,48 @@ with open("config/arquivos/lista_clientes.txt", "r") as arquivo:
         cliente = cliente.replace("\\n", "")
         lista_clientes_aux.append(cliente)
     lista_clientes = lista_clientes_aux
+
+#SECTION - sub_janela_alerta_carregando
+def sub_janela_alerta_carregando(mensagem):
+    #NOTE - sub_janela_alerta_carregando
+    sub_janela_confirmar_produtos = ctk.CTkToplevel()
+    sub_janela_confirmar_produtos.geometry("300x300")
+    sub_janela_confirmar_produtos.update_idletasks()
+    sub_janela_confirmar_produtos.attributes("-topmost", True)
+    x = (sub_janela_confirmar_produtos.winfo_screenwidth() // 2) - (sub_janela_confirmar_produtos.winfo_width() // 2)
+    y = (sub_janela_confirmar_produtos.winfo_screenheight() // 2) - (sub_janela_confirmar_produtos.winfo_height() // 2)
+    sub_janela_confirmar_produtos.geometry(f"+{x}+{y}")
+    
+
+    #SECTION - Funções Confirmar
+    def ok_btn_func():
+        #NOTE - ok_btn_func
+        sub_janela_confirmar_produtos.destroy()
+    #!SECTION
+
+    #NOTE - frame_confirmar
+    frame_confirmar = ctk.CTkFrame(
+        master=sub_janela_confirmar_produtos,
+        width=250,
+        height=250
+    )
+    frame_confirmar.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+    label_confirmar = ctk.CTkLabel(
+        master=sub_janela_confirmar_produtos,
+        text=mensagem,
+        text_color = "#00993D",
+        bg_color="#2b2b2b",
+        font=("arial", 18, "bold")
+    )
+    label_confirmar.place(relx=0.5, rely=0.45, anchor=tkinter.CENTER)
+
+    btn_ok = ctk.CTkButton(
+        master=frame_confirmar,
+        text="Ok",
+        command=ok_btn_func
+    )
+    btn_ok.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+#!SECTION
 
 #SECTION - sub_janela_alerta_sucesso
 def sub_janela_alerta_sucesso():
@@ -458,6 +501,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
             sub_janela_alerta_data_invalida()
         else:            
             prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
+            prods_selecionados.pop(-1)
+            prods_selecionados.pop(-1)
             for i, item in enumerate(prods_selecionados):
                 if item == "":
                     prods_selecionados.pop(i)
@@ -514,8 +559,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                             }
                     }
                     
-                    lista_det.append(dict_det)
-                    
+                    lista_det.append(dict_det)                    
                     lista_nome_produtos_selecionados.append(nome_produto)
                     lista_codigo_produtos_selecionados.append(codigo_produto)
                     lista_quantidade_selecionados.append(quantidade_prod)
@@ -571,8 +615,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         #NOTE - inicio_prod_func
         janela_pedido_venda.destroy()
         sub_janela_relatorio.destroy()
-    def btn_pedido_venda_func():
+    def btn_pedido_venda_func():        
         #NOTE - btn_pedido_venda_func
+        pyautogui.alert(text="Aguarde...")      
         with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
             codigo_local_estoque = arquivo.read()
         codigo_local_estoque = codigo_local_estoque.strip()
@@ -585,6 +630,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
             dados_venda = arquivo.read()
         data_vencimento = dados_venda.split(" | ")[1].strip()
         arquivos = os.listdir("config/arquivos")
+        venda = False
         for arquivo_dir in arquivos:
             if "temp_lista_det_" in arquivo_dir:
                 codigo_cliente_omie = arquivo_dir.split("_")[3]
@@ -617,19 +663,21 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                             }
                             departamentos.append(dict_departamentos)                            
                 incluir_pedido_venda_lot(temp_det, codigo_cliente_omie, data_vencimento, departamentos)
+                venda = True
                 os.remove(f"config/arquivos/{arquivo_dir}")        
                 for dict_det in temp_det:
                     produtos = dict_det["produto"]
                     descricao = produtos["descricao"]
                     quantidade = produtos["quantidade"]
-                    produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade}\n")        
-        with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
-            arquivo.writelines(produtos_venda)
-        sub_janela_alerta_sucesso()
-        janela_pedido_venda.destroy()
-        sub_janela_relatorio.deiconify()
-        sub_janela_relatorio.state("zoomed")
-        atualizar_func()
+                    produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade}\n")      
+        if venda == True:
+            with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
+                arquivo.writelines(produtos_venda)
+            sub_janela_alerta_sucesso()
+            janela_pedido_venda.destroy()
+            sub_janela_relatorio.deiconify()
+            sub_janela_relatorio.state("zoomed")
+            atualizar_func()
     #!SECTION
     
 

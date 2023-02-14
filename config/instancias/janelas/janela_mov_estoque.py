@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import tkinter
+import pyautogui
 from PIL import Image
 from unidecode import unidecode
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
@@ -714,6 +715,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
             lista_nome_produto = []
             lista_cod_produto = []
             lista_quantidade_produto = []
+            pyautogui.alert(text="Aguarde...")
             for item in prods_ceasa:
                 item = item.split("|")
                 nome_produto = item[0]
@@ -1086,10 +1088,10 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
         
         return:
             - None"""
+        
         lista_nome_produto = []
         lista_cod_produto = []
         lista_quantidade_produto = []
-        #nome_estoque_interno = combo_estoque_interno.get()
         nome_estoque_caminhao = combo_estoque_caminhao.get()
         nota = nota_entry.get()
         produtos_selecionados = text_produtos.get("0.0", "end").strip()
@@ -1103,10 +1105,9 @@ def janela_mov_estoque_func(janela_inicio, prods_selecionados, tipo, prods_ceasa
                     lista_nome_produto.append(nome_produto)
                     lista_cod_produto.append(codigo)
                     lista_quantidade_produto.append(quantidade_produto)
-                    
-                #codigo_local_estoque = get_codigo_local_estoque(nome_estoque=nome_estoque_interno)
                 codigo_estoque_caminhao = get_codigo_local_estoque(nome_estoque=nome_estoque_caminhao)
-                if codigo_estoque_caminhao != "":                            
+                if codigo_estoque_caminhao != "":
+                    pyautogui.alert(text="Aguarde...")                        
                     for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
                         cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
                         if tipo == "SAI":
