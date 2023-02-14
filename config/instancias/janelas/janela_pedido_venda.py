@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import os
 import tkinter
 import datetime
 from unidecode import unidecode
@@ -436,15 +437,14 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("0.0", "end")
         text_prod_selecionados.configure(state="disabled")
-    lista_det = []
     def concluir_cliente_func():
         #NOTE - concluir_cliente_func
+        lista_det = []
         data = entry_data.get()
         verificar_data = verificar_data_func(data)
         if verificar_data == False:
             sub_janela_alerta_data_invalida()
-        else:
-            
+        else:            
             prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
             for i, item in enumerate(prods_selecionados):
                 if item == "":
@@ -495,7 +495,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                                 "valor_unitario": valor
                             }
                     }
+                    
                     lista_det.append(dict_det)
+                    
                     lista_nome_produtos_selecionados.append(nome_produto)
                     lista_codigo_produtos_selecionados.append(codigo_produto)
                     lista_quantidade_selecionados.append(quantidade_prod)
@@ -504,6 +506,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     lista_ncm_selecionados.append(ncm)
                     lista_projeto_selecionados.append(codigo_projeto)
                     lista_unidade_selecionados.append(unidade)
+                with open(f"config/arquivos/temp_lista_det_{codigo_cliente_omie}.txt", "w") as arquivo:
+                    arquivo.write(str(lista_det))
                 dict_pedido_venda = {
                     "valor": lista_valor_selecionados,
                     "razao_social": razao_social,
@@ -562,9 +566,18 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         lista_det = ast.literal_eval(lista_det)
         with open("config/arquivos/dados_venda.txt", "r") as arquivo:
             dados_venda = arquivo.read()
-        codigo_cliente_omie = dados_venda.split(" | ")[0].strip()
-        data_vencimento = dados_venda.split(" | ")[1].strip()        
-        incluir_pedido_venda_lot(lista_det, codigo_cliente_omie, data_vencimento)
+        data_vencimento = dados_venda.split(" | ")[1].strip()
+        arquivos = os.listdir("config/arquivos")
+        for arquivo_dir in arquivos:
+            print(f"arquivo_dir: {arquivo_dir}")
+            if "temp_lista_det_" in arquivo_dir:
+                codigo_cliente_omie = arquivo_dir.split("_")[3]
+                codigo_cliente_omie = codigo_cliente_omie.split(".")[0]
+                with open(f"config/arquivos/{arquivo_dir}") as arquivo:
+                    temp_det = arquivo.read()
+                temp_det = ast.literal_eval(temp_det)
+                incluir_pedido_venda_lot(temp_det, codigo_cliente_omie, data_vencimento)
+                os.remove(f"config/arquivos/{arquivo_dir}")
         codigo_local_estoque = codigo_local_estoque.strip()
         for dict_det in lista_det:
             produtos = dict_det["produto"]
