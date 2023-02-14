@@ -188,7 +188,7 @@ def diferenca_quantidade_estoque_produto(codigo_local_estoque):
                                                 "pagina": pagina,
                                                 "registros_por_pagina": 500,
                                                 "codigo_local_estoque": codigo_local_estoque,
-                                                "apenas_importado_api": "S",
+                                                "apenas_importado_api": "N",
                                                 "data_inicial": data_atual,
                                                 "data_final": data_atual,
                                             }

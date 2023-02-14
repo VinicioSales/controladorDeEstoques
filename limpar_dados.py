@@ -54,7 +54,7 @@ def listar_ajuste_estoque():
                                             {
                                                 "pagina": pagina,
                                                 "registros_por_pagina": 500,
-                                                "apenas_importado_api": "S"
+                                                "apenas_importado_api": "N"
                                             }
                                         ]
                             })
@@ -119,7 +119,7 @@ def listar_pedido_vendas():
                                             {
                                                 "pagina": pagina,
                                                 "registros_por_pagina": 500,
-                                                "apenas_importado_api": "S"
+                                                "apenas_importado_api": "N"
                                             }
                                         ]
                             })

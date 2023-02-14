@@ -9,6 +9,8 @@ from config.styles.styles import estilo_janelas_func
 from config.instancias.apis import listar_local_estoque
 from config.instancias.apis import listar_projetos
 from config.instancias.apis import listar_produtos
+from config.instancias.apis import listar_clientes
+from config.instancias.apis import listar_departamentos
 
 #SECTION - Puxando listas
 #NOTE - listar_local_estoque
@@ -55,6 +57,14 @@ for item in lista_produtos:
     lista_produtos_arquivo.append(f"{item}\n")
 with open("config/arquivos/lista_produtos.txt", "w") as arquivo:
     arquivo.writelines(lista_produtos_arquivo)
+
+lista_clientes = listar_clientes()
+with open("config/arquivos/lista_clientes.txt", "w") as arquivo:
+    arquivo.writelines(lista_clientes)
+
+lista_departamentos = listar_departamentos()
+with open("config/arquivos/lista_departamentos.txt", "w") as arquivo:
+    arquivo.writelines(lista_departamentos)
 #!SECTION
 
 #SECTION - janela_configurações

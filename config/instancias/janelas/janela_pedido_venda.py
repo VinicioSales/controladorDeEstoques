@@ -1,16 +1,30 @@
 import customtkinter as ctk
+import os
 import tkinter
 import datetime
 from unidecode import unidecode
 from PIL import Image
 import ast
 from config.instancias.apis.apis_vendas import incluir_pedido_venda
+from config.instancias.apis.apis_vendas import incluir_pedido_venda_lot
 from config.instancias.apis.apis_cliente import get_cod_cliente
 from config.instancias.apis.apis_projetos import get_cod_projeto
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 
 
-linha_venda = 1
+with open("config/arquivos/lista_clientes.txt", "r") as arquivo:
+    lista_clientes = arquivo.readlines()
+    lista_clientes_aux = []
+    for cliente in lista_clientes:
+        cliente = cliente.split(" | ")
+        del cliente[0]
+        cliente = str(cliente)
+        cliente = cliente.replace("[", "")
+        cliente = cliente.replace("]", "")
+        cliente = cliente.replace("'", "")
+        cliente = cliente.replace("\\n", "")
+        lista_clientes_aux.append(cliente)
+    lista_clientes = lista_clientes_aux
 
 #SECTION - sub_janela_alerta_sucesso
 def sub_janela_alerta_sucesso():
@@ -437,11 +451,12 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         text_prod_selecionados.configure(state="disabled")
     def concluir_cliente_func():
         #NOTE - concluir_cliente_func
+        lista_det = []
         data = entry_data.get()
         verificar_data = verificar_data_func(data)
         if verificar_data == False:
             sub_janela_alerta_data_invalida()
-        else:
+        else:            
             prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
             for i, item in enumerate(prods_selecionados):
                 if item == "":
@@ -458,7 +473,13 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 else:
                     prazo = prazo.split(" ")[0]
                     data_vencimento = somar_dias_uteis(data, prazo)
-                codigo_cliente_omie, razao_social = get_cod_cliente(nome_cliente)                   
+                with open("config/arquivos/lista_clientes.txt", "r") as arquivo:
+                    lista_clientes_buscar = arquivo.readlines()
+                for cliente in lista_clientes_buscar:
+                    razao_social = cliente.split(" | ")[1].strip()
+                    if razao_social == nome_cliente:
+                        codigo_cliente_omie = cliente.split(" | ")[0].strip()
+                        break
                 lista_nome_produtos_selecionados = []
                 lista_valor_selecionados = []
                 lista_quantidade_selecionados = []
@@ -469,6 +490,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 lista_cfop_selecionados = []
                 lista_pedidos_venda = []
                 dict_pedido_venda = {}
+                
                 for linha in prods_selecionados:                            
                     linha = linha.split(" | ")
                     nome_produto = linha[0]
@@ -476,7 +498,24 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     valor = linha[2].strip()
                     valor = float(valor.replace("\n", ""))
                     cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_nome_func(nome_produto)
-                    codigo_projeto = get_cod_projeto(nome_produto)                    
+                    codigo_projeto = get_cod_projeto(nome_produto)
+                    dict_det = {
+                        "ide": {
+                                "codigo_item_integracao": "4422421"
+                        },
+                        "produto": {
+                                "cfop": cfop,
+                                "codigo_produto": codigo_produto,
+                                "descricao": descricao,
+                                "ncm": ncm,
+                                "quantidade": quantidade_prod,
+                                "unidade": unidade,
+                                "valor_unitario": valor
+                            }
+                    }
+                    
+                    lista_det.append(dict_det)
+                    
                     lista_nome_produtos_selecionados.append(nome_produto)
                     lista_codigo_produtos_selecionados.append(codigo_produto)
                     lista_quantidade_selecionados.append(quantidade_prod)
@@ -485,6 +524,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     lista_ncm_selecionados.append(ncm)
                     lista_projeto_selecionados.append(codigo_projeto)
                     lista_unidade_selecionados.append(unidade)
+                with open(f"config/arquivos/temp_lista_det_{codigo_cliente_omie}.txt", "w") as arquivo:
+                    arquivo.write(str(lista_det))
                 dict_pedido_venda = {
                     "valor": lista_valor_selecionados,
                     "razao_social": razao_social,
@@ -498,24 +539,27 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     "quantidade_prod": lista_quantidade_selecionados,                    
                     "codigo_projeto": lista_projeto_selecionados
                 }
+                with open("config/arquivos/lista_det.txt", "w") as arquivo:
+                    arquivo.write(str(lista_det))
                 lista_titulos = ["valor", "razao_social"]
                 lista_pedidos_venda.append(dict_pedido_venda)
-                with open("config/arquivos/lista_pedidos_venda.txt", "w") as arquivo:
-                    arquivo.write(str(lista_pedidos_venda))
+                with open("config/arquivos/dados_venda.txt", "w") as arquivo:
+                    arquivo.write(f"{codigo_cliente_omie} | {data_vencimento}")
                 text_venda.configure(state="normal")                
                 for dict_pedido_venda in lista_pedidos_venda:
-                    linha_venda = 0
                     for chave, valor in dict_pedido_venda.items():                        
                         for titulo in lista_titulos:
                             if chave == titulo:
                                 if chave == "razao_social":                              
                                     text_venda.insert(f"0.0", f"Cliente: {valor}\n")
                                 if chave == "valor":
-                                    total = sum(valor)
+                                    lista_quantidade = dict_pedido_venda["quantidade_prod"]
+                                    lista_preco = dict_pedido_venda["valor"]
+                                    total = 0
+                                    for quantidade, preco in zip(lista_quantidade, lista_preco):
+                                        total += quantidade * preco
                                     text_venda.insert(f"1.0", f"Valor: R$ {total}\n\n")
-                                linha_venda += 1
                                 break
-                                
                 text_venda.configure(state="disabled")
                 limpar_prods_selecionados()
     def voltar_prod_func():
@@ -531,30 +575,56 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         #NOTE - btn_pedido_venda_func
         with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
             codigo_local_estoque = arquivo.read()
+        codigo_local_estoque = codigo_local_estoque.strip()
         with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
-            produtos_venda = arquivo.readlines()
-        with open("config/arquivos/lista_pedidos_venda.txt", "r") as arquivo:
-            lista_pedidos_venda = arquivo.read()
-        lista_pedidos_venda = ast.literal_eval(lista_pedidos_venda)
-        for dict_pedido_venda in lista_pedidos_venda:
-            codigo_cliente_omie = dict_pedido_venda["codigo_cliente_omie"]
-            data_vencimento = dict_pedido_venda["data_vencimento"]
-            lista_codigo_produtos_selecionados = dict_pedido_venda["codigo_produto"]
-            lista_cfop_selecionados = dict_pedido_venda["cfop"]
-            lista_ncm_selecionados = dict_pedido_venda["ncm"]
-            lista_unidade_selecionados = dict_pedido_venda["unidade"]
-            lista_quantidade_selecionados = dict_pedido_venda["quantidade_prod"]
-            lista_valor_selecionados = dict_pedido_venda["valor"]
-            lista_projeto_selecionados = dict_pedido_venda["codigo_projeto"]
-            lista_nome_produtos_selecionados = dict_pedido_venda["descricao"]
-            for codigo_produto, cfop, unidade, ncm, quantidade_prod, valor, codigo_projeto, descricao in zip(lista_codigo_produtos_selecionados, lista_cfop_selecionados, lista_unidade_selecionados,\
-                lista_ncm_selecionados, lista_quantidade_selecionados, lista_valor_selecionados, lista_projeto_selecionados, lista_nome_produtos_selecionados):
-                incluir_pedido_venda(codigo_produto, codigo_cliente_omie, data_vencimento, cfop, descricao, ncm ,unidade, valor, quantidade_prod, codigo_projeto)
-                codigo_local_estoque = codigo_local_estoque.strip()
-                produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade_prod}\n")
-        sub_janela_alerta_sucesso()
+            produtos_venda = arquivo.readlines()        
+        with open("config/arquivos/lista_det.txt", "r") as arquivo:
+            lista_det = arquivo.read()
+        lista_det = ast.literal_eval(lista_det)
+        with open("config/arquivos/dados_venda.txt", "r") as arquivo:
+            dados_venda = arquivo.read()
+        data_vencimento = dados_venda.split(" | ")[1].strip()
+        arquivos = os.listdir("config/arquivos")
+        for arquivo_dir in arquivos:
+            if "temp_lista_det_" in arquivo_dir:
+                codigo_cliente_omie = arquivo_dir.split("_")[3]
+                codigo_cliente_omie = codigo_cliente_omie.split(".")[0]
+                with open(f"config/arquivos/{arquivo_dir}") as arquivo:
+                    temp_det = arquivo.read()
+                temp_det = ast.literal_eval(temp_det)
+                with open("config/arquivos/lista_departamentos.txt", "r") as arquivo:
+                    lista_departamentos = arquivo.readlines()
+                departamentos = []
+                tamanho_lista = float(len(temp_det))
+                nPerc = float(100 / tamanho_lista)
+                nPerc = f"{nPerc:.7f}"
+                for dict_det in temp_det:
+                    produtos = dict_det["produto"]
+                    descricao = produtos["descricao"]
+                    valor_unitario = produtos["valor_unitario"]
+                    nValor = produtos["valor_unitario"] * produtos["quantidade"]
+                    print(f"nValor: {nValor}")
+                    for departamento in lista_departamentos:
+                        nome_departamento = departamento.split(" | ")[1].strip()
+                        if nome_departamento == descricao:
+                            codigo_departamento = departamento.split(" | ")[0].strip()
+                            dict_departamentos = {
+                                "cCodDepto": codigo_departamento,
+                                "nPerc": nPerc,
+                                "nValor": nValor,
+                                "nValorFixo": "S"
+                            }
+                            departamentos.append(dict_departamentos)                            
+                incluir_pedido_venda_lot(temp_det, codigo_cliente_omie, data_vencimento, departamentos)
+                os.remove(f"config/arquivos/{arquivo_dir}")        
+                for dict_det in temp_det:
+                    produtos = dict_det["produto"]
+                    descricao = produtos["descricao"]
+                    quantidade = produtos["quantidade"]
+                    produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade}\n")        
         with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
             arquivo.writelines(produtos_venda)
+        sub_janela_alerta_sucesso()
         janela_pedido_venda.destroy()
         sub_janela_relatorio.deiconify()
         sub_janela_relatorio.state("zoomed")
@@ -711,7 +781,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     label_clientes.place(relx=0.43, rely=0.68, anchor=tkinter.CENTER)
 
     #NOTE - combo_cliente
-    lista_clientes = ["vinicio", "Victor", "Amanda", "Papelaria e Livraria Rápida Ltda", "Indústria de Malhas"]
+    #lista_clientes = ["vinicio", "Victor", "Amanda", "Papelaria e Livraria Rápida Ltda", "Indústria de Malhas"]
+
     combo_cliente = ctk.CTkComboBox(
         master=frame_meio,
         values=lista_clientes,

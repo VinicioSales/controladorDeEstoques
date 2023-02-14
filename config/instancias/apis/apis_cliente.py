@@ -57,3 +57,38 @@ def get_cod_cliente(nome_cliente):
     
     return codigo_cliente_omie, razao_social
 
+def listar_clientes():
+    #NOTE - get_cod_cliente
+    """
+    Retorna uma lista de todos os clientes.
+    Retorna:
+    str: lista_clientes
+    """
+    lista_clientes = []
+    pagina = 1
+    total_de_paginas = 1
+    while pagina <= total_de_paginas:
+        url = "https://app.omie.com.br/api/v1/geral/clientes/"
+        payload = json.dumps({
+                                "call": "ListarClientes",
+                                "app_key": app_key,
+                                "app_secret": app_secret,
+                                "param":[
+                                            {
+                                                "pagina": pagina,
+                                                "registros_por_pagina": 500,
+                                                "apenas_importado_api": "N"
+                                            }
+                                        ]
+                            })
+        headers ={
+                    "Content-Type": "application/json"
+                }
+        response = requests.request("POST", url, headers=headers, data=payload)
+        response = response.json()
+        clientes_cadastro = response["clientes_cadastro"]
+        for cliente in clientes_cadastro:
+            codigo_cliente_omie = cliente["codigo_cliente_omie"]
+            razao_social = cliente["razao_social"]
+            lista_clientes.append(f"{codigo_cliente_omie} | {razao_social}\n")
+        return lista_clientes
