@@ -335,7 +335,9 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
             data_atual += datetime.timedelta(days=1)
             if data_atual.weekday() not in (5, 6):
                 dias_uteis += 1
-        data_vencimento = data_atual
+        data_vencimento = str(data_atual)
+        date = datetime.datetime.strptime(data_vencimento, "%Y-%m-%d")
+        data_vencimento = date.strftime("%d/%m/%Y")
         return data_vencimento
     def verificar_data_func(date_string):
         #NOTE - verificar_data_func
@@ -471,8 +473,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     data_vencimento = datetime.date.today()
                     data_vencimento = data_vencimento.strftime("%d/%m/%Y")
                 else:
-                    prazo = prazo.split(" ")[0]
-                    data_vencimento = somar_dias_uteis(data, prazo)
+                    prazo = int(prazo.split(" ")[0].strip())
+                    data_vencimento = somar_dias_uteis(prazo)
                 with open("config/arquivos/lista_clientes.txt", "r") as arquivo:
                     lista_clientes_buscar = arquivo.readlines()
                 for cliente in lista_clientes_buscar:
@@ -597,13 +599,14 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 departamentos = []
                 tamanho_lista = float(len(temp_det))
                 nPerc = float(100 / tamanho_lista)
-                nPerc = f"{nPerc:.7f}"
+                if nPerc == 100.0000000:
+                    nPerc = f"{nPerc:.6f}"
+                else:
+                    nPerc = f"{nPerc:.7f}"
                 for dict_det in temp_det:
                     produtos = dict_det["produto"]
                     descricao = produtos["descricao"]
-                    valor_unitario = produtos["valor_unitario"]
                     nValor = produtos["valor_unitario"] * produtos["quantidade"]
-                    print(f"nValor: {nValor}")
                     for departamento in lista_departamentos:
                         nome_departamento = departamento.split(" | ")[1].strip()
                         if nome_departamento == descricao:
