@@ -592,10 +592,10 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 tamanho_lista = float(len(temp_det))
                 nPerc = float(100 / tamanho_lista)
                 nPerc = f"{nPerc:.7f}"
-                print(f"tamanho_lista: {tamanho_lista} - nPerc: {nPerc}")
                 for dict_det in temp_det:
                     produtos = dict_det["produto"]
                     descricao = produtos["descricao"]
+                    valor_unitario = produtos["valor_unitario"]
                     for departamento in lista_departamentos:
                         nome_departamento = departamento.split(" | ")[1].strip()
                         if nome_departamento == descricao:
@@ -603,7 +603,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                             dict_departamentos = {
                                 "cCodDepto": codigo_departamento,
                                 "nPerc": nPerc,
-                                "nValor": 1,
+                                "nValor": valor_unitario,
                                 "nValorFixo": "S"
                             }
                             departamentos.append(dict_departamentos)                            
