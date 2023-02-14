@@ -559,6 +559,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         #NOTE - btn_pedido_venda_func
         with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
             codigo_local_estoque = arquivo.read()
+        codigo_local_estoque = codigo_local_estoque.strip()
         with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
             produtos_venda = arquivo.readlines()        
         with open("config/arquivos/lista_det.txt", "r") as arquivo:
@@ -569,7 +570,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         data_vencimento = dados_venda.split(" | ")[1].strip()
         arquivos = os.listdir("config/arquivos")
         for arquivo_dir in arquivos:
-            print(f"arquivo_dir: {arquivo_dir}")
             if "temp_lista_det_" in arquivo_dir:
                 codigo_cliente_omie = arquivo_dir.split("_")[3]
                 codigo_cliente_omie = codigo_cliente_omie.split(".")[0]
@@ -577,16 +577,15 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     temp_det = arquivo.read()
                 temp_det = ast.literal_eval(temp_det)
                 incluir_pedido_venda_lot(temp_det, codigo_cliente_omie, data_vencimento)
-                os.remove(f"config/arquivos/{arquivo_dir}")
-        codigo_local_estoque = codigo_local_estoque.strip()
-        for dict_det in lista_det:
-            produtos = dict_det["produto"]
-            descricao = produtos["descricao"]
-            quantidade = produtos["quantidade"]
-            produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade}\n")
-        sub_janela_alerta_sucesso()
+                os.remove(f"config/arquivos/{arquivo_dir}")        
+                for dict_det in temp_det:
+                    produtos = dict_det["produto"]
+                    descricao = produtos["descricao"]
+                    quantidade = produtos["quantidade"]
+                    produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade}\n")        
         with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
             arquivo.writelines(produtos_venda)
+        sub_janela_alerta_sucesso()
         janela_pedido_venda.destroy()
         sub_janela_relatorio.deiconify()
         sub_janela_relatorio.state("zoomed")
