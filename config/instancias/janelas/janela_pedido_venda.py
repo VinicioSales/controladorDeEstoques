@@ -436,6 +436,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         text_prod_selecionados.configure(state="normal")
         text_prod_selecionados.delete("0.0", "end")
         text_prod_selecionados.configure(state="disabled")
+    lista_det = []
     def concluir_cliente_func():
         #NOTE - concluir_cliente_func
         data = entry_data.get()
@@ -443,6 +444,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         if verificar_data == False:
             sub_janela_alerta_data_invalida()
         else:
+            
             prods_selecionados = text_prod_selecionados.get("0.0", "end").split("\n")
             for i, item in enumerate(prods_selecionados):
                 if item == "":
@@ -470,7 +472,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 lista_cfop_selecionados = []
                 lista_pedidos_venda = []
                 dict_pedido_venda = {}
-                lista_det = []
+                
                 for linha in prods_selecionados:                            
                     linha = linha.split(" | ")
                     nome_produto = linha[0]
@@ -493,9 +495,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                                 "valor_unitario": valor
                             }
                     }
-                    print(f"dict_det 1: {dict_det}")
                     lista_det.append(dict_det)
-                    print(f"lista_det 1: {lista_det}")
                     lista_nome_produtos_selecionados.append(nome_produto)
                     lista_codigo_produtos_selecionados.append(codigo_produto)
                     lista_quantidade_selecionados.append(quantidade_prod)
@@ -532,7 +532,11 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                                 if chave == "razao_social":                              
                                     text_venda.insert(f"0.0", f"Cliente: {valor}\n")
                                 if chave == "valor":
-                                    total = sum(valor)
+                                    lista_quantidade = dict_pedido_venda["quantidade_prod"]
+                                    lista_preco = dict_pedido_venda["valor"]
+                                    total = 0
+                                    for quantidade, preco in zip(lista_quantidade, lista_preco):
+                                        total += quantidade * preco
                                     text_venda.insert(f"1.0", f"Valor: R$ {total}\n\n")
                                 linha_venda += 1
                                 break
@@ -562,13 +566,11 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         data_vencimento = dados_venda.split(" | ")[1].strip()        
         incluir_pedido_venda_lot(lista_det, codigo_cliente_omie, data_vencimento)
         codigo_local_estoque = codigo_local_estoque.strip()
-        print(f"lista_det: {lista_det}")
         for dict_det in lista_det:
             produtos = dict_det["produto"]
             descricao = produtos["descricao"]
             quantidade = produtos["quantidade"]
             produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade}\n")
-            print(f"produtos_venda: {produtos_venda}")
         sub_janela_alerta_sucesso()
         with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
             arquivo.writelines(produtos_venda)
