@@ -473,7 +473,13 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                 else:
                     prazo = prazo.split(" ")[0]
                     data_vencimento = somar_dias_uteis(data, prazo)
-                codigo_cliente_omie, razao_social = get_cod_cliente(nome_cliente)                   
+                with open("config/arquivos/lista_clientes.txt", "r") as arquivo:
+                    lista_clientes_buscar = arquivo.readlines()
+                for cliente in lista_clientes_buscar:
+                    razao_social = cliente.split(" | ")[1].strip()
+                    if razao_social == nome_cliente:
+                        codigo_cliente_omie = cliente.split(" | ")[0].strip()
+                        break
                 lista_nome_produtos_selecionados = []
                 lista_valor_selecionados = []
                 lista_quantidade_selecionados = []

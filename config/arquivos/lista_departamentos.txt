@@ -1,4 +1,9 @@
 6873271994 | Coentro
 6873271995 | Tomate
 6873271996 | Milho
-6873271997 | Instalação e Manutenção
+6873271997 | Pimentão
+6905704300 | Cebola
+6905704444 | Cebolinha
+6905704564 | Cenoura
+6905704702 | Pimenta
+6905704816 | Ervilha
