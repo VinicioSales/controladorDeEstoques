@@ -3,6 +3,7 @@ import tkinter
 import pyautogui
 from PIL import Image
 from unidecode import unidecode
+from tkcalendar import Calendar, DateEntry
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 from config.credenciais.database import database_infos_func
@@ -726,7 +727,7 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
                 lista_quantidade_produto.append(quantidade_produto)
             for nome_produto, cod_produto, quantidade_produto in zip(lista_nome_produto, lista_cod_produto, lista_quantidade_produto):
                 cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(cod_produto)
-                obs_ent = f"{nota}\n\nVolta do {codigo_estoque_origem}"
+                obs_ent = f"{nota}\n\nVolta do {estoque_origem}"
                 obs_sai = f"{nota}\n\nSaida para o Box" 
                 incluir_ajuste_estoque(codigo_produto, quantidade_produto, "SAI", valor_unitario, obs_sai, codigo_estoque_origem)
                 incluir_ajuste_estoque(codigo_produto, quantidade_produto, "ENT", valor_unitario, obs_ent, estoque_box)

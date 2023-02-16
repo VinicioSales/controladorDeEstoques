@@ -2,9 +2,11 @@ import customtkinter as ctk
 import pyautogui
 import os
 import tkinter
+from tkinter import ttk
 import datetime
 from unidecode import unidecode
 from PIL import Image
+from tkcalendar import Calendar, DateEntry
 import ast
 from config.instancias.apis.apis_vendas import incluir_pedido_venda
 from config.instancias.apis.apis_vendas import incluir_pedido_venda_lot
@@ -603,6 +605,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                                     for quantidade, preco in zip(lista_quantidade, lista_preco):
                                         total += quantidade * preco
                                     text_venda.insert(f"1.0", f"Valor: R$ {total}\n\n")
+                                    text_venda.insert(f"1.0", f"Data: {data}\n")
                                 break
                 text_venda.configure(state="disabled")
                 limpar_prods_selecionados()
@@ -851,10 +854,15 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     label_data.place(relx=0.43, rely=0.74, anchor=tkinter.CENTER)    
 
     #NOTE - entry_data
-    entry_data = ctk.CTkEntry(
-        master=frame_meio,
-        width=150,
-        height=25,)
+    estilo_data = ttk.Style(frame_meio)
+    estilo_data.theme_use('clam')
+    estilo_data.configure('my.DateEntry', foreground='#3b3b3b', background='#3b3b3b', arrowcolor='white', bordercolor='white')
+    entry_data = DateEntry(
+        frame_meio,
+        width=20,
+        estilo_data = "my.DateEntry",
+        borderwidth=2,
+        date_pattern='dd/MM/yyyy')
     entry_data.place(relx=0.53, rely=0.74, anchor=tkinter.CENTER)
 
     

@@ -2,6 +2,7 @@
 import tkinter
 import customtkinter as ctk
 from datetime import date
+import os
 from config.instancias import janela_inicial_func
 from config.instancias import janela_mov_estoque_func
 from config.instancias import janela_relatorio_diferenca_func
@@ -26,6 +27,10 @@ if str(data_atual) != str(data_anterior):
         arquivo.write("")
     with open("config/arquivos/lista_pedidos_venda.txt", "w") as arquivo:
         arquivo.write("")
+    arquivos = os.listdir("config/arquivos")
+    for arquivo in arquivos:
+        if "temp_lista_det_" in arquivo:
+            os.remove(f"config/arquivos/{arquivo}")
 
 with open("config/arquivos/data_anterior.txt", "w") as arquivo:
     arquivo.write(data_atual)
