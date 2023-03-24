@@ -17,7 +17,6 @@ from config.instancias.apis import consultar_cliente_inativo
 
 #NOTE - Liberação de acesso
 inativo = consultar_cliente_inativo()
-#inativo = "N"
 if inativo == "S":
     sub_janela_alerta_acesso_bloqueado = sub_janela_alerta_acesso_bloqueado_func()
 elif inativo == "N":
