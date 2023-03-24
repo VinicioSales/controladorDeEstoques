@@ -8,6 +8,8 @@ from unidecode import unidecode
 database_infos = database_infos_func()
 app_key = database_infos["app_key"]
 app_secret = database_infos["app_secret"]
+app_key_parceiro = database_infos["app_key_parceiro"]
+app_secret_parceiro = database_infos["app_secret_parceiro"]
 
 def get_cod_cliente(nome_cliente):
     #NOTE - get_cod_cliente
@@ -92,3 +94,31 @@ def listar_clientes():
             razao_social = cliente["razao_social"]
             lista_clientes.append(f"{codigo_cliente_omie} | {razao_social}\n")
         return lista_clientes
+
+def consultar_cliente_inativo():
+    #NOTE - consultar_cliente_inativo
+    """
+    Consulta o status de inatividade de um cliente na API Omie.
+
+    Returns:
+        Um valor booleano indicando se o cliente está inativo ou não.
+    """
+    url = "https://app.omie.com.br/api/v1/geral/clientes/"
+    payload = json.dumps({
+                            "call": "ConsultarCliente",
+                            "app_key": app_key_parceiro,
+                            "app_secret": app_secret_parceiro,
+                            "param":[
+                                        {
+                                            "codigo_cliente_omie": "7311700214"
+                                        }
+                                    ]
+                        })
+    headers ={
+                "Content-Type": "application/json"
+            }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    response = response.json()
+    inativo = response["inativo"]
+
+    return inativo

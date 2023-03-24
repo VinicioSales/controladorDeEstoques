@@ -13,6 +13,7 @@ from config.instancias.apis import listar_produtos
 from config.instancias.apis import listar_clientes
 from config.instancias.apis import listar_departamentos
 from config.instancias.janelas import sub_janela_alerta_acesso_bloqueado_func
+from config.instancias.apis import consultar_cliente_inativo
 
 #NOTE - Liberação de acesso
 inativo = consultar_cliente_inativo()
