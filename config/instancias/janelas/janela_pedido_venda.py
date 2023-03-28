@@ -2,12 +2,12 @@ import customtkinter as ctk
 import pyautogui
 import os
 import tkinter
-from tkinter import ttk
+from tkinter import *
 import datetime
 from unidecode import unidecode
 from PIL import Image
-from tkcalendar import Calendar, DateEntry
 import ast
+import re
 from config.instancias.apis.apis_vendas import incluir_pedido_venda
 from config.instancias.apis.apis_vendas import incluir_pedido_venda_lot
 from config.instancias.apis.apis_cliente import get_cod_cliente
@@ -833,8 +833,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     label_clientes.place(relx=0.43, rely=0.68, anchor=tkinter.CENTER)
 
     #NOTE - combo_cliente
-    #lista_clientes = ["vinicio", "Victor", "Amanda", "Papelaria e Livraria Rápida Ltda", "Indústria de Malhas"]
-
     combo_cliente = ctk.CTkComboBox(
         master=frame_meio,
         values=lista_clientes,
@@ -854,18 +852,12 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     label_data.place(relx=0.43, rely=0.74, anchor=tkinter.CENTER)    
 
     #NOTE - entry_data
-    estilo_data = ttk.Style(frame_meio)
-    estilo_data.theme_use('clam')
-    estilo_data.configure('my.DateEntry', foreground='#3b3b3b', background='#3b3b3b', arrowcolor='white', bordercolor='white')
-    entry_data = DateEntry(
-        frame_meio,
-        width=20,
-        estilo_data = "my.DateEntry",
-        borderwidth=2,
-        date_pattern='dd/MM/yyyy')
+    entry_data = ctk.CTkEntry(
+        master=frame_meio,
+        width=150,
+        height=25,)
     entry_data.place(relx=0.53, rely=0.74, anchor=tkinter.CENTER)
 
-    
 
     #NOTE - label_prazo 
     label_prazo = ctk.CTkLabel(
