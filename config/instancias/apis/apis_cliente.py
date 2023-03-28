@@ -110,7 +110,7 @@ def consultar_cliente_inativo():
                             "app_secret": app_secret_parceiro,
                             "param":[
                                         {
-                                            "codigo_cliente_omie": "7311700214"
+                                            "codigo_cliente_omie": "6073300493"
                                         }
                                     ]
                         })
