@@ -16,6 +16,7 @@ from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.credenciais.database import database_infos_func
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
+from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_produto
 
 database_infos = database_infos_func()
 codigo_local_estoque_galpao = database_infos['codigo_local_estoque_galpao']
@@ -343,22 +344,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
             codigo_local_estoque_aux = arquivo.read()
         codigo_local_estoque_aux = codigo_local_estoque_aux.strip()
-        with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
-            produtos_venda = arquivo.readlines()
         with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
             quant_diferenca_estoque = arquivo.readlines()
-        for prods_venda in produtos_venda:
-            codigo_local_estoque_venda = prods_venda.split(" | ")[0].strip()
-            nome_produto_venda = prods_venda.split(" | ")[1].strip()
-            quant_venda = float(prods_venda.split(" | ")[2].strip())
-            for i, prods_dif in enumerate(quant_diferenca_estoque):
-                nome_produto_diferenca = prods_dif.split(" | ")[1].strip()
-                quant_diferenca = float(prods_dif.split(" | ")[2].strip())
-                codigo_local_estoque = prods_dif.split(" | ")[0].strip()
-                if codigo_local_estoque == codigo_local_estoque_venda:
-                    if nome_produto_venda in nome_produto_diferenca:
-                        quant_sub = quant_diferenca - quant_venda
-                        quant_diferenca_estoque[i] = f"{codigo_local_estoque} | {nome_produto_diferenca} | {quant_sub}\n"
         text_relatorio.configure(state="normal")
         text_relatorio.delete("0.0", "end")
         linha = 0
@@ -367,7 +354,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
             prod_estoque.pop(0)
             text_relatorio.insert(f"{linha}.0", f"{prod_estoque[0]} | {prod_estoque[1]}")
             linha += 1
-        text_relatorio.configure(state="disabled")
+            text_relatorio.configure(state="disabled")
     def somar_dias_uteis(dias_a_somar):
         #NOTE - somar_dias_uteis
         """
@@ -649,9 +636,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         pyautogui.alert(text="Aguarde...")      
         with open("config/arquivos/codigo_local_estoque_aux.txt", "r") as arquivo:
             codigo_local_estoque = arquivo.read()
-        codigo_local_estoque = codigo_local_estoque.strip()
-        with open("config/arquivos/produtos_venda.txt", "r") as arquivo:
-            produtos_venda = arquivo.readlines()        
+        codigo_local_estoque = codigo_local_estoque.strip()     
         with open("config/arquivos/lista_det.txt", "r") as arquivo:
             lista_det = arquivo.read()
         lista_det = ast.literal_eval(lista_det)
@@ -699,7 +684,6 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     produtos = dict_det["produto"]
                     descricao = produtos["descricao"]
                     quantidade = produtos["quantidade"]
-                    produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade}\n")
                     obs_ent = "Produto vendido de caminhão. Aguardando baixa pelo relatório"
                     obs_sai = "Produto vendido"
                     codigo_produto = get_codigo(descricao)
@@ -707,13 +691,12 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     incluir_ajuste_estoque(codigo_produto, quantidade, 'SAI', valor_unitario, obs_sai, codigo_local_estoque)
                     incluir_ajuste_estoque(codigo_produto, quantidade, 'ENT', valor_unitario, obs_ent, codigo_local_estoque_galpao)
         if venda == True:
-            with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
-                arquivo.writelines(produtos_venda)
             sub_janela_alerta_sucesso()
             janela_pedido_venda.destroy()
             sub_janela_relatorio.deiconify()
             sub_janela_relatorio.state("zoomed")
-            #atualizar_func()
+            produtos_nao_retornados = diferenca_quantidade_estoque_produto(codigo_local_estoque)
+            atualizar_func()
     #!SECTION
     
 
