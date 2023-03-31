@@ -13,7 +13,12 @@ from config.instancias.apis.apis_vendas import incluir_pedido_venda_lot
 from config.instancias.apis.apis_cliente import get_cod_cliente
 from config.instancias.apis.apis_projetos import get_cod_projeto
 from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
+from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
+from config.credenciais.database import database_infos_func
+from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 
+database_infos = database_infos_func()
+codigo_local_estoque_galpao = database_infos['codigo_local_estoque_galpao']
 
 with open("config/arquivos/lista_clientes.txt", "r") as arquivo:
     lista_clientes = arquivo.readlines()
@@ -618,6 +623,27 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
         #NOTE - inicio_prod_func
         janela_pedido_venda.destroy()
         sub_janela_relatorio.destroy()
+    def get_codigo(nome_produto):
+        #NOTE - get_codigo
+        """Pega o codigo do produto na lista de produtos
+        
+        param:
+            - string: nome_produto
+            
+        return:
+            - string: codigo"""
+        with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
+            lista_produtos = arquivo.readlines()
+        nome_produto_aux= nome_produto.replace(" ", "")
+        for produto in lista_produtos:                
+            produto = produto.split("|")
+            nome = produto[1]
+            nome_aux = nome.replace(" ", "")
+            if str(nome_produto_aux) in str(nome_aux):
+                codigo = produto[0]
+                codigo = codigo.replace(" ", "")
+                break
+        return codigo
     def btn_pedido_venda_func():        
         #NOTE - btn_pedido_venda_func
         pyautogui.alert(text="Aguarde...")      
@@ -664,7 +690,8 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                                 "nValor": nValor,
                                 "nValorFixo": "S"
                             }
-                            departamentos.append(dict_departamentos)                            
+                            departamentos.append(dict_departamentos)
+                
                 incluir_pedido_venda_lot(temp_det, codigo_cliente_omie, data_vencimento, departamentos)
                 venda = True
                 os.remove(f"config/arquivos/{arquivo_dir}")        
@@ -672,7 +699,13 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
                     produtos = dict_det["produto"]
                     descricao = produtos["descricao"]
                     quantidade = produtos["quantidade"]
-                    produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade}\n")      
+                    produtos_venda.append(f"{codigo_local_estoque} | {descricao} | {quantidade}\n")
+                    obs_ent = "Produto vendido de caminhão. Aguardando baixa pelo relatório"
+                    obs_sai = "Produto vendido"
+                    codigo_produto = get_codigo(descricao)
+                    cfop, codigo_produto, descricao, ncm, unidade, valor_unitario = pesquisar_produto_cod_func(codigo_produto)
+                    incluir_ajuste_estoque(codigo_produto, quantidade, 'SAI', valor_unitario, obs_sai, codigo_local_estoque)
+                    incluir_ajuste_estoque(codigo_produto, quantidade, 'ENT', valor_unitario, obs_ent, codigo_local_estoque_galpao)
         if venda == True:
             with open("config/arquivos/produtos_venda.txt", "w") as arquivo:
                 arquivo.writelines(produtos_venda)
@@ -680,7 +713,7 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
             janela_pedido_venda.destroy()
             sub_janela_relatorio.deiconify()
             sub_janela_relatorio.state("zoomed")
-            atualizar_func()
+            #atualizar_func()
     #!SECTION
     
 

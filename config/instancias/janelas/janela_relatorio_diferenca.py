@@ -75,7 +75,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
                 produtos_venda = arquivo.readlines()
             with open(f"config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
                 quant_diferenca_estoque = arquivo.readlines()
-            for prods_venda in produtos_venda:
+            '''for prods_venda in produtos_venda:
                 codigo_local_estoque_venda = prods_venda.split(" | ")[0].strip()
                 nome_produto_venda = prods_venda.split(" | ")[1].strip()
                 quant_venda = float(prods_venda.split(" | ")[2].strip())
@@ -86,7 +86,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
                     if codigo_local_estoque == codigo_local_estoque_venda:
                         if nome_produto_venda in nome_produto_diferenca:
                             quant_sub = quant_diferenca - quant_venda
-                            quant_diferenca_estoque[i] = f"{codigo_local_estoque} | {nome_produto_diferenca} | {quant_sub}\n"
+                            quant_diferenca_estoque[i] = f"{codigo_local_estoque} | {nome_produto_diferenca} | {quant_sub}\n"'''
             text_relatorio.configure(state="normal")
             text_relatorio.delete("0.0", "end")
             linha = 0
@@ -118,7 +118,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
         with open(f"config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
             lista_produtos_ceasa = arquivo.readlines()
         
-        lista_relatorio = []
+        """lista_relatorio = []
         for produto_ceasa in lista_produtos_ceasa:
             codigo_local_estoque, nome_produto_ceasa, quant_ceasa = produto_ceasa.split(" | ")
             nome_produto_ceasa = nome_produto_ceasa.strip()
@@ -131,8 +131,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
                     resultado = quant_diferenca - quant_ceasa
                     lista_relatorio.append(f"{nome_difenca} | {resultado}\n")
         with open(f"config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
-            arquivo.writelines(quant_diferenca_estoque)
-            #quant_diferenca_estoque = arquivo.readlines()
+            arquivo.writelines(quant_diferenca_estoque)"""
 
         text_relatorio = ctk.CTkTextbox(
         master=frame_principal,

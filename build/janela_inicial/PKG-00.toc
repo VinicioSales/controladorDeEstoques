@@ -1,0 +1,84 @@
+('C:\\Users\\glici\\Meu Drive '
+ '(parceiro@parceirodocontador.com.br)\\Junior\\Python\\Omie\\Qualisuper\\Automacao '
+ 'dos caminhoes 2.0\\build\\janela_inicial\\janela_inicial.pkg',
+ {'BINARY': True,
+  'DATA': True,
+  'EXECUTABLE': True,
+  'EXTENSION': True,
+  'PYMODULE': True,
+  'PYSOURCE': True,
+  'PYZ': False,
+  'SPLASH': True},
+ [('PYZ-00.pyz',
+   'C:\\Users\\glici\\Meu Drive '
+   '(parceiro@parceirodocontador.com.br)\\Junior\\Python\\Omie\\Qualisuper\\Automacao '
+   'dos caminhoes 2.0\\build\\janela_inicial\\PYZ-00.pyz',
+   'PYZ'),
+  ('struct',
+   'C:\\Users\\glici\\Meu Drive '
+   '(parceiro@parceirodocontador.com.br)\\Junior\\Python\\Omie\\Qualisuper\\Automacao '
+   'dos caminhoes 2.0\\build\\janela_inicial\\localpycs\\struct.pyc',
+   'PYMODULE'),
+  ('pyimod01_archive',
+   'C:\\Users\\glici\\Meu Drive '
+   '(parceiro@parceirodocontador.com.br)\\Junior\\Python\\Omie\\Qualisuper\\Automacao '
+   'dos caminhoes 2.0\\build\\janela_inicial\\localpycs\\pyimod01_archive.pyc',
+   'PYMODULE'),
+  ('pyimod02_importers',
+   'C:\\Users\\glici\\Meu Drive '
+   '(parceiro@parceirodocontador.com.br)\\Junior\\Python\\Omie\\Qualisuper\\Automacao '
+   'dos caminhoes '
+   '2.0\\build\\janela_inicial\\localpycs\\pyimod02_importers.pyc',
+   'PYMODULE'),
+  ('pyimod03_ctypes',
+   'C:\\Users\\glici\\Meu Drive '
+   '(parceiro@parceirodocontador.com.br)\\Junior\\Python\\Omie\\Qualisuper\\Automacao '
+   'dos caminhoes 2.0\\build\\janela_inicial\\localpycs\\pyimod03_ctypes.pyc',
+   'PYMODULE'),
+  ('pyimod04_pywin32',
+   'C:\\Users\\glici\\Meu Drive '
+   '(parceiro@parceirodocontador.com.br)\\Junior\\Python\\Omie\\Qualisuper\\Automacao '
+   'dos caminhoes 2.0\\build\\janela_inicial\\localpycs\\pyimod04_pywin32.pyc',
+   'PYMODULE'),
+  ('pyiboot01_bootstrap',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
+   'PYSOURCE'),
+  ('pyi_rth_inspect',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
+   'PYSOURCE'),
+  ('pyi_rth_pkgutil',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgutil.py',
+   'PYSOURCE'),
+  ('pyi_rth_multiprocessing',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
+   'PYSOURCE'),
+  ('pyi_rth_pkgres',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgres.py',
+   'PYSOURCE'),
+  ('pyi_rth_win32comgenpy',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_win32comgenpy.py',
+   'PYSOURCE'),
+  ('pyi_rth_pywintypes',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\_pyinstaller_hooks_contrib\\hooks\\rthooks\\pyi_rth_pywintypes.py',
+   'PYSOURCE'),
+  ('pyi_rth_pythoncom',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\_pyinstaller_hooks_contrib\\hooks\\rthooks\\pyi_rth_pythoncom.py',
+   'PYSOURCE'),
+  ('pyi_rth_setuptools',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_setuptools.py',
+   'PYSOURCE'),
+  ('pyi_rth__tkinter',
+   'C:\\Users\\parce\\AppData\\Roaming\\Python\\Python311\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth__tkinter.py',
+   'PYSOURCE'),
+  ('janela_inicial',
+   'C:\\Users\\glici\\Meu Drive '
+   '(parceiro@parceirodocontador.com.br)\\Junior\\Python\\Omie\\Qualisuper\\Automacao '
+   'dos caminhoes 2.0\\janela_inicial.py',
+   'PYSOURCE')],
+ True,
+ False,
+ False,
+ [],
+ None,
+ None,
+ None)
