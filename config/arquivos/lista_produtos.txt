@@ -1,8 +1,8 @@
 1000 | Milho
 109325141 | Coentro
 110007405 | Tomate
-110007406 | Pimentão
-111937242 | Cebola
+110007406 | Batata Aperitivo
+111937242 | BATATA LISA
 111954114 | Cebolinha
 111954120 | Cenoura
 7114168 | Pimenta

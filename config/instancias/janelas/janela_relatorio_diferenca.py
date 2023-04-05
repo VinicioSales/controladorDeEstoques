@@ -1,16 +1,8 @@
 
 import customtkinter as ctk
 import tkinter
-import datetime
-from PIL import Image
 from config.instancias.apis.apis_estoque import diferenca_quantidade_estoque_produto
-from config.instancias.apis.apis_vendas import incluir_pedido_venda
-from config.instancias.apis.apis_produtos import pesquisar_produto_nome_func
-from config.instancias.apis.apis_projetos import get_cod_projeto
-from config.styles import estilo_janelas_func
-from config.credenciais.database import database_infos_func
 from config.instancias.janelas.janela_pedido_venda import janela_pedido_venda_func
-
 
 
 #SECTION - janela_relatorio_diferenca_func
@@ -103,22 +95,6 @@ def janela_relatorio_diferenca_func(janela_inicio):
             quant_diferenca_estoque = arquivo.readlines()
         with open(f"config/arquivos/lista_produtos_ceasa.txt", "r") as arquivo:
             lista_produtos_ceasa = arquivo.readlines()
-        
-        """lista_relatorio = []
-        for produto_ceasa in lista_produtos_ceasa:
-            codigo_local_estoque, nome_produto_ceasa, quant_ceasa = produto_ceasa.split(" | ")
-            nome_produto_ceasa = nome_produto_ceasa.strip()
-            quant_ceasa = float(quant_ceasa.strip())
-            for diferenca_estoque in quant_diferenca_estoque:
-                codigo_local_estoque_diferenca, nome_difenca, quant_diferenca = diferenca_estoque.split(" | ")
-                quant_diferenca = float(quant_diferenca.strip())
-                nome_difenca = nome_difenca.strip()
-                if nome_produto_ceasa == nome_difenca:
-                    resultado = quant_diferenca - quant_ceasa
-                    lista_relatorio.append(f"{nome_difenca} | {resultado}\n")
-        with open(f"config/arquivos/quant_diferenca_estoque.txt", "w") as arquivo:
-            arquivo.writelines(quant_diferenca_estoque)"""
-
         text_relatorio = ctk.CTkTextbox(
         master=frame_principal,
         width=500,
@@ -229,6 +205,7 @@ def janela_relatorio_diferenca_func(janela_inicio):
             estoque = estoque.replace("\\n", "")
             lista_estoques_aux.append(estoque)
         lista_estoques = lista_estoques_aux
+        lista_estoques.sort()
 
     #NOTE - Frames
     frame_principal = ctk.CTkFrame(
@@ -237,14 +214,11 @@ def janela_relatorio_diferenca_func(janela_inicio):
         height=500
     )
     frame_principal.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
-    
-    img_voltar = ctk.CTkImage(light_image=Image.open("config/arquivos/img/voltar.png"), size=(30,30))
     btn_voltar = ctk.CTkButton(
         master=frame_principal,
         width=50,
         height=30,
         text="Voltar",
-        #image=img_voltar,
         command=voltar_btn_func
     )
     btn_voltar.place(relx=0.1, rely=0.05)

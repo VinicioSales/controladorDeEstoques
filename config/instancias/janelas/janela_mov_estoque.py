@@ -3,7 +3,6 @@ import tkinter
 import pyautogui
 from PIL import Image
 from unidecode import unidecode
-from tkcalendar import Calendar, DateEntry
 from config.instancias.apis.apis_estoque import incluir_ajuste_estoque
 from config.instancias.apis.apis_produtos import pesquisar_produto_cod_func
 from config.credenciais.database import database_infos_func
@@ -27,9 +26,6 @@ def sub_janela_alerta_sucesso():
 
     #SECTION - Funções Confirmar
     def ok_btn_func():
-        #NOTE - ok_btn_func
-        sub_janela_alerta_sucesso.destroy()
-    def ok_btn_event_func(event):
         #NOTE - ok_btn_func
         sub_janela_alerta_sucesso.destroy()
     #!SECTION
@@ -959,6 +955,7 @@ with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
         produto = produto.replace("\\n", "")
         lista_projetos_aux.append(produto)
     lista_produtos = lista_projetos_aux
+    lista_produtos.sort()
 with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
     lista_estoques = arquivo.readlines()
     lista_estoques_aux = []
@@ -972,6 +969,7 @@ with open("config/arquivos/lista_estoques.txt", "r") as arquivo:
         estoque = estoque.replace("\\n", "")
         lista_estoques_aux.append(estoque)
     lista_estoques = lista_estoques_aux
+    lista_estoques.sort()
 with open("config/arquivos/lista_projetos.txt", "r") as arquivo:
     lista_projetos = arquivo.readlines()
     lista_projetos_aux = []

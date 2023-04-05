@@ -13,7 +13,6 @@ from config.instancias.apis import listar_produtos
 from config.instancias.apis import listar_clientes
 from config.instancias.apis import listar_departamentos
 from config.instancias.janelas import sub_janela_alerta_acesso_bloqueado_func
-from config.instancias.apis import consultar_cliente_inativo
 
 #NOTE - Liberação de acesso
 #inativo = consultar_cliente_inativo()
@@ -185,7 +184,7 @@ elif inativo == "N":
     #========= BOTOES ===========#
     btn_sai_estoque = ctk.CTkButton(
         master=frame_1_inicio,
-        text="Saída de estoque",
+        text="Movimento Saída Estoque",
         hover_color = "#AA0",
         width=200,
         height=50,
@@ -196,7 +195,7 @@ elif inativo == "N":
 
     btn_ent_estoque = ctk.CTkButton(
         master=frame_1_inicio,
-        text="Entrada de estoque",
+        text="Movimento Entrada Estoque",
         hover_color = "#AA0",
         width=200,
         height=50,
