@@ -764,13 +764,13 @@ def janela_pedido_venda_func(sub_janela_relatorio, produtos_estoque, text_relato
     label_pesquisar_prod.place(relx=0.43, rely=0.30, anchor=tkinter.CENTER)    
     
     #NOTE - combo_pesquisar_prod
-    with open("config/arquivos/lista_produtos.txt", "r") as arquivo:
-        lista_produtos = arquivo.readlines()
-    for i, produto in enumerate(lista_produtos):
-        lista_produtos[i] = str((produto.split(" | "))[1]).replace("\n","")
+    with open("config/arquivos/quant_diferenca_estoque.txt", "r") as arquivo:
+        quant_diferenca_estoque = arquivo.readlines()
+    for i, produto in enumerate(quant_diferenca_estoque):
+        quant_diferenca_estoque[i] = str((produto.split(" | "))[1]).replace("\n","")
     combo_pesquisar_prod = ctk.CTkComboBox(
         master=frame_meio,
-        values=lista_produtos,
+        values=quant_diferenca_estoque,
         width=150,
         height=25,        
         )
