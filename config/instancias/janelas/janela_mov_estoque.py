@@ -456,7 +456,6 @@ def janela_produtos_func(janela_mov_estoque, tipo):
         command=voltar_prod_func
     )
     btn_voltar.place(relx=0.39, rely=0.1)
-    img_home = ctk.CTkImage(light_image=Image.open("config/arquivos/img/home.png"), size=(30,30))
     btn_inicio = ctk.CTkButton(
         master=frame_meio,
         width=15,
@@ -788,8 +787,6 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         height=15,
         text="Voltar",
         font=(font_btn, 15),
-        #image=img_voltar,
-        #fg_color="transparent",
         command=voltar_prod_func
     )
     btn_voltar.place(relx=0.39, rely=0.1)
@@ -800,8 +797,6 @@ def sub_janela_ceasa_func(janela_mov_estoque, tipo, janela_produtos, prods_selec
         height=15,
         text="Início",
         font=(font_btn, 15),
-        #image=img_home,
-        #fg_color="transparent",
         command=inicio_prod_func
     )
     btn_inicio.place(relx=0.44, rely=0.1)
